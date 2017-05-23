@@ -14,7 +14,7 @@
  * program. If not, see <http://opensource.org/licenses/MIT/>.
  */
 
-package org.safris.commons.logging;
+package org.lib4j.logging;
 
 import java.io.IOException;
 import java.io.PrintWriter;
