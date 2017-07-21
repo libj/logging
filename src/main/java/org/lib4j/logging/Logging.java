@@ -16,25 +16,31 @@
 
 package org.lib4j.logging;
 
+import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.Handler;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
+import org.slf4j.LoggerFactory;
+import org.slf4j.event.Level;
 
 public final class Logging {
-  public static void setLevel(final Level rootLevel) {
-    setLevel(rootLevel, null);
+  private static final Map<Level,ch.qos.logback.classic.Level> levelToLevel = new HashMap<Level,ch.qos.logback.classic.Level>();
+
+  static {
+    levelToLevel.put(Level.TRACE, ch.qos.logback.classic.Level.TRACE);
+    levelToLevel.put(Level.DEBUG, ch.qos.logback.classic.Level.DEBUG);
+    levelToLevel.put(Level.INFO, ch.qos.logback.classic.Level.INFO);
+    levelToLevel.put(Level.WARN, ch.qos.logback.classic.Level.WARN);
+    levelToLevel.put(Level.ERROR, ch.qos.logback.classic.Level.ERROR);
   }
 
-  public static void setLevel(final Level rootLevel, final Map<String,Level> levels) {
-    final Logger rootLogger = Logger.getLogger("");
-    rootLogger.setLevel(rootLevel);
-    for (final Handler handler : rootLogger.getHandlers())
-      handler.setLevel(rootLevel);
+  public static void setLevel(final Level level) {
+    ((ch.qos.logback.classic.Logger)LoggerFactory.getLogger(ch.qos.logback.classic.Logger.ROOT_LOGGER_NAME)).setLevel(levelToLevel.get(level));
+  }
 
-    if (levels != null)
-      for (final Map.Entry<String,Level> entry : levels.entrySet())
-        Logger.getLogger(entry.getKey()).setLevel(entry.getValue());
+  public static void setLevel(final Class<?> clazz, final Level level) {
+    final ch.qos.logback.classic.Logger logger = (ch.qos.logback.classic.Logger)LoggerFactory.getLogger(clazz);
+    if (logger != null)
+      logger.setLevel(levelToLevel.get(level));
   }
 
   private Logging() {

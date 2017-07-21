@@ -73,7 +73,7 @@ public final class LoggerUtil {
     else if (level == Level.ERROR)
       logger.error(msg);
     else
-      throw new UnsupportedOperationException("Unexpected level: " + level);
+      throw new UnsupportedOperationException("Unsupported level: " + level);
   }
 
   /**
@@ -100,7 +100,7 @@ public final class LoggerUtil {
     else if (level == Level.ERROR)
       logger.error(format, arg);
     else
-      throw new UnsupportedOperationException("Unexpected level: " + level);
+      throw new UnsupportedOperationException("Unsupported level: " + level);
   }
 
   /**
@@ -128,7 +128,7 @@ public final class LoggerUtil {
     else if (level == Level.ERROR)
       logger.error(format, arg1, arg2);
     else
-      throw new UnsupportedOperationException("Unexpected level: " + level);
+      throw new UnsupportedOperationException("Unsupported level: " + level);
   }
 
   /**
@@ -159,7 +159,7 @@ public final class LoggerUtil {
     else if (level == Level.ERROR)
       logger.error(format, arguments);
     else
-      throw new UnsupportedOperationException("Unexpected level: " + level);
+      throw new UnsupportedOperationException("Unsupported level: " + level);
   }
 
   /**
@@ -181,7 +181,7 @@ public final class LoggerUtil {
     else if (level == Level.ERROR)
       logger.error(msg, t);
     else
-      throw new UnsupportedOperationException("Unexpected level: " + level);
+      throw new UnsupportedOperationException("Unsupported level: " + level);
   }
 
   /**
@@ -204,7 +204,7 @@ public final class LoggerUtil {
     else if (level == Level.ERROR)
       logger.error(marker, msg);
     else
-      throw new UnsupportedOperationException("Unexpected level: " + level);
+      throw new UnsupportedOperationException("Unsupported level: " + level);
   }
 
   /**
@@ -229,7 +229,7 @@ public final class LoggerUtil {
     else if (level == Level.ERROR)
       logger.error(marker, format, arg);
     else
-      throw new UnsupportedOperationException("Unexpected level: " + level);
+      throw new UnsupportedOperationException("Unsupported level: " + level);
   }
 
   /**
@@ -256,7 +256,7 @@ public final class LoggerUtil {
     else if (level == Level.ERROR)
       logger.error(marker, format, arg1, arg2);
     else
-      throw new UnsupportedOperationException("Unexpected level: " + level);
+      throw new UnsupportedOperationException("Unsupported level: " + level);
   }
 
   /**
@@ -282,7 +282,7 @@ public final class LoggerUtil {
     else if (level == Level.ERROR)
       logger.error(marker, format, arguments);
     else
-      throw new UnsupportedOperationException("Unexpected level: " + level);
+      throw new UnsupportedOperationException("Unsupported level: " + level);
   }
 
   /**
@@ -307,7 +307,7 @@ public final class LoggerUtil {
     else if (level == Level.ERROR)
       logger.error(marker, msg, t);
     else
-      throw new UnsupportedOperationException("Unexpected level: " + level);
+      throw new UnsupportedOperationException("Unsupported level: " + level);
   }
 
   private LoggerUtil() {
