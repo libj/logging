@@ -64,18 +64,12 @@ public class DeferredLogger {
     public void flush(final Level level) {
       synchronized (flushFilter) {
         flushFilter.setLevel(level);
-        appender.addFilter(new Filter<ILoggingEvent>() {
-          @Override
-          public FilterReply decide(final ILoggingEvent event) {
-            return level.isGreaterOrEqual(event.getLevel()) ? FilterReply.ACCEPT : FilterReply.DENY;
-          }
-        });
-
         final Iterator<ILoggingEvent> iterator = events.iterator();
         while (iterator.hasNext()) {
           final ILoggingEvent event = iterator.next();
           iterator.remove();
-          appender.doAppend(event);
+          if (event.getLevel().isGreaterOrEqual(level))
+            appender.doAppend(event);
         }
 
         flushFilter.setLevel(null);
