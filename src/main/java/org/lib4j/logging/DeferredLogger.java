@@ -16,9 +16,9 @@
 
 package org.lib4j.logging;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -44,7 +44,7 @@ public class DeferredLogger {
   }
 
   private static class AppenderBuffer {
-    private final List<ILoggingEvent> events = new LinkedList<ILoggingEvent>();
+    private final List<ILoggingEvent> events = new ArrayList<ILoggingEvent>();
     private final Appender<ILoggingEvent> appender;
     private final FlushFilter flushFilter = new FlushFilter();
 
