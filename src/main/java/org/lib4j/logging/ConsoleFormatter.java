@@ -40,7 +40,7 @@ public class ConsoleFormatter extends Formatter {
     synchronized (formatter) {
       final StringBuilder builder = new StringBuilder();
       final String message = formatMessage(record);
-      builder.append("[").append(record.getLevel().getLocalizedName()).append("] ");
+      builder.append('[').append(record.getLevel().getLocalizedName()).append("] ");
       builder.append(message);
       builder.append(newline);
       return builder.toString();
