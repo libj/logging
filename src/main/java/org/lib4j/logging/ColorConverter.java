@@ -20,8 +20,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.lib4j.test.TestRuntime;
-
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.pattern.CompositeConverter;
@@ -71,7 +69,7 @@ public class ColorConverter extends CompositeConverter<ILoggingEvent> {
       return enabled;
 
     try {
-      return enabled = !TestRuntime.isInIDE() && System.getProperty("os.name").toLowerCase().indexOf("win") < 0;
+      return enabled = System.getProperty("os.name").toLowerCase().indexOf("win") < 0;
     }
     catch (final Throwable e) {
       return false;
