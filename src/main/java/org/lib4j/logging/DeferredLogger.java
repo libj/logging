@@ -81,10 +81,10 @@ public class DeferredLogger {
 
   public static void defer(final Logger logger, final Appender<ILoggingEvent> appender, final Level defaultLevel) {
     if (logger == null)
-      throw new NullPointerException("logger == null");
+      throw new IllegalArgumentException("logger == null");
 
     if (appender == null)
-      throw new NullPointerException("appender == null");
+      throw new IllegalArgumentException("appender == null");
 
     if (!logger.isAttached(appender))
       throw new IllegalArgumentException("appender is not attached to logger");

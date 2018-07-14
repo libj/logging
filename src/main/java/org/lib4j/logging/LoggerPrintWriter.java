@@ -45,10 +45,10 @@ public class LoggerPrintWriter extends PrintWriter {
     });
 
     if (logger == null)
-      throw new NullPointerException("logger == null");
+      throw new IllegalArgumentException("logger == null");
 
     if (level == null)
-      throw new NullPointerException("level == null");
+      throw new IllegalArgumentException("level == null");
 
     this.logger = logger;
     this.level = level;
