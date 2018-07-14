@@ -23,7 +23,7 @@ import org.slf4j.LoggerFactory;
 import org.slf4j.event.Level;
 
 public final class Logging {
-  private static final Map<Level,ch.qos.logback.classic.Level> levelToLevel = new HashMap<Level,ch.qos.logback.classic.Level>();
+  private static final Map<Level,ch.qos.logback.classic.Level> levelToLevel = new HashMap<>();
 
   static {
     levelToLevel.put(Level.TRACE, ch.qos.logback.classic.Level.TRACE);

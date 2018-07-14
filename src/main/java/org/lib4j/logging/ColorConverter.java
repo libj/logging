@@ -25,7 +25,7 @@ import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.pattern.CompositeConverter;
 
 public class ColorConverter extends CompositeConverter<ILoggingEvent> {
-  private static final Map<String,AnsiColor> colors = new HashMap<String,AnsiColor>();
+  private static final Map<String,AnsiColor> colors = new HashMap<>();
 
   private static enum AnsiColor {
     BLACK("0"),
@@ -51,7 +51,7 @@ public class ColorConverter extends CompositeConverter<ILoggingEvent> {
     }
   }
 
-  private static final Map<Integer,AnsiColor> levels = new HashMap<Integer,AnsiColor>();
+  private static final Map<Integer,AnsiColor> levels = new HashMap<>();
 
   static {
     levels.put(Level.ERROR_INTEGER, AnsiColor.RED);

@@ -44,7 +44,7 @@ public class DeferredLogger {
   }
 
   private static class AppenderBuffer {
-    private final List<ILoggingEvent> events = new ArrayList<ILoggingEvent>();
+    private final List<ILoggingEvent> events = new ArrayList<>();
     private final Appender<ILoggingEvent> appender;
     private final FlushFilter flushFilter = new FlushFilter();
 
@@ -77,7 +77,7 @@ public class DeferredLogger {
     }
   }
 
-  private static final Map<Appender<ILoggingEvent>,DeferredLogger> deferrers = new LinkedHashMap<Appender<ILoggingEvent>,DeferredLogger>();
+  private static final Map<Appender<ILoggingEvent>,DeferredLogger> deferrers = new LinkedHashMap<>();
 
   public static void defer(final Logger logger, final Appender<ILoggingEvent> appender, final Level defaultLevel) {
     if (logger == null)
