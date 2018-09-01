@@ -80,9 +80,6 @@ public class DeferredLogger {
   private static final Map<Appender<ILoggingEvent>,DeferredLogger> deferrers = new LinkedHashMap<>();
 
   public static void defer(final Logger logger, final Appender<ILoggingEvent> appender, final Level defaultLevel) {
-    if (logger == null)
-      throw new IllegalArgumentException("logger == null");
-
     if (appender == null)
       throw new IllegalArgumentException("appender == null");
 
