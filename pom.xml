@@ -21,11 +21,11 @@
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>org</groupId>
-    <artifactId>lib4j</artifactId>
+    <artifactId>fastjax</artifactId>
     <version>3.2.3-SNAPSHOT</version>
   </parent>
-  <groupId>org.lib4j</groupId>
-  <artifactId>lib4j-logging</artifactId>
+  <groupId>org.fastjax</groupId>
+  <artifactId>fastjax-logging</artifactId>
   <version>1.0.7-SNAPSHOT</version>
   <name>${project.groupId}:${project.artifactId}</name>
   <properties>
