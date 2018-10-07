@@ -22,11 +22,12 @@ import org.slf4j.event.Level;
 
 public final class LoggerUtil {
   /**
-   * Check if a message of the given level would actually be logged
-   * by this logger.
+   * Check if a message of the given {@code level} would be logged by this
+   * logger.
    *
-   * @param   level   a message logging level
-   * @return  true if the given message level is currently being logged.
+   * @param logger The logger to check.
+   * @param level The logging level.
+   * @return {@code true} if the given logging level is currently being logged.
    */
   public static boolean isLoggable(final Logger logger, final Level level) {
     return logger != null && level != null && (
@@ -38,12 +39,13 @@ public final class LoggerUtil {
   }
 
   /**
-   * Check if a message of the given level would actually be logged
-   * by this logger.
+   * Check if a message of the given {@code level} and {@code marker} would be
+   * logged by this logger.
    *
-   * @param   level   a message logging level
-   * @param   marker The marker specific to this log statement
-   * @return  true if the given message level is currently being logged.
+   * @param logger The logger to check.
+   * @param level The logging level.
+   * @param marker The marker data to take into consideration.
+   * @return {@code true} if the given logging level is currently being logged.
    */
   public static boolean isLoggable(final Logger logger, final Level level, final Marker marker) {
     return logger != null && level != null && (
@@ -55,11 +57,11 @@ public final class LoggerUtil {
   }
 
   /**
-   * Log a message using <code>logger</code> at <code>level</code>
+   * Log a {@code msg} message with {@code logger} at {@code level}.
    *
-   * @param logger the logger
-   * @param level the logging level
-   * @param msg the message string to be logged
+   * @param logger The logger.
+   * @param level The logging level.
+   * @param msg The message string to log.
    */
   public static void log(final Logger logger, final Level level, final String msg) {
     if (level == Level.INFO)
@@ -77,16 +79,16 @@ public final class LoggerUtil {
   }
 
   /**
-   * Log a message using the <code>logger</code> at <code>level</code> according to the specified format
-   * and argument.
-   * <p/>
-   * <p>This form avoids superfluous object creation when the logger
-   * is disabled for the <code>level</code> level. </p>
+   * Log a message with {@code logger} at {@code level} according to the
+   * specified {@code format} and {@code arg}.
+   * <p>
+   * This form avoids superfluous object creation when the logger is disabled
+   * for the {@code level}.
    *
-   * @param logger the logger
-   * @param level the logging level
-   * @param format the format string
-   * @param arg    the argument
+   * @param logger The logger.
+   * @param level The logging level.
+   * @param format The format string.
+   * @param arg The argument.
    */
   public static void log(final Logger logger, final Level level, final String format, final Object arg) {
     if (level == Level.INFO)
@@ -104,17 +106,17 @@ public final class LoggerUtil {
   }
 
   /**
-   * Log a message using the <code>logger</code> at <code>level</code> according to the specified format
-   * and arguments.
-   * <p/>
-   * <p>This form avoids superfluous object creation when the logger
-   * is disabled for the <code>level</code> level. </p>
+   * Log a message with {@code logger} at {@code level} according to the
+   * specified {@code format} and arguments, {@code arg1} and {@code arg2}.
+   * <p>
+   * This form avoids superfluous object creation when the logger is disabled
+   * for the {@code level}.
    *
-   * @param logger the logger
-   * @param level the logging level
-   * @param format the format string
-   * @param arg1   the first argument
-   * @param arg2   the second argument
+   * @param logger The logger.
+   * @param level The logging level.
+   * @param format The format string.
+   * @param arg1 The first argument.
+   * @param arg2 The second argument.
    */
   public static void log(final Logger logger, final Level level, final String format, final Object arg1, final Object arg2) {
     if (level == Level.INFO)
@@ -132,22 +134,23 @@ public final class LoggerUtil {
   }
 
   /**
-   * Log a message using the <code>logger</code> at <code>level</code> according to the specified format
-   * and arguments.
-   * <p/>
-   * <p>This form avoids superfluous string concatenation when the logger
-   * is disabled for the <code>level</code> level. However, final this variant incurs the hidden
-   * (final and relatively small) cost of creating an <code>Object[]</code> before invoking the method,
-   * even if this logger is disabled for <code>level</code>. The variants taking
-   * {@link #log(final Logger logger, final Level level, String, Object) one} and {@link #log(final Logger logger, final Level level, String, Object, Object) two}
-   * arguments exist solely in order to avoid this hidden cost.</p>
+   * Log a message with {@code logger} at {@code level} according to the
+   * specified {@code format} and {@code arguments}.
+   * <p>
+   * This form avoids superfluous string concatenation when the logger is
+   * disabled for the {@code level}. However, this variant incurs the hidden
+   * (final and relatively small) cost of creating an {@code Object[]} before
+   * invoking the method, even if this logger is disabled for {@code level}. The
+   * variants taking {@link #log(Logger, Level, String, Object)} and
+   * {@link #log(Logger, Level, String, Object, Object)} arguments exist solely
+   * in order to avoid this hidden cost.
    *
-   * @param logger the logger
-   * @param level the logging level
-   * @param format    the format string
-   * @param arguments a list of 3 or more arguments
+   * @param logger The logger.
+   * @param level The logging level.
+   * @param format The format string.
+   * @param arguments A list of 3 or more arguments.
    */
-  public static void log(final Logger logger, final Level level, final String format, final Object... arguments) {
+  public static void log(final Logger logger, final Level level, final String format, final Object ... arguments) {
     if (level == Level.INFO)
       logger.info(format, arguments);
     else if (level == Level.DEBUG)
@@ -163,11 +166,13 @@ public final class LoggerUtil {
   }
 
   /**
-   * Log an exception (throwable) using the <code>logger</code> at <code>level</code> with an
-   * accompanying message.
+   * Log an exception {@code t} (throwable) with {@code logger} at {@code level} with an
+   * accompanying {@code msg} message.
    *
-   * @param msg the message accompanying the exception
-   * @param t   the exception (throwable) to log
+   * @param logger The logger.
+   * @param level The logging level.
+   * @param msg The message accompanying the exception.
+   * @param t The exception (throwable) to log.
    */
   public static void log(final Logger logger, final Level level, final String msg, final Throwable t) {
     if (level == Level.INFO)
@@ -185,12 +190,13 @@ public final class LoggerUtil {
   }
 
   /**
-   * Log a message using <code>logger</code> at <code>level</code> with the specific Marker.
+   * Log a {@code msg} message with {@code logger} at {@code level}, with the
+   * specific {@code marker}.
    *
-   * @param logger the logger
-   * @param level the logging level
-   * @param marker The marker specific to this log statement
-   * @param msg    the message string to be logged
+   * @param logger The logger.
+   * @param level The logging level.
+   * @param marker The marker specific to this log statement.
+   * @param msg The message string to be logged.
    */
   public static void log(final Logger logger, final Level level, final Marker marker, final String msg) {
     if (level == Level.INFO)
@@ -208,14 +214,20 @@ public final class LoggerUtil {
   }
 
   /**
-   * This method is similar to {@link #log(final Logger logger, final Level level, String, Object)} method except that the
-   * marker data is also taken into consideration.
+   * Log a message with {@code logger} at {@code level} according to the
+   * specified {@code format} and {@code arg}, with the specific {@code marker}.
+   * <p>
+   * This form avoids superfluous object creation when the logger is disabled
+   * for the {@code level}.
+   * <p>
+   * This method is similar to {@link #log(Logger, Level, String, Object)}
+   * method except that the marker data is also taken into consideration.
    *
-   * @param logger the logger
-   * @param level the logging level
-   * @param marker the marker data specific to this log statement
-   * @param format the format string
-   * @param arg    the argument
+   * @param logger The logger.
+   * @param level The logging level.
+   * @param marker The marker specific to this log statement.
+   * @param format The format string.
+   * @param arg The argument.
    */
   public static void log(final Logger logger, final Level level, final Marker marker, final String format, final Object arg) {
     if (level == Level.INFO)
@@ -233,16 +245,23 @@ public final class LoggerUtil {
   }
 
   /**
-   * This method is similar to {@link #log(final Logger logger, final Level level, String, Object, Object)}
-   * method except that the marker data is also taken into
-   * consideration.
+   * Log a message with {@code logger} at {@code level} according to the
+   * specified {@code format} and arguments, {@code arg1} and {@code arg2}, with
+   * the specific {@code marker}.
+   * <p>
+   * This form avoids superfluous object creation when the logger is disabled
+   * for the {@code level}.
+   * <p>
+   * This method is similar to
+   * {@link #log(Logger, Level, String, Object, Object)} method except that the
+   * marker data is also taken into consideration.
    *
-   * @param logger the logger
-   * @param level the logging level
-   * @param marker the marker data specific to this log statement
-   * @param format the format string
-   * @param arg1   the first argument
-   * @param arg2   the second argument
+   * @param logger The logger.
+   * @param level The logging level.
+   * @param marker The marker specific to this log statement.
+   * @param format The format string.
+   * @param arg1 The first argument.
+   * @param arg2 The second argument.
    */
   public static void log(final Logger logger, final Level level, final Marker marker, final String format, final Object arg1, final Object arg2) {
     if (level == Level.INFO)
@@ -260,17 +279,29 @@ public final class LoggerUtil {
   }
 
   /**
-   * This method is similar to {@link #log(final Logger logger, final Level level, String, Object...)}
-   * method except that the marker data is also taken into
-   * consideration.
+   * Log a message with {@code logger} at {@code level} according to the
+   * specified {@code format} and {@code arguments}, with the specific
+   * {@code marker}.
+   * <p>
+   * This form avoids superfluous string concatenation when the logger is
+   * disabled for the {@code level}. However, this variant incurs the hidden
+   * (final and relatively small) cost of creating an {@code Object[]} before
+   * invoking the method, even if this logger is disabled for {@code level}. The
+   * variants taking {@link #log(Logger, Level, String, Object)} and
+   * {@link #log(Logger, Level, String, Object, Object)} arguments exist solely
+   * in order to avoid this hidden cost.
+   * <p>
+   * This method is similar to
+   * {@link #log(Logger, Level, String, Object...)} method except that the
+   * marker data is also taken into consideration.
    *
-   * @param logger the logger
-   * @param level the logging level
-   * @param marker    the marker data specific to this log statement
-   * @param format    the format string
-   * @param arguments a list of 3 or more arguments
+   * @param logger The logger.
+   * @param level The logging level.
+   * @param marker The marker specific to this log statement.
+   * @param format The format string.
+   * @param arguments A list of 3 or more arguments.
    */
-  public static void log(final Logger logger, final Level level, final Marker marker, final String format, final Object... arguments) {
+  public static void log(final Logger logger, final Level level, final Marker marker, final String format, final Object ... arguments) {
     if (level == Level.INFO)
       logger.info(marker, format, arguments);
     else if (level == Level.DEBUG)
@@ -294,6 +325,19 @@ public final class LoggerUtil {
    * @param marker the marker data for this log statement
    * @param msg    the message accompanying the exception
    * @param t      the exception (throwable) to log
+   */
+  /**
+   * Log an exception {@code t} (throwable) with {@code logger} at {@code level}
+   * with an accompanying {@code msg} message, with the specific {@code marker}.
+   * <p>
+   * This method is similar to {@link #log(Logger, Level, String, Throwable)}
+   * method except that the marker data is also taken into consideration.
+   *
+   * @param logger The logger.
+   * @param level The logging level.
+   * @param marker The marker specific to this log statement.
+   * @param msg The message accompanying the exception.
+   * @param t The exception (throwable) to log.
    */
   public static void log(final Logger logger, final Level level, final Marker marker, final String msg, final Throwable t) {
     if (level == Level.INFO)
