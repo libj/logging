@@ -16,79 +16,105 @@
 
 package org.fastjax.logging;
 
+import java.util.Objects;
+
 import org.slf4j.Logger;
 import org.slf4j.Marker;
 
-public class WrappedLogger implements Logger {
-  private final Logger logger;
+/**
+ * A {@code FilterLogger} contains some other {@link Logger}, to which it
+ * delegates all method calls, possibly transforming the method parameters along
+ * the way or providing additional functionality. The class {@code FilterLogger}
+ * itself simply overrides all methods of {@link Logger} with versions that pass
+ * all requests to the source {@link Logger}. Subclasses of {@code FilterLogger}
+ * may further override some of these methods and may also provide additional
+ * methods and fields.
+ */
+public abstract class FilterLogger implements Logger {
+  /**
+   * The target Logger.
+   */
+  private Logger target;
 
-  public WrappedLogger(final Logger logger) {
-    this.logger = logger;
+  /**
+   * Creates a new {@code FilterLogger} with the specified {@code target}.
+   *
+   * @param target The target {@link Logger} object.
+   * @throws NullPointerException If {@code target} is null.
+   */
+  public FilterLogger(final Logger target) {
+    this.target = Objects.requireNonNull(target);
+  }
+
+  /**
+   * Creates a new {@code FilterLogger} with a null target.
+   */
+  protected FilterLogger() {
   }
 
   @Override
   public String getName() {
-    return logger.getName();
+    return target.getName();
   }
 
   @Override
   public boolean isTraceEnabled() {
-    return logger.isTraceEnabled();
+    return target.isTraceEnabled();
   }
 
   @Override
   public void trace(final String msg) {
-    logger.trace(msg);
+    target.trace(msg);
   }
 
   @Override
   public void trace(final String format, final Object arg) {
-    logger.trace(format, arg);
+    target.trace(format, arg);
   }
 
   @Override
   public void trace(final String format, final Object arg1, final Object arg2) {
-    logger.trace(format, arg1, arg2);
+    target.trace(format, arg1, arg2);
   }
 
   @Override
   public void trace(final String format, final Object ... arguments) {
-    logger.trace(format, arguments);
+    target.trace(format, arguments);
   }
 
   @Override
   public void trace(final String msg, final Throwable t) {
-    logger.trace(msg, t);
+    target.trace(msg, t);
   }
 
   @Override
   public boolean isTraceEnabled(final Marker marker) {
-    return logger.isTraceEnabled(marker);
+    return target.isTraceEnabled(marker);
   }
 
   @Override
   public void trace(final Marker marker, final String msg) {
-    logger.trace(marker, msg);
+    target.trace(marker, msg);
   }
 
   @Override
   public void trace(final Marker marker, final String format, final Object arg) {
-    logger.trace(marker, format, arg);
+    target.trace(marker, format, arg);
   }
 
   @Override
   public void trace(final Marker marker, final String format, final Object arg1, final Object arg2) {
-    logger.trace(marker, format, arg1, arg2);
+    target.trace(marker, format, arg1, arg2);
   }
 
   @Override
   public void trace(final Marker marker, final String format, final Object ... argArray) {
-    logger.trace(marker, format, argArray);
+    target.trace(marker, format, argArray);
   }
 
   @Override
   public void trace(final Marker marker, final String msg, final Throwable t) {
-    logger.trace(marker, msg, t);
+    target.trace(marker, msg, t);
   }
 
   @Override
@@ -98,147 +124,147 @@ public class WrappedLogger implements Logger {
 
   @Override
   public void debug(final String msg) {
-    logger.debug(msg);
+    target.debug(msg);
   }
 
   @Override
   public void debug(final String format, final Object arg) {
-    logger.debug(format, arg);
+    target.debug(format, arg);
   }
 
   @Override
   public void debug(final String format, final Object arg1, final Object arg2) {
-    logger.debug(format, arg1, arg2);
+    target.debug(format, arg1, arg2);
   }
 
   @Override
   public void debug(final String format, final Object ... arguments) {
-    logger.debug(format, arguments);
+    target.debug(format, arguments);
   }
 
   @Override
   public void debug(final String msg, final Throwable t) {
-    logger.debug(msg, t);
+    target.debug(msg, t);
   }
 
   @Override
   public boolean isDebugEnabled(final Marker marker) {
-    return logger.isDebugEnabled(marker);
+    return target.isDebugEnabled(marker);
   }
 
   @Override
   public void debug(final Marker marker, final String msg) {
-    logger.debug(marker, msg);
+    target.debug(marker, msg);
   }
 
   @Override
   public void debug(final Marker marker, final String format, final Object arg) {
-    logger.debug(marker, format, arg);
+    target.debug(marker, format, arg);
   }
 
   @Override
   public void debug(final Marker marker, final String format, final Object arg1, final Object arg2) {
-    logger.debug(marker, format, arg1, arg2);
+    target.debug(marker, format, arg1, arg2);
   }
 
   @Override
   public void debug(final Marker marker, final String format, final Object ... arguments) {
-    logger.debug(marker, format, arguments);
+    target.debug(marker, format, arguments);
   }
 
   @Override
   public void debug(final Marker marker, final String msg, final Throwable t) {
-    logger.debug(marker, msg, t);
+    target.debug(marker, msg, t);
   }
 
   @Override
   public boolean isInfoEnabled() {
-    return logger.isInfoEnabled();
+    return target.isInfoEnabled();
   }
 
   @Override
   public void info(final String msg) {
-    logger.info(msg);
+    target.info(msg);
   }
 
   @Override
   public void info(final String format, final Object arg) {
-    logger.info(format, arg);
+    target.info(format, arg);
   }
 
   @Override
   public void info(final String format, final Object arg1, final Object arg2) {
-    logger.info(format, arg1, arg2);
+    target.info(format, arg1, arg2);
   }
 
   @Override
   public void info(final String format, final Object ... arguments) {
-    logger.info(format, arguments);
+    target.info(format, arguments);
   }
 
   @Override
   public void info(final String msg, final Throwable t) {
-    logger.info(msg, t);
+    target.info(msg, t);
   }
 
   @Override
   public boolean isInfoEnabled(final Marker marker) {
-    return logger.isInfoEnabled(marker);
+    return target.isInfoEnabled(marker);
   }
 
   @Override
   public void info(final Marker marker, final String msg) {
-    logger.info(marker, msg);
+    target.info(marker, msg);
   }
 
   @Override
   public void info(final Marker marker, final String format, final Object arg) {
-    logger.info(marker, format, arg);
+    target.info(marker, format, arg);
   }
 
   @Override
   public void info(final Marker marker, final String format, final Object arg1, final Object arg2) {
-    logger.info(marker, format, arg1, arg2);
+    target.info(marker, format, arg1, arg2);
   }
 
   @Override
   public void info(final Marker marker, final String format, final Object ... arguments) {
-    logger.info(marker, format, arguments);
+    target.info(marker, format, arguments);
   }
 
   @Override
   public void info(final Marker marker, final String msg, final Throwable t) {
-    logger.info(marker, msg);
+    target.info(marker, msg);
   }
 
   @Override
   public boolean isWarnEnabled() {
-    return logger.isWarnEnabled();
+    return target.isWarnEnabled();
   }
 
   @Override
   public void warn(final String msg) {
-    logger.warn(msg);
+    target.warn(msg);
   }
 
   @Override
   public void warn(final String format, final Object arg) {
-    logger.warn(format, arg);
+    target.warn(format, arg);
   }
 
   @Override
   public void warn(final String format, final Object ... arguments) {
-    logger.warn(format, arguments);
+    target.warn(format, arguments);
   }
 
   @Override
   public void warn(final String format, final Object arg1, final Object arg2) {
-    logger.warn(format, arg1, arg2);
+    target.warn(format, arg1, arg2);
   }
 
   @Override
   public void warn(final String msg, final Throwable t) {
-    logger.warn(msg, t);
+    target.warn(msg, t);
   }
 
   @Override
@@ -248,86 +274,86 @@ public class WrappedLogger implements Logger {
 
   @Override
   public void warn(final Marker marker, final String msg) {
-    logger.warn(marker, msg);
+    target.warn(marker, msg);
   }
 
   @Override
   public void warn(final Marker marker, final String format, final Object arg) {
-    logger.warn(marker, format, arg);
+    target.warn(marker, format, arg);
   }
 
   @Override
   public void warn(final Marker marker, final String format, final Object arg1, final Object arg2) {
-    logger.warn(marker, format, arg1, arg2);
+    target.warn(marker, format, arg1, arg2);
   }
 
   @Override
   public void warn(final Marker marker, final String format, final Object ... arguments) {
-    logger.warn(marker, format, arguments);
+    target.warn(marker, format, arguments);
   }
 
   @Override
   public void warn(final Marker marker, final String msg, final Throwable t) {
-    logger.warn(marker, msg);
+    target.warn(marker, msg);
   }
 
   @Override
   public boolean isErrorEnabled() {
-    return logger.isErrorEnabled();
+    return target.isErrorEnabled();
   }
 
   @Override
   public void error(final String msg) {
-    logger.error(msg);
+    target.error(msg);
   }
 
   @Override
   public void error(final String format, final Object arg) {
-    logger.error(format, arg);
+    target.error(format, arg);
   }
 
   @Override
   public void error(final String format, final Object arg1, final Object arg2) {
-    logger.error(format, arg1, arg2);
+    target.error(format, arg1, arg2);
   }
 
   @Override
   public void error(final String format, final Object ... arguments) {
-    logger.error(format, arguments);
+    target.error(format, arguments);
   }
 
   @Override
   public void error(final String msg, final Throwable t) {
-    logger.error(msg, t);
+    target.error(msg, t);
   }
 
   @Override
   public boolean isErrorEnabled(final Marker marker) {
-    return logger.isErrorEnabled(marker);
+    return target.isErrorEnabled(marker);
   }
 
   @Override
   public void error(final Marker marker, final String msg) {
-    logger.error(marker, msg);
+    target.error(marker, msg);
   }
 
   @Override
   public void error(final Marker marker, final String format, final Object arg) {
-    logger.error(marker, format, arg);
+    target.error(marker, format, arg);
   }
 
   @Override
   public void error(final Marker marker, final String format, final Object arg1, final Object arg2) {
-    logger.error(marker, format, arg1, arg2);
+    target.error(marker, format, arg1, arg2);
   }
 
   @Override
   public void error(final Marker marker, final String format, final Object ... arguments) {
-    logger.error(marker, format, arguments);
+    target.error(marker, format, arguments);
   }
 
   @Override
   public void error(final Marker marker, final String msg, final Throwable t) {
-    logger.error(marker, msg);
+    target.error(marker, msg);
   }
 }

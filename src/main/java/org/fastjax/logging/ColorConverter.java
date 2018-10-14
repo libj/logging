@@ -24,9 +24,15 @@ import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.pattern.CompositeConverter;
 
+/**
+ * A {@link CompositeConverter} implementation that colorizes log messages.
+ */
 public class ColorConverter extends CompositeConverter<ILoggingEvent> {
   private static final Map<String,AnsiColor> colors = new HashMap<>();
 
+  /**
+   * Enum of standard ANSI color codes.
+   */
   private static enum AnsiColor {
     BLACK("0"),
     RED("1"),
@@ -64,6 +70,13 @@ public class ColorConverter extends CompositeConverter<ILoggingEvent> {
 
   private static Boolean enabled;
 
+  /**
+   * Returns {@code true} if the {@code ColorConverter} is enabled, and
+   * {@code false} otherwise.
+   *
+   * @return {@code true} if the {@code ColorConverter} is enabled, and
+   *         {@code false} otherwise.
+   */
   private static boolean isEnabled() {
     if (enabled != null)
       return enabled;
@@ -76,10 +89,28 @@ public class ColorConverter extends CompositeConverter<ILoggingEvent> {
     }
   }
 
+  /**
+   * Sets the enabled state of the {@code ColorConverter} to the value of
+   * {@code enabled}.
+   *
+   * @param enabled The value to which the enabled state of the
+   *          {@code ColorConverter} should be set.
+   */
   public static void setEnabled(final boolean enabled) {
     ColorConverter.enabled = enabled;
   }
 
+  /**
+   * Transforms the specified {@link ILoggingEvent} by amending its message with
+   * color options specified in the {@code <pattern>} element under
+   * {@code <layout>} in {@code logback.xml}.
+   * <p>
+   * An example {@code <pattern>} that specifies color codes and options is:
+   *
+   * <pre>
+   * <code>&lt;pattern&gt;[%color(%4level){bold,blue}] %color(%msg%n){magenta}&lt;/pattern&gt;</code>
+   * </pre>
+   */
   @Override
   protected String transform(final ILoggingEvent event, final String in) {
     if (!isEnabled())
@@ -126,7 +157,7 @@ public class ColorConverter extends CompositeConverter<ILoggingEvent> {
     final StringBuilder builder = new StringBuilder();
     builder.append(ENCODE_START).append(strength);
     if (color != null)
-      builder.append(";").append(group).append(color);
+      builder.append(';').append(group).append(color);
 
     return builder.append(ENCODE_END).append(in).append(ENCODE_START).append(RESET).append(ENCODE_END).toString();
   }
