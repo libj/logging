@@ -164,6 +164,27 @@ public class DeferredLogger {
   private static final Map<org.slf4j.Logger,DeferredLogger> deferrers = new LinkedHashMap<>();
 
   /**
+   * Returns the first {@link Appender} of the specified {@link Logger}, or if
+   * one does not exist, the first {@link Appender} of the ROOT logger.
+   *
+   * @param logger The {@link Logger}.
+   * @return The first {@link Appender} of the specified {@link Logger}, or if
+   *         one does not exist, the first {@link Appender} of the ROOT logger.
+   * @throws IllegalStateException If the specified {@link Logger} and the ROOT
+   *           logger do not have an appender.
+   */
+  private static Appender<ILoggingEvent> getAppender(final Logger logger) {
+    if (logger.iteratorForAppenders().hasNext())
+      return logger.iteratorForAppenders().next();
+
+    final Logger rootLogger = (Logger)LoggerFactory.getLogger(org.slf4j.Logger.ROOT_LOGGER_NAME);
+    if (!rootLogger.iteratorForAppenders().hasNext())
+      throw new IllegalStateException("ROOT logger does not have an appender");
+
+    return rootLogger.iteratorForAppenders().next();
+  }
+
+  /**
    * Configures the specified {@link org.slf4j.Logger} to defer log events with
    * a level between:
    * <ol>
@@ -177,28 +198,29 @@ public class DeferredLogger {
    * @param deferredLevel The lowest {@link org.slf4j.event.Level} that will be
    *          deferred for later output.
    * @return The specified {@code logger}.
-   * @throws IllegalStateException If the ROOT logger does not have an appender.
+   * @throws ClassCastException If {@code logger} is not an instance of
+   *           {@link ch.qos.logback.classic.Logger}.
+   * @throws IllegalStateException If the specified {@link Logger} and the ROOT
+   *           logger do not have an appender.
    */
   public static org.slf4j.Logger defer(final org.slf4j.Logger logger, final org.slf4j.event.Level deferredLevel) {
-    final Logger loggerLB = (ch.qos.logback.classic.Logger)logger;
-    final Logger rootLoggerLB = (ch.qos.logback.classic.Logger)LoggerFactory.getLogger(org.slf4j.Logger.ROOT_LOGGER_NAME);
-    if (!rootLoggerLB.iteratorForAppenders().hasNext())
-      throw new IllegalStateException("ROOT logger does not have an appender");
+    return defer((Logger)logger, LoggerUtil.levelToLevel.get(deferredLevel));
+  }
 
-    final Appender<ILoggingEvent> appender = rootLoggerLB.iteratorForAppenders().next();
-    final Level defaultLevelLB = loggerLB.getEffectiveLevel();
-    final Level deferredLevelLB = LoggerUtil.levelToLevel.get(deferredLevel);
-    loggerLB.setLevel(deferredLevelLB);
+  private static org.slf4j.Logger defer(final Logger logger, final Level deferredLevel) {
+    final Appender<ILoggingEvent> appender = getAppender(logger);
+    final Level defaultLevel = logger.getEffectiveLevel();
+    logger.setLevel(deferredLevel);
     if (deferrers.containsKey(logger))
       return logger;
 
     final AppenderBuffer buffer = new AppenderBuffer(appender);
-    final DeferredLogger deferredLogger = new DeferredLogger(loggerLB, defaultLevelLB, buffer);
+    final DeferredLogger deferredLogger = new DeferredLogger(logger, defaultLevel, buffer);
     deferrers.put(logger, deferredLogger);
     appender.addFilter(new Filter<ILoggingEvent>() {
       @Override
       public FilterReply decide(final ILoggingEvent event) {
-        if (event.getLevel().levelInt < deferredLevelLB.levelInt)
+        if (event.getLevel().levelInt < deferredLevel.levelInt)
           return FilterReply.DENY;
 
         if (event.getLevel().levelInt < deferredLogger.level.levelInt) {
@@ -310,7 +332,7 @@ public class DeferredLogger {
    * Creates a new {@code DeferredLogger} with the specified parameters.
    *
    * @param logger The {@link Logger}.
-   * @param level The current {@link Level} value as fonfigured in {@code logback.xml}.
+   * @param level The current {@link Level} value as configured in {@code logback.xml}.
    * @param buffer The {@link AppenderBuffer}.
    */
   private DeferredLogger(final Logger logger, final Level level, final AppenderBuffer buffer) {
