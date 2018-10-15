@@ -220,6 +220,9 @@ public class DeferredLogger {
     appender.addFilter(new Filter<ILoggingEvent>() {
       @Override
       public FilterReply decide(final ILoggingEvent event) {
+        if (!logger.getName().equals(event.getLoggerName()))
+          return FilterReply.NEUTRAL;
+
         if (event.getLevel().levelInt < deferredLevel.levelInt)
           return FilterReply.DENY;
 
@@ -332,7 +335,8 @@ public class DeferredLogger {
    * Creates a new {@code DeferredLogger} with the specified parameters.
    *
    * @param logger The {@link Logger}.
-   * @param level The current {@link Level} value as configured in {@code logback.xml}.
+   * @param level The current {@link Level} value as configured in
+   *          {@code logback.xml}.
    * @param buffer The {@link AppenderBuffer}.
    */
   private DeferredLogger(final Logger logger, final Level level, final AppenderBuffer buffer) {
