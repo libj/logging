@@ -335,7 +335,7 @@ public class DeferredLogger {
    * will invoke the default {@link Appender#doAppend(Object)} method for each
    * event with level at or above the {@code deferredLevel} (specified in
    * {@link DeferredLogger#defer(org.slf4j.Logger,org.slf4j.event.Level)}), and
-   * below the default level set in {@link logback.xml}.
+   * below the default level set in {@code logback.xml}.
    */
   public static void flush() {
     for (final DeferredLogger entry : deferrers.values())
@@ -367,7 +367,7 @@ public class DeferredLogger {
    * will invoke the default {@link Appender#doAppend(Object)} method for each
    * event with level at or above the {@code deferredLevel} (specified in
    * {@link DeferredLogger#defer(org.slf4j.Logger,org.slf4j.event.Level)}), and
-   * below the default level set in {@link logback.xml}.
+   * below the default level set in {@code logback.xml}.
    *
    * @param logger The deferred {@link org.slf4j.Logger}.
    * @throws IllegalArgumentException If the specified {@code logger} is not a
