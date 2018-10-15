@@ -207,6 +207,60 @@ public class DeferredLogger {
     return defer((Logger)logger, LoggerUtil.levelToLevel.get(deferredLevel));
   }
 
+  /**
+   * Returns {@code true} if the specified {@link ILoggingEvent} matches the
+   * specified {@link Logger} and {@link Appender}, otherwise {@code false}.
+   * <p>
+   * The algorithm to determine whether {@code event} matches the {@code logger}
+   * and {@code appender} is as follows:
+   * <ol>
+   * <li>If {@code logger.getName()} is equal to "ROOT"
+   * <ol>
+   * <li>{@code true} if {@code event.getLoggerName()} is equal to "ROOT".</li>
+   * <li>{@code true} if the {@link Appender} is <i>not</i> owned by the
+   * {@link Logger} of {@code event} (e.g. If the {@link Logger} of
+   * {@code event} does not have its own {@link Appender}, then the "ROOT"
+   * appender applies).</li>
+   * <li>{@code false} otherwise.</li>
+   * </ol>
+   * </li>
+   * <li>If {@code logger.getName().length()} is equal to
+   * {@code event.getLoggerName().length()}
+   * <ol>
+   * <li>{@code true} if {@code logger.getName()} is equal to
+   * {@code event.getLoggerName()}.</li>
+   * <li>{@code false} otherwise.</li>
+   * </ol>
+   * </li>
+   * <li>If {@code logger.getName().length()} is less than
+   * {@code event.getLoggerName().length()}
+   * <ol>
+   * <li>{@code true} if {@code event.getLoggerName()} starts with
+   * {@code logger.getName() + "."}.</li>
+   * <li>{@code false} otherwise.</li>
+   * </ol>
+   * </li>
+   * </ol>
+   *
+   * @param event The {@link Event}.
+   * @param logger The {@link Logger}.
+   * @param appender The {@link Appender}.
+   * @return {@code true} if the specified {@link ILoggingEvent} matches the
+   *         specified {@link Logger} and {@link Appender}, otherwise
+   *         {@code false}.
+   */
+  private static boolean matchesLogger(final ILoggingEvent event, final Logger logger, final Appender<ILoggingEvent> appender) {
+    final String loggerName = logger.getName();
+    final String eventLoggerName = event.getLoggerName();
+    if (org.slf4j.Logger.ROOT_LOGGER_NAME.equals(loggerName))
+      return org.slf4j.Logger.ROOT_LOGGER_NAME.equals(eventLoggerName) || !((Logger)LoggerFactory.getLogger(event.getLoggerName())).isAttached(appender);
+
+    if (loggerName.length() == eventLoggerName.length())
+      return loggerName.equals(eventLoggerName);
+
+    return loggerName.length() < eventLoggerName.length() && eventLoggerName.startsWith(loggerName + ".");
+  }
+
   private static org.slf4j.Logger defer(final Logger logger, final Level deferredLevel) {
     final Appender<ILoggingEvent> appender = getAppender(logger);
     final Level defaultLevel = logger.getEffectiveLevel();
@@ -220,7 +274,7 @@ public class DeferredLogger {
     appender.addFilter(new Filter<ILoggingEvent>() {
       @Override
       public FilterReply decide(final ILoggingEvent event) {
-        if (!logger.getName().equals(event.getLoggerName()))
+        if (!matchesLogger(event, logger, appender))
           return FilterReply.NEUTRAL;
 
         if (event.getLevel().levelInt < deferredLevel.levelInt)

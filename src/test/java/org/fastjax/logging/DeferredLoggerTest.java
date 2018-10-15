@@ -173,22 +173,27 @@ public class DeferredLoggerTest extends LayoutBase<ILoggingEvent> {
   @Test
   public void test8() {
     final Logger logger = DeferredLogger.defer(LoggerFactory.getLogger(DeferredLoggerTest.class), Level.INFO);
-    final Logger logger2 = LoggerFactory.getLogger("foo");
     logger.trace("trace");
     assertEquals(0, events.size());
     logger.debug("debug");
     assertEquals(0, events.size());
     logger.info("info");
     assertEquals(0, events.size());
-    logger2.info("foo info");
+    LoggerFactory.getLogger("foo").info("foo info");
     assertEquals(1, events.size());
     DeferredLogger.clear(logger);
     logger.warn("warn");
     assertEquals(2, events.size());
-    logger.error("error");
+    LoggerFactory.getLogger(DeferredLoggerTest.class.getName() + ".SubClass").warn("warn");
     assertEquals(3, events.size());
+    DeferredLogger.defer(LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME), Level.DEBUG).debug("debug");
+    assertEquals(3, events.size());
+    LoggerFactory.getLogger("bar").debug("debug");
+    assertEquals(3, events.size());
+    logger.error("error");
+    assertEquals(4, events.size());
 
     DeferredLogger.flush();
-    assertEquals(3, events.size());
+    assertEquals(6, events.size());
   }
 }
