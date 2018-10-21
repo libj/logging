@@ -208,8 +208,8 @@ public class DeferredLogger {
   }
 
   /**
-   * Returns {@code true} if the specified {@link ILoggingEvent} matches the
-   * specified {@link Logger} and {@link Appender}, otherwise {@code false}.
+   * Tests whether the specified {@link ILoggingEvent} matches the specified
+   * {@link Logger} and {@link Appender}.
    * <p>
    * The algorithm to determine whether {@code event} matches the {@code logger}
    * and {@code appender} is as follows:
@@ -246,7 +246,7 @@ public class DeferredLogger {
    * @param logger The {@link Logger}.
    * @param appender The {@link Appender}.
    * @return {@code true} if the specified {@link ILoggingEvent} matches the
-   *         specified {@link Logger} and {@link Appender}, otherwise
+   *         specified {@link Logger} and {@link Appender}; otherwise
    *         {@code false}.
    */
   private static boolean matchesLogger(final ILoggingEvent event, final Logger logger, final Appender<ILoggingEvent> appender) {
