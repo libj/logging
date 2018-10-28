@@ -22,34 +22,33 @@ import org.slf4j.Logger;
 import org.slf4j.Marker;
 
 /**
- * A {@code FilterLogger} contains some other {@link Logger}, to which it
- * delegates all method calls, possibly transforming the method parameters along
- * the way or providing additional functionality. The class {@code FilterLogger}
- * itself simply overrides all methods of {@link Logger} with versions that pass
- * all requests to the source {@link Logger}. Subclasses of {@code FilterLogger}
- * may further override some of these methods and may also provide additional
- * methods and fields.
+ * A {@code DelegateLogger} contains some other {@link Logger}, possibly
+ * transforming the method parameters along the way or providing additional
+ * functionality. The class {@code DelegateLogger} itself simply overrides all
+ * methods of {@link Logger} with versions that delegate all calls to the source
+ * {@link Logger}. Subclasses of {@code DelegateLogger} may further override
+ * some of these methods and may also provide additional methods and fields.
  */
-public abstract class FilterLogger implements Logger {
+public abstract class DelegateLogger implements Logger {
   /**
-   * The target Logger.
+   * The target {@link Logger}.
    */
   private Logger target;
 
   /**
-   * Creates a new {@code FilterLogger} with the specified {@code target}.
+   * Creates a new {@code DelegateLogger} with the specified {@code target}.
    *
    * @param target The target {@link Logger} object.
    * @throws NullPointerException If {@code target} is null.
    */
-  public FilterLogger(final Logger target) {
+  public DelegateLogger(final Logger target) {
     this.target = Objects.requireNonNull(target);
   }
 
   /**
-   * Creates a new {@code FilterLogger} with a null target.
+   * Creates a new {@code DelegateLogger} with a null target.
    */
-  protected FilterLogger() {
+  protected DelegateLogger() {
   }
 
   @Override
