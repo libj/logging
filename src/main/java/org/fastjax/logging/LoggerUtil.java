@@ -56,7 +56,7 @@ public final class LoggerUtil {
    * @throws ClassCastException If {@code logger} is not an instance of
    *           {@link ch.qos.logback.classic.Logger}.
    * @throws NullPointerException If {@code logger} is null.
-   * @throws IllegalArgumentException If @{@code level} is null, and
+   * @throws IllegalArgumentException If {@code level} is null, and
    *           {@code logger} is the ROOT logger.
    */
   public static void setLevel(final Logger logger, final Level level) {
