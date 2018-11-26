@@ -242,7 +242,7 @@ public class DeferredLogger {
    * </li>
    * </ol>
    *
-   * @param event The {@link Event}.
+   * @param event The {@link ILoggingEvent}.
    * @param logger The {@link Logger}.
    * @param appender The {@link Appender}.
    * @return {@code true} if the specified {@link ILoggingEvent} matches the
