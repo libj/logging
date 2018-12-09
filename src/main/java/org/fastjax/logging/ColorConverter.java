@@ -33,7 +33,7 @@ public class ColorConverter extends CompositeConverter<ILoggingEvent> {
   /**
    * Enum of standard ANSI color codes.
    */
-  private static enum AnsiColor {
+  private enum AnsiColor {
     BLACK("0"),
     RED("1"),
     GREEN("2"),
