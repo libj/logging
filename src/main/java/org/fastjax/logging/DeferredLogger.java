@@ -80,7 +80,7 @@ import ch.qos.logback.core.spi.FilterReply;
  * related to the error in question.
  * <p>
  * <b>The {@code DeferredLogger} is only applicable to the
- * <a href="https://logback.qos.ch/">LogBack</a> implementation of
+ * <a href="https://logback.qos.ch/">Logback</a> implementation of
  * {@link org.slf4j.Logger} instances.</b>
  */
 public class DeferredLogger {

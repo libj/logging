@@ -46,7 +46,7 @@ public class ColorConverter extends CompositeConverter<ILoggingEvent> {
 
     private final String code;
 
-    AnsiColor(final String code) {
+    private AnsiColor(final String code) {
       this.code = code;
       colors.put(name().toLowerCase(), this);
     }
