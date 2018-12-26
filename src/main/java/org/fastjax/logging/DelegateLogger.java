@@ -33,7 +33,7 @@ public abstract class DelegateLogger implements Logger {
   /**
    * The target {@link Logger}.
    */
-  private Logger target;
+  protected volatile Logger target;
 
   /**
    * Creates a new {@code DelegateLogger} with the specified {@code target}.

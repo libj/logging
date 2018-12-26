@@ -66,7 +66,7 @@ Utility functions for operations pertaining to `Logger`.
 
 ### JavaDocs
 
-JavaDocs are available [here](https://www.fastjax.org/javadocs/org/fastjax/logging/package-summary.html).
+JavaDocs are available [here](https://logging.fastjax.org/javadocs/).
 
 ## Contributing
 
