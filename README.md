@@ -55,7 +55,6 @@ DeferredLogger.flush(Level.TRACE);
 
 A `DelegateLogger` contains some other `Logger`, possibly transforming the method parameters along the way or providing additional functionality. The class `DelegateLogger` itself simply overrides all methods of `Logger` with versions that delegate all calls to the source `Logger`. Subclasses of `DelegateLogger` may further override some of these methods and may also provide additional methods and fields.
 
-
 ### [LoggerPrintWriter](src/main/java/org/fastjax/logging/LoggerPrintWriter.java)
 
 A `PrintWriter` that delegates its methods to a target `Logger`. The `print()`, `println()`, `write()`, and `append()` methods will result in a new log event only if the log message ends with a `'\n'` character. If a message does not end with a `'\n'` character, it will be buffered until a `'\n'` character is encountered as the last character of a later call.
