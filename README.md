@@ -1,18 +1,18 @@
-# FastJAX Logging
+# OpenJAX Classic Logging
 
 **Java API Extension for Logging**
 
 ## Introduction
 
-The FastJAX Logging library is a collection of supplementary patterns for the [Simple Logging Facade for Java (SLF4J)][slf4j] and the [Logback Project][logback].
+The OpenJAX Classic Logging library is a collection of supplementary patterns for the [Simple Logging Facade for Java (SLF4J)][slf4j] and the [Logback Project][logback].
 
 ## Classes
 
-### [ColorConverter](src/main/java/org/fastjax/logging/ColorConverter.java)
+### [ColorConverter](src/main/java/org/openjax/classic/logging/ColorConverter.java)
 
 A `CompositeConverter` implementation that colorizes log messages.
 
-### [DeferredLogger](src/main/java/org/fastjax/loggong/DeferredLogger.java)
+### [DeferredLogger](src/main/java/org/openjax/classic/loggong/DeferredLogger.java)
 Logger that defers output of log events until flushed. The `DeferredLogger` addresses a common use-case: Consider an application that is complex, and has considerable trace and debug log statements throughout its code. This application also has a long running test phase, where the same code is tested numerous times for different input. If the test phase is successful, the detailed trace and debug log statements flood the console buffers. If the test phase fails, the detailed trace and debug log statements are principle in helping the developer diagnose the problem. In order to satisfy both the success and failure cases, there exist a couple of approaches: 
 1. By default, set the log level to `INFO`. This would ensure the success case does not flood the logs. If there is a failure, however, the developer would have to set the log level to `TRACE`, and restart the long running test phase. Additionally, the log statements from this test phase would be outputted regardless of whether the specific operation led to the error or not. The developer would therefore have to filter through the entire log output to find the events corresponding to the error.
 2. Alternatively, consider a solution that uses the `DeferredLogger`. The `DeferredLogger` is configured with two parameters: 
@@ -51,21 +51,21 @@ logger.error("error"); // Logged
 DeferredLogger.flush(Level.TRACE); 
 ```
 
-### [DelegateLogger](src/main/java/org/fastjax/logging/DelegateLogger.java)
+### [DelegateLogger](src/main/java/org/openjax/classic/logging/DelegateLogger.java)
 
 A `DelegateLogger` contains some other `Logger`, possibly transforming the method parameters along the way or providing additional functionality. The class `DelegateLogger` itself simply overrides all methods of `Logger` with versions that delegate all calls to the source `Logger`. Subclasses of `DelegateLogger` may further override some of these methods and may also provide additional methods and fields.
 
-### [LoggerPrintWriter](src/main/java/org/fastjax/logging/LoggerPrintWriter.java)
+### [LoggerPrintWriter](src/main/java/org/openjax/classic/logging/LoggerPrintWriter.java)
 
 A `PrintWriter` that delegates its methods to a target `Logger`. The `print()`, `println()`, `write()`, and `append()` methods will result in a new log event only if the log message ends with a `'\n'` character. If a message does not end with a `'\n'` character, it will be buffered until a `'\n'` character is encountered as the last character of a later call.
 
-### [LoggerUtil](src/main/java/org/fastjax/logging/LoggerUtil.java)
+### [LoggerUtil](src/main/java/org/openjax/classic/logging/LoggerUtil.java)
 
 Utility functions for operations pertaining to `Logger`.
 
 ### JavaDocs
 
-JavaDocs are available [here](https://logging.fastjax.org/javadocs/).
+JavaDocs are available [here](https://classic.openjax.org/logging/apidocs/).
 
 ## Contributing
 

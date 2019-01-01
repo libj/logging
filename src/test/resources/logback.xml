@@ -1,5 +1,5 @@
 <!--
-  Copyright (c) 2017 FastJAX
+  Copyright (c) 2017 OpenJAX
   
   Permission is hereby granted, free of charge, to any person obtaining a copy
   of this software and associated documentation files (the "Software"), to deal
@@ -20,11 +20,11 @@
   xsi:schemaLocation="http://ch.qos.logback/xml/ns/logback https://raw.githubusercontent.com/enricopulatzo/logback-XSD/master/src/main/xsd/logback.xsd">
   <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
     <encoder class="ch.qos.logback.core.encoder.LayoutWrappingEncoder">
-      <layout class="org.fastjax.logging.DeferredLoggerTest"/>
+      <layout class="org.openjax.classic.logging.DeferredLoggerTest"/>
     </encoder>
   </appender>
 
-  <logger name="org.fastjax.logging" level="WARN"/>
+  <logger name="org.openjax.classic.logging" level="WARN"/>
 
   <root level="INFO">
     <appender-ref ref="STDOUT"/>
