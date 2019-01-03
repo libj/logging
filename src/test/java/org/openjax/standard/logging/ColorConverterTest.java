@@ -14,7 +14,7 @@
  * program. If not, see <http://opensource.org/licenses/MIT/>.
  */
 
-package org.openjax.classic.logging;
+package org.openjax.standard.logging;
 
 import static org.junit.Assert.*;
 
@@ -22,6 +22,7 @@ import java.util.Collections;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.openjax.standard.logging.ColorConverter;
 
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.spi.LoggingEvent;

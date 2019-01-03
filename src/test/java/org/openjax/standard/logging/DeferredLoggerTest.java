@@ -14,7 +14,7 @@
  * program. If not, see <http://opensource.org/licenses/MIT/>.
  */
 
-package org.openjax.classic.logging;
+package org.openjax.standard.logging;
 
 import static org.junit.Assert.*;
 
@@ -23,6 +23,7 @@ import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.openjax.standard.logging.DeferredLogger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.event.Level;

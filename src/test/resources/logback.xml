@@ -20,11 +20,11 @@
   xsi:schemaLocation="http://ch.qos.logback/xml/ns/logback https://raw.githubusercontent.com/enricopulatzo/logback-XSD/master/src/main/xsd/logback.xsd">
   <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
     <encoder class="ch.qos.logback.core.encoder.LayoutWrappingEncoder">
-      <layout class="org.openjax.classic.logging.DeferredLoggerTest"/>
+      <layout class="org.openjax.standard.logging.DeferredLoggerTest"/>
     </encoder>
   </appender>
 
-  <logger name="org.openjax.classic.logging" level="WARN"/>
+  <logger name="org.openjax.standard.logging" level="WARN"/>
 
   <root level="INFO">
     <appender-ref ref="STDOUT"/>
