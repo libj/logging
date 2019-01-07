@@ -3,11 +3,10 @@ jdk:
 - oraclejdk8
 - oraclejdk11
 install:
-- echo $TRAVIS_JDK_VERSION
-- '[ "$TRAVIS_JDK_VERSION" = "1.8" ] && [ "$TRAVIS_BRANCH" = "master" ] && [ "$TRAVIS_PULL_REQUEST" == "false" ] && sh -c "$SIGNING_KEY" | $GPG_EXECUTABLE --fast-import'
+- '[ "$TRAVIS_JDK_VERSION" = "oraclejdk8" ] && [ "$TRAVIS_BRANCH" = "master" ] && [ "$TRAVIS_PULL_REQUEST" == "false" ] && sh -c "$SIGNING_KEY" | $GPG_EXECUTABLE --fast-import'
 - cp settings.xml $HOME/.m2/settings.xml
 script:
-- '[ "$TRAVIS_JDK_VERSION" = "1.8" ] && [ "$TRAVIS_BRANCH" = "master" ] && [ "$TRAVIS_PULL_REQUEST" == "false" ] && mvn -q -B -DlogbackRootLevel=WARN -Dmaven.rtest.skip clean deploy -P deploy || mvn -q -B -DlogbackRootLevel=WARN -Dmaven.rtest.skip clean install'
+- '[ "$TRAVIS_JDK_VERSION" = "oraclejdk8" ] && [ "$TRAVIS_BRANCH" = "master" ] && [ "$TRAVIS_PULL_REQUEST" == "false" ] && mvn -q -B -DlogbackRootLevel=WARN -Dmaven.rtest.skip clean deploy -P deploy || mvn -q -B -DlogbackRootLevel=WARN -Dmaven.rtest.skip clean install'
 env:
   global:
   - secure: f4vqnb/2REYvfH0nlCLd6zIptSF6yKdVmOUndjzkKLEpQtAi0L411Hfeqj/ZGiwEi8dg5rzCBgivdTny1ZHtekaMN2HvYkMA0KtaUHLUdyeO1xElxO6npI49NLtIB38EA2XJx1Pul5bVJnoxFs5Nd2YoosejpuCHicnLJMPKtu59pp4biRO4iclzA/VjP4jJ4sQ8F0chEo9/UnAl9ABXjnnuhWnZmGaMhmO6uoq/JfVjDcSYrQZUVvYjG29t3qBGCPQ0WyeWKPXyN6fAYGyJcK5d6yfmxWue6MmAjoqlAJPIPaQWNZS103xAB5mhzk54pNuXdv93Vpd2zrMJpWo/k2d76C8H2lmQAFSkgdiOJ0F04Nbre4QdLkGeTISy5vEw28k2D39e41PNsIlBR1gtA86YrnZDKUvH7go1WjK6r367htdUd/qK6ZYSWKDCgkA8DF7OGVkqG7J4pFq0cHH43MlD+noqPGlVDvDvkEPW5s2aKfAYvC0DUBhX8FynAJq1NrSEPQmAlR149HAp8fzkKGx6e3UPr/RdxacbuVS161LkuPs7b2JJzGNuc6aGOWBcA3geoTSL2q8ufQVehHBAOKogYwkW19TiEGLMm7IbRl0h+u00fRp21rdaVwCf2B2/yTqLKn7+Yg1hWoBqKLFh4iSz/0Bm6sE8GlKVTrj3qBo=
