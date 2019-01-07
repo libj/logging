@@ -13,8 +13,8 @@ script:
 - '[ "$TRAVIS_JDK_VERSION" = "oraclejdk8" ] &&
    [ "$TRAVIS_BRANCH" = "master" ] &&
    [ "$TRAVIS_PULL_REQUEST" == "false" ] &&
-   mvn -q -B -Dmaven.rtest.skip clean deploy -P deploy ||
-   mvn -q -B -Dmaven.rtest.skip clean install'
+   mvn -Dmaven.rtest.skip clean deploy -P deploy ||
+   mvn -Dmaven.rtest.skip clean install'
 env:
   global:
   - secure: JBDBgg0lW5geS2qdWj1MuHSK6gEXocOSV/SAi2arYu0a/6xR7PBLRbWoRLuYyTkwdHz5oT3amfzZUvYu4pFQg+iPIn+y7eYxojVtqO8TPJmJ739aNtKBB14iOwZhgexExqOuvmYwjyRlKm9mmi5taXh1LQ3xroLYJaLjWHUFdPT9q/s1UdLRZQetqvn+a1EfDnrIk45nlDyK3KDToZfcARqjsqdbF+VcHdOQQQh+e3fSID0YU/bJ7lCDTbCupfGqPdQE47wXwdUajY6XPEnpO+J5PSZjaXqn6u0d9R7Wu1QezSxFfVRdcZBFUfm8NYe+Ma+tWRV6sfR0nsBGbD5XKU993+kN5zL2q1Cdx43DjwbEOjPm5tSu9Prk8niUlwlufmLsC5fO9kr3WCInjyc/1lSwI7s4Mb1m/QpT/I/UX8RMjv318dm1PuWMQUlVsRU2G+1h7xdJaGhJOGVvlteQ208KsCwAJlYHmT8lJzKI8O3ZQLTsJXeOJCp5yM7xre0Q69+mrqm7JT4UIbTEuuzQqgl7o0LBweeD0YgRwKgNguKMqOupFkEpLTpT87Z1p37qm3etyDheywGrDAlyG2eNM55p+QD3CdzxO2cDSKwDtaHVaU28BezxnKqSjX4DUnCh/h3Rsw9/LsIhLb3Kvjty8/vcjUJhNYZvfxRCOckwYxc=
