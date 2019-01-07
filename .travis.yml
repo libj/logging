@@ -23,7 +23,9 @@ env:
   - secure: IxQIcopgBRQbLCXrMi8wcW50SbshwkKiiOdCQ76P1xiqSSGpYk/Za9PrsMvDk90jpE/gxDcBCAdaCKRN+xGhBVKC5g+RwiTse2KM2tO0yRFdJOI4Yc1gpNTFBa6UdxkclwotvrvubTApdvkB401swMtLUBqXrvyFjHYl18ZFk7bQqpt0I4mzxjcBzRsgRpw8x61iF7uoA1UVito64NDTy7nR2tvqmBCMqjn1QsjXr/eUpnP+LA1saUkkGTuUUadLiC6Hd33ATExaTGM7/gqj7itWm1E1ogT/MUDY50E86Lu1C1CKjQFa7G1UkBpx3EXcs9cT8Nk13fKZ4iOQQ57SxVXQ3kFykFmPRH8mwGbtLR8rc61huEYQwy8uwTE9A1glbE3hj3SfYmawHRT2n8hhOkFPpw0s/43omNsd7k17PwsoVNuGh7BM0f2MLlzh24Yk2ACm5D7fmlwVqhXWYDWlILpafxPkMOR3tbGI0Vt2xXzM4ljJTU1HLLpo+iUm/zdyCbr+66QwrB0O0R14DWowW9XFffDNe0XuMgQ9s/ZymUkOXZX9Q84dJyYMf75t5euVq6oNs9j/xk/0fq/dbDJTSlS1fvuVdRpxuaqOCYGS8ZY+CMdtk17N3VRxUW3vOTgOhDvg8vdbsYVuXePpTcozPNpba6L4Rl4EL3jLb0JB4eM=
 matrix:
   include:
-  - jdk: oraclejdk8
+  - language: java
+    jdk: oraclejdk8
     env: DEPLOY=true
-  - jdk: oraclejdk11
+  - language: java
+    jdk: oraclejdk11
     env: DEPLOY=false
