@@ -3,11 +3,11 @@ jdk:
 - oraclejdk8
 - oraclejdk11
 install:
-- '[ -n "$(java -version | grep '1.8')" ] && [ "$TRAVIS_BRANCH" = "master" ] && [ "$TRAVIS_PULL_REQUEST"
+- '[ -n "$(java -version | grep 1.8)" ] && [ "$TRAVIS_BRANCH" = "master" ] && [ "$TRAVIS_PULL_REQUEST"
   == "false" ] && sh -c "$SIGNING_KEY" | $GPG_EXECUTABLE --fast-import'
 - cp settings.xml $HOME/.m2/settings.xml
 script:
-- '[ -n "$(java -version | grep '1.8')" ] && [ "$TRAVIS_BRANCH" = "master" ] && [ "$TRAVIS_PULL_REQUEST"
+- '[ -n "$(java -version | grep 1.8)" ] && [ "$TRAVIS_BRANCH" = "master" ] && [ "$TRAVIS_PULL_REQUEST"
   == "false" ] && mvn -q -B -DlogbackRootLevel=WARN -Dmaven.rtest.skip clean deploy
   -P deploy || mvn -q -B -DlogbackRootLevel=WARN -Dmaven.rtest.skip clean install'
 env:
