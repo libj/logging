@@ -10,12 +10,6 @@ script:
 - '[ "$DEPLOY" = "true" ] && [ "$TRAVIS_BRANCH" = "master" ] && [ "$TRAVIS_PULL_REQUEST"
   == "false" ] && mvn -q -B -DlogbackRootLevel=WARN -Dmaven.rtest.skip clean deploy
   -P deploy || mvn -q -B -DlogbackRootLevel=WARN -Dmaven.rtest.skip clean install'
-matrix:
-  include:
-  - jdk: oraclejdk8
-    env: DEPLOY=true
-  - jdk: oraclejdk11
-    env: DEPLOY=false
 env:
   matrix:
   - DEPLOY=false
@@ -27,3 +21,9 @@ env:
   - secure: lt9Vquf2R/7VKz+Lv0SGgTfM/+fXx+74YszqxvIxmh+soH8QHE789fUothPSHWSKuI9w3hWTaiWPxMuCZRUgLmLazpwTD21myZmFSoc5HD020s4YxUOyT4AHlTeicbaQ9YfJd5xqBhjQY4MVYJNJF6MLIlnrNrgJmFjI9xkJGGOxO9/M2H0lrHf7VYlV56D+S2MtfsSY0inm2gqa5iNPnGF1Y6NoACviHKJgUgW0IEOsyVBNMPSGfjsYEjnDzv6lFZCZQhZ3k06wMB+9tTgRk7AZLmsxHXTypqy09Dd6iWfUwxiuZK44kytek+GtSmjnKC0bH08xrVXVKn0vo1UTiXKqrwU/KnGFfMLshQyvqTZQugQjdkik83B9dLiaGZXJq4Ux6KbRkukXWFS+nBfbl+do09GxjDPU4whF0u5KRrPcFfMDLFWJ4FrnLs/o4aMHMCQ2rgftf44K2aOzzI8RInNDAN1weLPL+0GKwgWTWAZtDRbv4qxxVyUNZ5ZIAgXoezKBgAfI6G+QnpUpOd6kh6T7H2oQBQlY6derNUXkuadjRC7wwznaY1tdkj7NKk9YmKvWH/5E9IJXQUtK7kmlo5dNUouVaE2xl2ASi7dn8Xuv0Sb7SeNkVyj8ML22nGkIG6yZkU/dlL0V+nX8o6le9vMCASENVM+2zeW7C5rjlKA=
   - secure: In5iLajkihDUEZNIhX8FeP2WBinfP+bFVYDEcxStKKrN9Y7MHm9iieHFxPyMNoImvnefk0/YfYq1V4u0GQUfyUPkkfvuamtWq3SAAxLdU64CI1qhoA7QV/1lsw32CYMBO6kS5xVsMZKpsJPZ+qGhQTJ0HaoF5L8J+mP3F//gos4nEXveGzEN754+tXgAhw6wC2eu4mcKpvA62yA7yEws6vcgTYY7czNUnWZrJq6IC2NMa3jeVjXetXZzx6Q3QGUnsHzQMsg2W+WXTijpHa/n1J4YPwvOAhLtVCgsz6o0VB3lcsB85iKYaGWfXvOhhwcQcqY0k2xNj5v+VyUfHRjhlpCmPKkkQD3k9SiUA5B9aZFhAq9aBuUYezK4zbYESfLEg1wi+CSIy4/tgbrdzDr+Htt0j2Xt5DeWc0lvTttegsARPdhnLj9Lpx3zqNP3zwteMUle/rJFo3KodF8F+dcBem6lWgJ96F8qJytFcQ+yeGDjJD9QSQnQj3B6SXaEtkkneVJ1VHSSIlF9sbnOCpvNMktbRRuxp5RzOO1lKYmSrQtJcHtc7NMyt0qenaCrvN5vpe7L7pxIJqYGoEPnFLpipC/QYzmfTEG+CljaGtVsnOxBkcZDYclt6LTd/EfSOgbfbvvZAXzaIAbpzGAKt5gdigWVieBo7o3yjLsc5UpBMms=
   - secure: IxQIcopgBRQbLCXrMi8wcW50SbshwkKiiOdCQ76P1xiqSSGpYk/Za9PrsMvDk90jpE/gxDcBCAdaCKRN+xGhBVKC5g+RwiTse2KM2tO0yRFdJOI4Yc1gpNTFBa6UdxkclwotvrvubTApdvkB401swMtLUBqXrvyFjHYl18ZFk7bQqpt0I4mzxjcBzRsgRpw8x61iF7uoA1UVito64NDTy7nR2tvqmBCMqjn1QsjXr/eUpnP+LA1saUkkGTuUUadLiC6Hd33ATExaTGM7/gqj7itWm1E1ogT/MUDY50E86Lu1C1CKjQFa7G1UkBpx3EXcs9cT8Nk13fKZ4iOQQ57SxVXQ3kFykFmPRH8mwGbtLR8rc61huEYQwy8uwTE9A1glbE3hj3SfYmawHRT2n8hhOkFPpw0s/43omNsd7k17PwsoVNuGh7BM0f2MLlzh24Yk2ACm5D7fmlwVqhXWYDWlILpafxPkMOR3tbGI0Vt2xXzM4ljJTU1HLLpo+iUm/zdyCbr+66QwrB0O0R14DWowW9XFffDNe0XuMgQ9s/ZymUkOXZX9Q84dJyYMf75t5euVq6oNs9j/xk/0fq/dbDJTSlS1fvuVdRpxuaqOCYGS8ZY+CMdtk17N3VRxUW3vOTgOhDvg8vdbsYVuXePpTcozPNpba6L4Rl4EL3jLb0JB4eM=
+matrix:
+  include:
+  - jdk: oraclejdk8
+    env: DEPLOY=true
+  - jdk: oraclejdk11
+    env: DEPLOY=false
