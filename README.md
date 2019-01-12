@@ -1,6 +1,8 @@
 # OpenJAX Standard Logging
 
-**Java API Extension for Logging**
+> Java API Extension for Logging
+
+[![Build Status](https://travis-ci.org/openjax/standard-logging.png)](https://travis-ci.org/openjax/standard-logging)
 
 ## Introduction
 
