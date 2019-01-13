@@ -3,6 +3,7 @@
 > Java API Extension for Logging
 
 [![Build Status](https://travis-ci.org/openjax/standard-logging.png)](https://travis-ci.org/openjax/standard-logging)
+[![Coverage Status](https://coveralls.io/repos/github/openjax/standard-logging/badge.svg)](https://coveralls.io/github/openjax/standard-logging)
 
 ## Introduction
 
