@@ -28,9 +28,6 @@ script:
   else
     mvn -Dmaven.rtest.skip clean install;
   fi'
-cache:
-  directories:
-    - ~/.m2/repository
 env:
   global:
   - secure: m28KAkohJu/FHC3vR7x32SmCmeS96ApXsxh9TPFK0UV+5WkDEdaYXYp8SbUnvv+mZURlU/eGf1J6ZBFzj25L3WTai93Irr0zaW5WCvOopGnMCWFGnNXlSFUm3eoTZJH2zVXZRYefNVfz3k22nt9lXlnK9cK2QLGUdlOMYqtMbaeseUt5g1Cp9kpZJ7n74IblhAaXGk5gRNOD2VjlNzUYXAFgw0xUdIlKJkhoyW7tlp3tBKX8RNAzmwZZYJ1TQB86i7UDct793oHIhwo/HPOKrMniBUz5AhNdh9cmi2dcTaO55W2GDxn+jt/xMZq3r/PblMHqc93JIrXRIsVQDl0ZZF20CIc+5vQjEEAygg9ILowfFa9Aedr3Yixw1yCixg7AtvicP0AstBIYOqIg6H5wMCAzXhD76Dhy2vEr5xzU5iXqZSOTsTLHKvcHhL189Dw8K9Uv/4XV6jPFbtrNuswNdIOR3N+lWNgv4RtFmv++DZhIUR3d67dNLawQZeonIHDDxb3i9Yi6FScSN5l9C+0A/CqMPgrF6AUXPQmM163CV51OTxU7/nbvFGNON7m6mvAbL5mJyyW/pgylajZHuB36oYB/phz527PI+a9JghxUUQ3XXUNRlGXa17PjPNQZTv2bsQc0wwFPIclBxEY1PkrUNoVEiv20v137jCI5FRqioO0=
