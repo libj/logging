@@ -22,7 +22,6 @@ import java.util.Collections;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.openjax.standard.logging.ColorConverter;
 
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.spi.LoggingEvent;
