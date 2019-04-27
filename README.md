@@ -4,6 +4,8 @@
 
 [![Build Status](https://travis-ci.org/openjax/standard-logging.png)](https://travis-ci.org/openjax/standard-logging)
 [![Coverage Status](https://coveralls.io/repos/github/openjax/standard-logging/badge.svg)](https://coveralls.io/github/openjax/standard-logging)
+[![Javadocs](https://www.javadoc.io/badge/org.openjax.standard/logging.svg)](https://www.javadoc.io/doc/org.openjax.standard/logging)
+[![Released Version](https://img.shields.io/maven-central/v/org.openjax.standard/logging.svg)](https://mvnrepository.com/artifact/org.openjax.standard/logging)
 
 ## Introduction
 
@@ -16,9 +18,9 @@ The OpenJAX Standard Logging library is a collection of supplementary patterns f
 A `CompositeConverter` implementation that colorizes log messages.
 
 ### [DeferredLogger](src/main/java/org/openjax/standard/loggong/DeferredLogger.java)
-Logger that defers output of log events until flushed. The `DeferredLogger` addresses a common use-case: Consider an application that is complex, and has considerable trace and debug log statements throughout its code. This application also has a long running test phase, where the same code is tested numerous times for different input. If the test phase is successful, the detailed trace and debug log statements flood the console buffers. If the test phase fails, the detailed trace and debug log statements are principle in helping the developer diagnose the problem. In order to satisfy both the success and failure cases, there exist a couple of approaches: 
+Logger that defers output of log events until flushed. The `DeferredLogger` addresses a common use-case: Consider an application that is complex, and has considerable trace and debug log statements throughout its code. This application also has a long running test phase, where the same code is tested numerous times for different input. If the test phase is successful, the detailed trace and debug log statements flood the console buffers. If the test phase fails, the detailed trace and debug log statements are principle in helping the developer diagnose the problem. In order to satisfy both the success and failure cases, there exist a couple of approaches:
 1. By default, set the log level to `INFO`. This would ensure the success case does not flood the logs. If there is a failure, however, the developer would have to set the log level to `TRACE`, and restart the long running test phase. Additionally, the log statements from this test phase would be outputted regardless of whether the specific operation led to the error or not. The developer would therefore have to filter through the entire log output to find the events corresponding to the error.
-2. Alternatively, consider a solution that uses the `DeferredLogger`. The `DeferredLogger` is configured with two parameters: 
+2. Alternatively, consider a solution that uses the `DeferredLogger`. The `DeferredLogger` is configured with two parameters:
     1. The default log level: Specified by the current level set for the logger (e.g. `INFO`).
     2. The deferred log level: Specifies the lower level of events to defer for later output (e.g. `TRACE`).
 
@@ -51,7 +53,7 @@ logger.warn("warn");   // Logged
 logger.error("error"); // Logged
 
 // Flushes the deferred logs (debug and info)
-DeferredLogger.flush(Level.TRACE); 
+DeferredLogger.flush(Level.TRACE);
 ```
 
 ### [DelegateLogger](src/main/java/org/openjax/standard/logging/DelegateLogger.java)
@@ -65,10 +67,6 @@ A `PrintWriter` that delegates its methods to a target `Logger`. The `print()`, 
 ### [LoggerUtil](src/main/java/org/openjax/standard/logging/LoggerUtil.java)
 
 Utility functions for operations pertaining to `Logger`.
-
-### JavaDocs
-
-JavaDocs are available [here](https://standard.openjax.org/logging/apidocs/).
 
 ## Contributing
 
