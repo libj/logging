@@ -14,7 +14,7 @@
 * program. If not, see <http://opensource.org/licenses/MIT/>.
 */
 
-package org.openjax.standard.logging;
+package org.openjax.ext.logging;
 
 import java.util.Collections;
 import java.util.HashMap;

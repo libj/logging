@@ -1,23 +1,23 @@
-# OpenJAX Standard Logging
+# OpenJAX Extensions Logging
 
 > Java API Extension for Logging
 
-[![Build Status](https://travis-ci.org/openjax/standard-logging.png)](https://travis-ci.org/openjax/standard-logging)
-[![Coverage Status](https://coveralls.io/repos/github/openjax/standard-logging/badge.svg)](https://coveralls.io/github/openjax/standard-logging)
-[![Javadocs](https://www.javadoc.io/badge/org.openjax.standard/logging.svg)](https://www.javadoc.io/doc/org.openjax.standard/logging)
-[![Released Version](https://img.shields.io/maven-central/v/org.openjax.standard/logging.svg)](https://mvnrepository.com/artifact/org.openjax.standard/logging)
+[![Build Status](https://travis-ci.org/openjax/ext-logging.png)](https://travis-ci.org/openjax/ext-logging)
+[![Coverage Status](https://coveralls.io/repos/github/openjax/ext-logging/badge.svg)](https://coveralls.io/github/openjax/ext-logging)
+[![Javadocs](https://www.javadoc.io/badge/org.openjax.ext/logging.svg)](https://www.javadoc.io/doc/org.openjax.ext/logging)
+[![Released Version](https://img.shields.io/maven-central/v/org.openjax.ext/logging.svg)](https://mvnrepository.com/artifact/org.openjax.ext/logging)
 
 ## Introduction
 
-The OpenJAX Standard Logging library is a collection of supplementary patterns for the [Simple Logging Facade for Java (SLF4J)][slf4j] and the [Logback Project][logback].
+The OpenJAX Extensions Logging library is a collection of supplementary patterns for the [Simple Logging Facade for Java (SLF4J)][slf4j] and the [Logback Project][logback].
 
 ## Classes
 
-### [ColorConverter](src/main/java/org/openjax/standard/logging/ColorConverter.java)
+### [ColorConverter](src/main/java/org/openjax/ext/logging/ColorConverter.java)
 
 A `CompositeConverter` implementation that colorizes log messages.
 
-### [DeferredLogger](src/main/java/org/openjax/standard/loggong/DeferredLogger.java)
+### [DeferredLogger](src/main/java/org/openjax/ext/loggong/DeferredLogger.java)
 Logger that defers output of log events until flushed. The `DeferredLogger` addresses a common use-case: Consider an application that is complex, and has considerable trace and debug log statements throughout its code. This application also has a long running test phase, where the same code is tested numerous times for different input. If the test phase is successful, the detailed trace and debug log statements flood the console buffers. If the test phase fails, the detailed trace and debug log statements are principle in helping the developer diagnose the problem. In order to satisfy both the success and failure cases, there exist a couple of approaches:
 1. By default, set the log level to `INFO`. This would ensure the success case does not flood the logs. If there is a failure, however, the developer would have to set the log level to `TRACE`, and restart the long running test phase. Additionally, the log statements from this test phase would be outputted regardless of whether the specific operation led to the error or not. The developer would therefore have to filter through the entire log output to find the events corresponding to the error.
 2. Alternatively, consider a solution that uses the `DeferredLogger`. The `DeferredLogger` is configured with two parameters:
@@ -56,15 +56,15 @@ logger.error("error"); // Logged
 DeferredLogger.flush(Level.TRACE);
 ```
 
-### [DelegateLogger](src/main/java/org/openjax/standard/logging/DelegateLogger.java)
+### [DelegateLogger](src/main/java/org/openjax/ext/logging/DelegateLogger.java)
 
 A `DelegateLogger` contains some other `Logger`, possibly transforming the method parameters along the way or providing additional functionality. The class `DelegateLogger` itself simply overrides all methods of `Logger` with versions that delegate all calls to the source `Logger`. Subclasses of `DelegateLogger` may further override some of these methods and may also provide additional methods and fields.
 
-### [LoggerPrintWriter](src/main/java/org/openjax/standard/logging/LoggerPrintWriter.java)
+### [LoggerPrintWriter](src/main/java/org/openjax/ext/logging/LoggerPrintWriter.java)
 
 A `PrintWriter` that delegates its methods to a target `Logger`. The `print()`, `println()`, `write()`, and `append()` methods will result in a new log event only if the log message ends with a `'\n'` character. If a message does not end with a `'\n'` character, it will be buffered until a `'\n'` character is encountered as the last character of a later call.
 
-### [LoggerUtil](src/main/java/org/openjax/standard/logging/LoggerUtil.java)
+### [LoggerUtil](src/main/java/org/openjax/ext/logging/LoggerUtil.java)
 
 Utility functions for operations pertaining to `Logger`.
 
