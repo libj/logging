@@ -26,7 +26,10 @@
   </parent>
   <artifactId>logging</artifactId>
   <version>0.4.1-SNAPSHOT</version>
-  <name>${project.groupId}:${project.artifactId}</name>
+  <name>OpenJAX Extensions Logging</name>
+  <description>
+    A collection of supplementary patterns for the Simple Logging Facade for Java (SLF4J) and the Logback Project.
+  </description>
   <dependencies>
     <dependency>
       <groupId>ch.qos.logback</groupId>
