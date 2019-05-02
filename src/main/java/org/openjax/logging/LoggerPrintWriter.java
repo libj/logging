@@ -14,7 +14,7 @@
  * program. If not, see <http://opensource.org/licenses/MIT/>.
  */
 
-package org.openjax.ext.logging;
+package org.openjax.logging;
 
 import java.io.IOException;
 import java.io.PrintWriter;

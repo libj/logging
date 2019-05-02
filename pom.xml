@@ -20,13 +20,13 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
-    <groupId>org.openjax.ext</groupId>
-    <artifactId>ext</artifactId>
-    <version>1.11.15-SNAPSHOT</version>
+    <groupId>org.openjax</groupId>
+    <artifactId>openjax</artifactId>
+    <version>2.5.3-SNAPSHOT</version>
   </parent>
   <artifactId>logging</artifactId>
   <version>0.4.1-SNAPSHOT</version>
-  <name>OpenJAX Extensions Logging</name>
+  <name>OpenJAX Logging</name>
   <description>
     A collection of supplementary patterns for the Simple Logging Facade for Java (SLF4J) and the Logback Project.
   </description>
