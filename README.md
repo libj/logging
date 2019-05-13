@@ -1,7 +1,5 @@
 # LibJ Logging
 
-> Java API Extension for Logging
-
 [![Build Status](https://travis-ci.org/libj/logging.png)](https://travis-ci.org/libj/logging)
 [![Coverage Status](https://coveralls.io/repos/github/libj/logging/badge.svg)](https://coveralls.io/github/libj/logging)
 [![Javadocs](https://www.javadoc.io/badge/org.libj/logging.svg)](https://www.javadoc.io/doc/org.libj/logging)
