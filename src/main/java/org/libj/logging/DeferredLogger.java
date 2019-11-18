@@ -21,6 +21,7 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import org.slf4j.LoggerFactory;
 
@@ -108,11 +109,12 @@ public class DeferredLogger {
     private final Appender<ILoggingEvent> appender;
 
     /**
-     * Create a new {@link AppenderBuffer} with the specified {@code appender}
+     * Create a new {@link AppenderBuffer} with the specified {@link Appender}
      * to which deferred events will be flushed.
      *
      * @param appender The {@link Appender} to which deferred events will be
      *          flushed.
+     * @throws NullPointerException If the specified {@link Appender} is null.
      */
     public AppenderBuffer(final Appender<ILoggingEvent> appender) {
       this.appender = appender;
@@ -172,6 +174,7 @@ public class DeferredLogger {
    *         one does not exist, the first {@link Appender} of the ROOT logger.
    * @throws IllegalStateException If the specified {@link Logger} and the ROOT
    *           logger do not have an appender.
+   * @throws NullPointerException If the specified {@link Logger} is null.
    */
   private static Appender<ILoggingEvent> getAppender(final Logger logger) {
     if (logger.iteratorForAppenders().hasNext())
@@ -197,11 +200,15 @@ public class DeferredLogger {
    *          between (1) and (2) above.
    * @param deferredLevel The lowest {@link org.slf4j.event.Level} that will be
    *          deferred for later output.
-   * @return The specified {@code logger}.
+   * @return The specified {@link Logger}.
    * @throws ClassCastException If {@code logger} is not an instance of
    *           {@link ch.qos.logback.classic.Logger}.
-   * @throws IllegalStateException If the specified {@link Logger} and the ROOT
+   * @throws IllegalStateException If the specified {@link Logger} and the root
    *           logger do not have an appender.
+   * @throws IllegalArgumentException If the specified
+   *           {@link org.slf4j.event.Level} is null.
+   * @throws NullPointerException If the specified {@link org.slf4j.Logger} is
+   *           null.
    */
   public static org.slf4j.Logger defer(final org.slf4j.Logger logger, final org.slf4j.event.Level deferredLevel) {
     return defer((Logger)logger, LoggerUtil.levelToLevel.get(deferredLevel));
@@ -248,6 +255,8 @@ public class DeferredLogger {
    * @return {@code true} if the specified {@link ILoggingEvent} matches the
    *         specified {@link Logger} and {@link Appender}; otherwise
    *         {@code false}.
+   * @throws NullPointerException If the specified {@link ILoggingEvent} or
+   *           {@link Logger} is null.
    */
   private static boolean matchesLogger(final ILoggingEvent event, final Logger logger, final Appender<ILoggingEvent> appender) {
     final String loggerName = logger.getName();
@@ -261,10 +270,29 @@ public class DeferredLogger {
     return loggerName.length() < eventLoggerName.length() && eventLoggerName.startsWith(loggerName + ".");
   }
 
+  /**
+   * Configures the specified {@link Logger} to defer log events with a level
+   * between:
+   * <ol>
+   * <li>The level for {@code logger} that is configured in
+   * {@code logback.xml}.</li>
+   * <li>The level specified by {@code deferredLevel}.</li>
+   * </ol>
+   *
+   * @param logger The logger to configure to defer log events with a level
+   *          between (1) and (2) above.
+   * @param deferredLevel The lowest {@link Level} that will be deferred for
+   *          later output.
+   * @return The specified {@link Logger}.
+   * @throws IllegalStateException If the specified {@link Logger} and the root
+   *           logger do not have an appender.
+   * @throws IllegalArgumentException If the specified {@link Level} is null.
+   * @throws NullPointerException If the specified {@link Logger} is null.
+   */
   private static org.slf4j.Logger defer(final Logger logger, final Level deferredLevel) {
     final Appender<ILoggingEvent> appender = getAppender(logger);
     final Level defaultLevel = logger.getEffectiveLevel();
-    logger.setLevel(deferredLevel);
+    logger.setLevel(Objects.requireNonNull(deferredLevel));
     if (deferrers.containsKey(logger))
       return logger;
 
@@ -305,8 +333,8 @@ public class DeferredLogger {
    * {@link org.slf4j.Logger}.
    *
    * @param logger The deferred {@link org.slf4j.Logger}.
-   * @throws IllegalArgumentException If the specified {@code logger} is not a
-   *           {@link DeferredLogger}.
+   * @throws IllegalArgumentException If the specified {@link org.slf4j.Logger}
+   *           is not a {@link DeferredLogger}.
    */
   public static void clear(final org.slf4j.Logger logger) {
     final DeferredLogger deferredLogger = deferrers.get(logger);
@@ -351,8 +379,8 @@ public class DeferredLogger {
    * @param level The lowest {@link Level} condition for events to be flushed.
    *          If an event has a level lower than {@code level}, it will not be
    *          flushed.
-   * @throws IllegalArgumentException If the specified {@code logger} is not a
-   *           {@link DeferredLogger}.
+   * @throws IllegalArgumentException If the specified {@link org.slf4j.Logger}
+   *           is not a {@link DeferredLogger}.
    */
   public static void flush(final org.slf4j.Logger logger, final org.slf4j.event.Level level) {
     final DeferredLogger deferredLogger = deferrers.get(logger);
@@ -370,8 +398,8 @@ public class DeferredLogger {
    * below the default level set in {@code logback.xml}.
    *
    * @param logger The deferred {@link org.slf4j.Logger}.
-   * @throws IllegalArgumentException If the specified {@code logger} is not a
-   *           {@link DeferredLogger}.
+   * @throws IllegalArgumentException If the specified {@link org.slf4j.Logger}
+   *           is not a {@link DeferredLogger}.
    */
   public static void flush(final org.slf4j.Logger logger) {
     final DeferredLogger deferredLogger = deferrers.get(logger);
@@ -392,10 +420,11 @@ public class DeferredLogger {
    * @param level The current {@link Level} value as configured in
    *          {@code logback.xml}.
    * @param buffer The {@link AppenderBuffer}.
+   * @throws NullPointerException If any of the specified parameters is null.
    */
   private DeferredLogger(final Logger logger, final Level level, final AppenderBuffer buffer) {
-    this.logger = logger;
-    this.level = level;
-    this.buffer = buffer;
+    this.logger = Objects.requireNonNull(logger);
+    this.level = Objects.requireNonNull(level);
+    this.buffer = Objects.requireNonNull(buffer);
   }
 }

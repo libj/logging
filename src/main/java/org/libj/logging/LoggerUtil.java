@@ -29,8 +29,8 @@ import org.slf4j.event.Level;
  */
 public final class LoggerUtil {
   /**
-   * A mapping from {@link Level} to its
-   * corresponding {@link ch.qos.logback.classic.Level}.
+   * A mapping from {@link Level} to its corresponding
+   * {@link ch.qos.logback.classic.Level}.
    */
   static final Map<Level,ch.qos.logback.classic.Level> levelToLevel;
 
@@ -55,9 +55,9 @@ public final class LoggerUtil {
    * @param level The {@link Level}.
    * @throws ClassCastException If {@code logger} is not an instance of
    *           {@link ch.qos.logback.classic.Logger}.
-   * @throws NullPointerException If {@code logger} is null.
    * @throws IllegalArgumentException If {@code level} is null, and
-   *           {@code logger} is the ROOT logger.
+   *           {@code logger} is the root logger.
+   * @throws NullPointerException If the specified {@link Logger} is null.
    */
   public static void setLevel(final Logger logger, final Level level) {
     ((ch.qos.logback.classic.Logger)logger).setLevel(levelToLevel.get(level));
@@ -71,7 +71,7 @@ public final class LoggerUtil {
    * @param level The logging {@link Level}.
    * @return {@code true} if the specified logging level is currently being
    *         logged by {@code logger}.
-   * @throws NullPointerException If {@code logger} is null.
+   * @throws NullPointerException If the specified {@link Logger} is null.
    */
   public static boolean isLoggable(final Logger logger, final Level level) {
     return logger != null && level != null && (level == Level.INFO && logger.isInfoEnabled() || level == Level.DEBUG && logger.isDebugEnabled() || level == Level.TRACE && logger.isTraceEnabled() || level == Level.WARN && logger.isWarnEnabled() || level == Level.ERROR && logger.isErrorEnabled());
@@ -86,7 +86,7 @@ public final class LoggerUtil {
    * @param marker The {@link Marker} data to take into consideration.
    * @return {@code true} if the specified logging level is currently being
    *         logged by {@code logger}.
-   * @throws NullPointerException If {@code logger} is null.
+   * @throws NullPointerException If the specified {@link Logger} is null.
    */
   public static boolean isLoggable(final Logger logger, final Level level, final Marker marker) {
     return logger != null && level != null && (level == Level.INFO && logger.isInfoEnabled(marker) || level == Level.DEBUG && logger.isDebugEnabled(marker) || level == Level.TRACE && logger.isTraceEnabled(marker) || level == Level.WARN && logger.isWarnEnabled(marker) || level == Level.ERROR && logger.isErrorEnabled(marker));
@@ -98,7 +98,7 @@ public final class LoggerUtil {
    * @param logger The {@link Logger}.
    * @param level The logging {@link Level}.
    * @param msg The message string to log.
-   * @throws NullPointerException If {@code logger} is null.
+   * @throws NullPointerException If the specified {@link Logger} is null.
    */
   public static void log(final Logger logger, final Level level, final String msg) {
     if (level == Level.INFO)
@@ -126,7 +126,7 @@ public final class LoggerUtil {
    * @param level The logging {@link Level}.
    * @param format The format string.
    * @param arg The argument.
-   * @throws NullPointerException If {@code logger} is null.
+   * @throws NullPointerException If the specified {@link Logger} is null.
    */
   public static void log(final Logger logger, final Level level, final String format, final Object arg) {
     if (level == Level.INFO)
@@ -155,7 +155,7 @@ public final class LoggerUtil {
    * @param format The format string.
    * @param arg1 The first argument.
    * @param arg2 The second argument.
-   * @throws NullPointerException If {@code logger} is null.
+   * @throws NullPointerException If the specified {@link Logger} is null.
    */
   public static void log(final Logger logger, final Level level, final String format, final Object arg1, final Object arg2) {
     if (level == Level.INFO)
@@ -179,8 +179,8 @@ public final class LoggerUtil {
    * This form avoids superfluous string concatenation when the logger is
    * disabled for the {@code level}. However, this variant incurs the hidden
    * (final and relatively small) cost of creating an {@code Object[]} before
-   * invoking the method, even if {@code logger} is disabled for {@code level}. The
-   * variants taking {@link #log(Logger,Level,String,Object)} and
+   * invoking the method, even if {@code logger} is disabled for {@code level}.
+   * The variants taking {@link #log(Logger,Level,String,Object)} and
    * {@link #log(Logger,Level,String,Object,Object)} arguments exist solely in
    * order to avoid this hidden cost.
    *
@@ -188,7 +188,7 @@ public final class LoggerUtil {
    * @param level The logging {@link Level}.
    * @param format The format string.
    * @param arguments A list of 3 or more arguments.
-   * @throws NullPointerException If {@code logger} is null.
+   * @throws NullPointerException If the specified {@link Logger} is null.
    */
   public static void log(final Logger logger, final Level level, final String format, final Object ... arguments) {
     if (level == Level.INFO)
@@ -212,8 +212,8 @@ public final class LoggerUtil {
    * @param logger The {@link Logger}.
    * @param level The logging {@link Level}.
    * @param msg The message accompanying the exception.
-   * @param t The exception (throwable) to log.
-   * @throws NullPointerException If {@code logger} is null.
+   * @param t The {@link Throwable} to log.
+   * @throws NullPointerException If the specified {@link Logger} is null.
    */
   public static void log(final Logger logger, final Level level, final String msg, final Throwable t) {
     if (level == Level.INFO)
@@ -238,7 +238,7 @@ public final class LoggerUtil {
    * @param level The logging {@link Level}.
    * @param marker The marker specific to this log statement.
    * @param msg The message string to be logged.
-   * @throws NullPointerException If {@code logger} is null.
+   * @throws NullPointerException If the specified {@link Logger} is null.
    */
   public static void log(final Logger logger, final Level level, final Marker marker, final String msg) {
     if (level == Level.INFO)
@@ -270,7 +270,7 @@ public final class LoggerUtil {
    * @param marker The marker specific to this log statement.
    * @param format The format string.
    * @param arg The argument.
-   * @throws NullPointerException If {@code logger} is null.
+   * @throws NullPointerException If the specified {@link Logger} is null.
    */
   public static void log(final Logger logger, final Level level, final Marker marker, final String format, final Object arg) {
     if (level == Level.INFO)
@@ -304,7 +304,7 @@ public final class LoggerUtil {
    * @param format The format string.
    * @param arg1 The first argument.
    * @param arg2 The second argument.
-   * @throws NullPointerException If {@code logger} is null.
+   * @throws NullPointerException If the specified {@link Logger} is null.
    */
   public static void log(final Logger logger, final Level level, final Marker marker, final String format, final Object arg1, final Object arg2) {
     if (level == Level.INFO)
@@ -329,8 +329,8 @@ public final class LoggerUtil {
    * This form avoids superfluous string concatenation when the logger is
    * disabled for the {@code level}. However, this variant incurs the hidden
    * (final and relatively small) cost of creating an {@code Object[]} before
-   * invoking the method, even if {@code logger} is disabled for {@code level}. The
-   * variants taking {@link #log(Logger,Level,String,Object)} and
+   * invoking the method, even if {@code logger} is disabled for {@code level}.
+   * The variants taking {@link #log(Logger,Level,String,Object)} and
    * {@link #log(Logger,Level,String,Object,Object)} arguments exist solely in
    * order to avoid this hidden cost.
    * <p>
@@ -342,7 +342,7 @@ public final class LoggerUtil {
    * @param marker The marker specific to this log statement.
    * @param format The format string.
    * @param arguments A list of 3 or more arguments.
-   * @throws NullPointerException If {@code logger} is null.
+   * @throws NullPointerException If the specified {@link Logger} is null.
    */
   public static void log(final Logger logger, final Level level, final Marker marker, final String format, final Object ... arguments) {
     if (level == Level.INFO)
@@ -370,8 +370,8 @@ public final class LoggerUtil {
    * @param level The logging {@link Level}.
    * @param marker The marker specific to this log statement.
    * @param msg The message accompanying the exception.
-   * @param t The exception (throwable) to log.
-   * @throws NullPointerException If {@code logger} is null.
+   * @param t The {@link Throwable} to log.
+   * @throws NullPointerException If the specified {@link Logger} is null.
    */
   public static void log(final Logger logger, final Level level, final Marker marker, final String msg, final Throwable t) {
     if (level == Level.INFO)

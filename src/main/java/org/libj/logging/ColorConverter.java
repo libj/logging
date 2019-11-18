@@ -34,15 +34,7 @@ public class ColorConverter extends CompositeConverter<ILoggingEvent> {
    * Enum of standard ANSI color codes.
    */
   private enum AnsiColor {
-    BLACK("0"),
-    RED("1"),
-    GREEN("2"),
-    YELLOW("3"),
-    BLUE("4"),
-    MAGENTA("5"),
-    CYAN("6"),
-    WHITE("7"),
-    DEFAULT("9");
+    BLACK("0"), RED("1"), GREEN("2"), YELLOW("3"), BLUE("4"), MAGENTA("5"), CYAN("6"), WHITE("7"), DEFAULT("9");
 
     private final String code;
 
@@ -71,7 +63,8 @@ public class ColorConverter extends CompositeConverter<ILoggingEvent> {
   private static Boolean enabled;
 
   /**
-   * States whether the {@link ColorConverter} is enabled.
+   * Returns {@code true} if the {@link ColorConverter} is enabled; otherwise
+   * {@code false}.
    *
    * @return {@code true} if the {@link ColorConverter} is enabled; otherwise
    *         {@code false}.
@@ -107,8 +100,11 @@ public class ColorConverter extends CompositeConverter<ILoggingEvent> {
    * An example {@code <pattern>} that specifies color codes and options is:
    *
    * <pre>
-   * <code>&lt;pattern&gt;[%color(%4level){bold,blue}] %color(%msg%n){magenta}&lt;/pattern&gt;</code>
+   * &lt;pattern&gt;[%color(%4level){bold,blue}] %color(%msg%n){magenta}&lt;/pattern&gt;
    * </pre>
+   *
+   * @throws NullPointerException If the specified {@link ILoggingEvent} is
+   *           null.
    */
   @Override
   protected String transform(final ILoggingEvent event, final String in) {

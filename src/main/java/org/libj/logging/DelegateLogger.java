@@ -30,9 +30,7 @@ import org.slf4j.Marker;
  * some of these methods and may also provide additional methods and fields.
  */
 public abstract class DelegateLogger implements Logger {
-  /**
-   * The target {@link Logger}.
-   */
+  /** The target {@link Logger}. */
   protected volatile Logger target;
 
   /**
