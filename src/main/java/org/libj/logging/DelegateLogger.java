@@ -22,11 +22,11 @@ import org.slf4j.Logger;
 import org.slf4j.Marker;
 
 /**
- * A {@code DelegateLogger} contains some other {@link Logger}, possibly
+ * A {@link DelegateLogger} contains some other {@link Logger}, possibly
  * transforming the method parameters along the way or providing additional
- * functionality. The class {@code DelegateLogger} itself simply overrides all
+ * functionality. The class {@link DelegateLogger} itself simply overrides all
  * methods of {@link Logger} with versions that delegate all calls to the source
- * {@link Logger}. Subclasses of {@code DelegateLogger} may further override
+ * {@link Logger}. Subclasses of {@link DelegateLogger} may further override
  * some of these methods and may also provide additional methods and fields.
  */
 public abstract class DelegateLogger implements Logger {
@@ -36,7 +36,7 @@ public abstract class DelegateLogger implements Logger {
   protected volatile Logger target;
 
   /**
-   * Creates a new {@code DelegateLogger} with the specified {@code target}.
+   * Creates a new {@link DelegateLogger} with the specified {@code target}.
    *
    * @param target The target {@link Logger} object.
    * @throws NullPointerException If {@code target} is null.
@@ -46,7 +46,7 @@ public abstract class DelegateLogger implements Logger {
   }
 
   /**
-   * Creates a new {@code DelegateLogger} with a null target.
+   * Creates a new {@link DelegateLogger} with a null target.
    */
   protected DelegateLogger() {
   }

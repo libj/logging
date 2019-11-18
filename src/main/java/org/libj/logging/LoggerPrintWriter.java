@@ -26,7 +26,7 @@ import org.slf4j.Logger;
 import org.slf4j.event.Level;
 
 /**
- * A {@link PrintWriter} that delegates its methods to a target {@code Logger}.
+ * A {@link PrintWriter} that delegates its methods to a target {@link Logger}.
  * The {@code print()}, {@code println()}, {@code write()}, and {@code append()}
  * methods will result in a new log event only if the log message ends with a
  * {@code '\n'} character. If a message does not end with a {@code '\n'}
@@ -39,13 +39,13 @@ public class LoggerPrintWriter extends PrintWriter {
   private final Level level;
 
   /**
-   * Creates a new {@code LoggerPrintWriter} with the specified {@link Logger}
+   * Creates a new {@link LoggerPrintWriter} with the specified {@link Logger}
    * and {@link Level}.
    *
    * @param logger The {@link Logger} instance to which methods of this
-   *          {@code LoggerPrintWriter} will be delegated.
+   *          {@link LoggerPrintWriter} will be delegated.
    * @param level The {@link Level} that will be used for log statements from
-   *          this {@code LoggerPrintWriter}.
+   *          this {@link LoggerPrintWriter}.
    */
   public LoggerPrintWriter(final Logger logger, final Level level) {
     super(new Writer() {

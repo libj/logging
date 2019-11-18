@@ -34,7 +34,7 @@ import ch.qos.logback.core.spi.FilterReply;
 /**
  * Logger that defers output of log events until flushed.
  * <p>
- * The {@code DeferredLogger} addresses a common use-case:
+ * The {@link DeferredLogger} addresses a common use-case:
  * <p>
  * Consider an application that is complex, and has considerable trace and debug
  * log statements throughout its code. This application also has a long running
@@ -52,15 +52,15 @@ import ch.qos.logback.core.spi.FilterReply;
  * regardless of whether the specific operation led to the error or not. The
  * developer would therefore have to filter through the entire log output to
  * find the events corresponding to the error.</li>
- * <li>Alternatively, consider a solution that uses the {@code DeferredLogger}.
- * The {@code DeferredLogger} is configured with two parameters:
+ * <li>Alternatively, consider a solution that uses the {@link DeferredLogger}.
+ * The {@link DeferredLogger} is configured with two parameters:
  * <ol>
  * <li>The default log level: Specified by the current level set for the logger
  * (e.g. INFO).</li>
  * <li>The deferred log level: Specifies the lower level of events to defer for
  * later output (e.g. TRACE).</li>
  * </ol>
- * With this configuration, the {@code DeferredLogger} allows events with a
+ * With this configuration, the {@link DeferredLogger} allows events with a
  * level of INFO or above to be outputted to the console, while events with a
  * level from TRACE (inclusive) to INFO (exclusive) will be deferred. The
  * developer may use this pattern to thereafter include a call to
@@ -74,12 +74,12 @@ import ch.qos.logback.core.spi.FilterReply;
  * {@link DeferredLogger#clear()} is called, the buffer of deferred log
  * statements is cleared.</li>
  * </ol>
- * With the {@code DeferredLogger}, trace log statements will be outputted only
+ * With the {@link DeferredLogger}, trace log statements will be outputted only
  * if an exception triggers {@link DeferredLogger#flush()}. This logging pattern
  * can be used to produce output of trace log statements that are directly
  * related to the error in question.
  * <p>
- * <b>The {@code DeferredLogger} is only applicable to the
+ * <b>The {@link DeferredLogger} is only applicable to the
  * <a href="https://logback.qos.ch/">Logback</a> implementation of
  * {@link org.slf4j.Logger} instances.</b>
  */
@@ -88,7 +88,7 @@ public class DeferredLogger {
     private Level level;
 
     /**
-     * Sets the {@link Level} of this {@code FlushFilter}.
+     * Sets the {@link Level} of this {@link FlushFilter}.
      *
      * @param level The {@link Level}.
      */
@@ -108,7 +108,7 @@ public class DeferredLogger {
     private final Appender<ILoggingEvent> appender;
 
     /**
-     * Create a new {@code AppenderBuffer} with the specified {@code appender}
+     * Create a new {@link AppenderBuffer} with the specified {@code appender}
      * to which deferred events will be flushed.
      *
      * @param appender The {@link Appender} to which deferred events will be
@@ -306,7 +306,7 @@ public class DeferredLogger {
    *
    * @param logger The deferred {@link org.slf4j.Logger}.
    * @throws IllegalArgumentException If the specified {@code logger} is not a
-   *           {@code DeferredLogger}.
+   *           {@link DeferredLogger}.
    */
   public static void clear(final org.slf4j.Logger logger) {
     final DeferredLogger deferredLogger = deferrers.get(logger);
@@ -352,7 +352,7 @@ public class DeferredLogger {
    *          If an event has a level lower than {@code level}, it will not be
    *          flushed.
    * @throws IllegalArgumentException If the specified {@code logger} is not a
-   *           {@code DeferredLogger}.
+   *           {@link DeferredLogger}.
    */
   public static void flush(final org.slf4j.Logger logger, final org.slf4j.event.Level level) {
     final DeferredLogger deferredLogger = deferrers.get(logger);
@@ -371,7 +371,7 @@ public class DeferredLogger {
    *
    * @param logger The deferred {@link org.slf4j.Logger}.
    * @throws IllegalArgumentException If the specified {@code logger} is not a
-   *           {@code DeferredLogger}.
+   *           {@link DeferredLogger}.
    */
   public static void flush(final org.slf4j.Logger logger) {
     final DeferredLogger deferredLogger = deferrers.get(logger);
@@ -386,7 +386,7 @@ public class DeferredLogger {
   private final AppenderBuffer buffer;
 
   /**
-   * Creates a new {@code DeferredLogger} with the specified parameters.
+   * Creates a new {@link DeferredLogger} with the specified parameters.
    *
    * @param logger The {@link Logger}.
    * @param level The current {@link Level} value as configured in

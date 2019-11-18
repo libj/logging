@@ -71,9 +71,9 @@ public class ColorConverter extends CompositeConverter<ILoggingEvent> {
   private static Boolean enabled;
 
   /**
-   * States whether the {@code ColorConverter} is enabled.
+   * States whether the {@link ColorConverter} is enabled.
    *
-   * @return {@code true} if the {@code ColorConverter} is enabled; otherwise
+   * @return {@code true} if the {@link ColorConverter} is enabled; otherwise
    *         {@code false}.
    */
   private static boolean isEnabled() {
@@ -89,11 +89,11 @@ public class ColorConverter extends CompositeConverter<ILoggingEvent> {
   }
 
   /**
-   * Sets the enabled state of the {@code ColorConverter} to the value of
+   * Sets the enabled state of the {@link ColorConverter} to the value of
    * {@code enabled}.
    *
    * @param enabled The value to which the enabled state of the
-   *          {@code ColorConverter} should be set.
+   *          {@link ColorConverter} should be set.
    */
   public static void setEnabled(final boolean enabled) {
     ColorConverter.enabled = enabled;
