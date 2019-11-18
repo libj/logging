@@ -353,4 +353,26 @@ public abstract class DelegateLogger implements Logger {
   public void error(final Marker marker, final String msg, final Throwable t) {
     target.error(marker, msg);
   }
+
+  @Override
+  public boolean equals(final Object obj) {
+    if (obj == this)
+      return true;
+
+    if (!(obj instanceof DelegateLogger))
+      return false;
+
+    final DelegateLogger that = (DelegateLogger)obj;
+    return target != null ? target.equals(that.target) : that.target == null;
+  }
+
+  @Override
+  public int hashCode() {
+    return target == null ? 733 : target.hashCode();
+  }
+
+  @Override
+  public String toString() {
+    return String.valueOf(target);
+  }
 }
