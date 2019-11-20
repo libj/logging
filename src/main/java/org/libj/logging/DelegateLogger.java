@@ -34,10 +34,11 @@ public abstract class DelegateLogger implements Logger {
   protected volatile Logger target;
 
   /**
-   * Creates a new {@link DelegateLogger} with the specified {@code target}.
+   * Creates a new {@link DelegateLogger} with the specified target
+   * {@link Logger}.
    *
-   * @param target The target {@link Logger} object.
-   * @throws NullPointerException If {@code target} is null.
+   * @param target The target {@link Logger}.
+   * @throws NullPointerException If the target {@link Logger} is null.
    */
   public DelegateLogger(final Logger target) {
     this.target = Objects.requireNonNull(target);
