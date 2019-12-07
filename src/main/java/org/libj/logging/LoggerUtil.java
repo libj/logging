@@ -178,9 +178,9 @@ public final class LoggerUtil {
    * <p>
    * This form avoids superfluous string concatenation when the logger is
    * disabled for the {@code level}. However, this variant incurs the hidden
-   * (final and relatively small) cost of creating an {@code Object[]} before
-   * invoking the method, even if {@code logger} is disabled for {@code level}.
-   * The variants taking {@link #log(Logger,Level,String,Object)} and
+   * (and relatively small) cost of creating an {@code Object[]} before invoking
+   * the method, even if {@code logger} is disabled for {@code level}. The
+   * variants taking {@link #log(Logger,Level,String,Object)} and
    * {@link #log(Logger,Level,String,Object,Object)} arguments exist solely in
    * order to avoid this hidden cost.
    *
@@ -328,9 +328,9 @@ public final class LoggerUtil {
    * <p>
    * This form avoids superfluous string concatenation when the logger is
    * disabled for the {@code level}. However, this variant incurs the hidden
-   * (final and relatively small) cost of creating an {@code Object[]} before
-   * invoking the method, even if {@code logger} is disabled for {@code level}.
-   * The variants taking {@link #log(Logger,Level,String,Object)} and
+   * (and relatively small) cost of creating an {@code Object[]} before invoking
+   * the method, even if {@code logger} is disabled for {@code level}. The
+   * variants taking {@link #log(Logger,Level,String,Object)} and
    * {@link #log(Logger,Level,String,Object,Object)} arguments exist solely in
    * order to avoid this hidden cost.
    * <p>
