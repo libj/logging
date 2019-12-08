@@ -76,7 +76,7 @@ public class ColorConverter extends CompositeConverter<ILoggingEvent> {
     try {
       return enabled = System.getProperty("os.name").toLowerCase().indexOf("win") < 0;
     }
-    catch (final Throwable e) {
+    catch (final Throwable t) {
       return false;
     }
   }
