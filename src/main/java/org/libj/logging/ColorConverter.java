@@ -100,7 +100,7 @@ public class ColorConverter extends CompositeConverter<ILoggingEvent> {
    * An example {@code <pattern>} that specifies color codes and options is:
    *
    * <pre>
-   * &lt;pattern&gt;[%color(%4level){bold,blue}] %color(%msg%n){magenta}&lt;/pattern&gt;
+   * {@code <pattern>[%color(%4level){bold,blue}] %color(%msg%n){magenta}</pattern>}
    * </pre>
    *
    * @throws NullPointerException If the specified {@link ILoggingEvent} is
