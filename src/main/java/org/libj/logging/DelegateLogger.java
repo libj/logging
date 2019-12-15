@@ -369,7 +369,7 @@ public abstract class DelegateLogger implements Logger {
 
   @Override
   public int hashCode() {
-    return target == null ? 733 : target.hashCode();
+    return target == null ? 0 : target.hashCode();
   }
 
   @Override
