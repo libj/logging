@@ -27,7 +27,7 @@ import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.spi.LoggingEvent;
 
 public class ColorConverterTest {
-  private final String in = "in";
+  private static final String in = "in";
   private ColorConverter converter;
   private LoggingEvent event;
 
@@ -44,66 +44,66 @@ public class ColorConverterTest {
   @Test
   public void red() {
     this.converter.setOptionList(Collections.singletonList("red"));
-    assertEquals("\033[0;31min\033[0;39m", this.converter.transform(this.event, this.in));
+    assertEquals("\033[0;31min\033[0;39m", this.converter.transform(this.event, in));
   }
 
   @Test
   public void green() {
     this.converter.setOptionList(Collections.singletonList("green"));
-    assertEquals("\033[0;32min\033[0;39m", this.converter.transform(this.event, this.in));
+    assertEquals("\033[0;32min\033[0;39m", this.converter.transform(this.event, in));
   }
 
   @Test
   public void yellow() {
     this.converter.setOptionList(Collections.singletonList("yellow"));
-    assertEquals("\033[0;33min\033[0;39m", this.converter.transform(this.event, this.in));
+    assertEquals("\033[0;33min\033[0;39m", this.converter.transform(this.event, in));
   }
 
   @Test
   public void blue() {
     this.converter.setOptionList(Collections.singletonList("blue"));
-    assertEquals("\033[0;34min\033[0;39m", this.converter.transform(this.event, this.in));
+    assertEquals("\033[0;34min\033[0;39m", this.converter.transform(this.event, in));
   }
 
   @Test
   public void magenta() {
     this.converter.setOptionList(Collections.singletonList("magenta"));
-    assertEquals("\033[0;35min\033[0;39m", this.converter.transform(this.event, this.in));
+    assertEquals("\033[0;35min\033[0;39m", this.converter.transform(this.event, in));
   }
 
   @Test
   public void cyan() {
     this.converter.setOptionList(Collections.singletonList("cyan"));
-    assertEquals("\033[0;36min\033[0;39m", this.converter.transform(this.event, this.in));
+    assertEquals("\033[0;36min\033[0;39m", this.converter.transform(this.event, in));
   }
 
   @Test
   public void faint() {
     this.converter.setOptionList(Collections.singletonList("faint"));
-    assertEquals("\033[2;39min\033[0;39m", this.converter.transform(this.event, this.in));
+    assertEquals("\033[2;39min\033[0;39m", this.converter.transform(this.event, in));
   }
 
   @Test
   public void highlightError() {
     this.event.setLevel(Level.ERROR);
-    assertEquals("\033[0;31min\033[0;39m", this.converter.transform(this.event, this.in));
+    assertEquals("\033[0;31min\033[0;39m", this.converter.transform(this.event, in));
   }
 
   @Test
   public void highlightWarn() {
     this.event.setLevel(Level.WARN);
-    assertEquals("\033[0;33min\033[0;39m", this.converter.transform(this.event, this.in));
+    assertEquals("\033[0;33min\033[0;39m", this.converter.transform(this.event, in));
   }
 
   @Test
   public void highlightDebug() {
     this.event.setLevel(Level.DEBUG);
-    assertEquals("\033[0;39min\033[0;39m", this.converter.transform(this.event, this.in));
+    assertEquals("\033[0;39min\033[0;39m", this.converter.transform(this.event, in));
   }
 
   @Test
   public void highlightTrace() {
     this.event.setLevel(Level.TRACE);
-    assertEquals("\033[0;39min\033[0;39m", this.converter.transform(this.event, this.in));
+    assertEquals("\033[0;39min\033[0;39m", this.converter.transform(this.event, in));
   }
 }

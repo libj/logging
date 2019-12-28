@@ -74,7 +74,7 @@ public class ColorConverter extends CompositeConverter<ILoggingEvent> {
       return enabled;
 
     try {
-      return enabled = System.getProperty("os.name").toLowerCase().indexOf("win") < 0;
+      return enabled = !System.getProperty("os.name").toLowerCase().contains("win");
     }
     catch (final Throwable t) {
       return false;
@@ -116,7 +116,7 @@ public class ColorConverter extends CompositeConverter<ILoggingEvent> {
     AnsiColor color = null;
     final List<String> options = getOptionList();
     if (options != null) {
-      for (final String option : getOptionList()) {
+      for (final String option : options) {
         if ("bold".equals(option)) {
           group = "3";
           strength = "1";

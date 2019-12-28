@@ -84,7 +84,7 @@ import ch.qos.logback.core.spi.FilterReply;
  * <a href="https://logback.qos.ch/">Logback</a> implementation of
  * {@link org.slf4j.Logger} instances.</b>
  */
-public class DeferredLogger {
+public final class DeferredLogger {
   private static class FlushFilter extends Filter<ILoggingEvent> {
     private Level level;
 
@@ -103,7 +103,7 @@ public class DeferredLogger {
     }
   }
 
-  private static class AppenderBuffer {
+  private static final class AppenderBuffer {
     private final List<ILoggingEvent> events = new ArrayList<>();
     private final FlushFilter flushFilter = new FlushFilter();
     private final Appender<ILoggingEvent> appender;
@@ -116,7 +116,7 @@ public class DeferredLogger {
      *          flushed.
      * @throws NullPointerException If the specified {@link Appender} is null.
      */
-    public AppenderBuffer(final Appender<ILoggingEvent> appender) {
+    private AppenderBuffer(final Appender<ILoggingEvent> appender) {
       this.appender = appender;
       this.appender.addFilter(flushFilter);
     }

@@ -16,7 +16,6 @@
 
 package org.libj.logging;
 
-import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.Writer;
 import java.util.Locale;
@@ -50,15 +49,15 @@ public class LoggerPrintWriter extends PrintWriter {
   public LoggerPrintWriter(final Logger logger, final Level level) {
     super(new Writer() {
       @Override
-      public void close() throws IOException {
+      public void close() {
       }
 
       @Override
-      public void flush() throws IOException {
+      public void flush() {
       }
 
       @Override
-      public void write(final char[] cbuf, final int off, final int len) throws IOException {
+      public void write(final char[] cbuf, final int off, final int len) {
       }
     });
 
@@ -103,7 +102,7 @@ public class LoggerPrintWriter extends PrintWriter {
 
   @Override
   public void write(final String s, final int off, final int len) {
-    buffer.append(s.substring(off, off + len));
+    buffer.append(s, off, off + len);
     flush();
   }
 

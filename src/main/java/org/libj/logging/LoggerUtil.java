@@ -17,7 +17,7 @@
 package org.libj.logging;
 
 import java.util.Collections;
-import java.util.HashMap;
+import java.util.EnumMap;
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -35,7 +35,7 @@ public final class LoggerUtil {
   static final Map<Level,ch.qos.logback.classic.Level> levelToLevel;
 
   static {
-    final Map<Level,ch.qos.logback.classic.Level> map = new HashMap<>();
+    final Map<Level,ch.qos.logback.classic.Level> map = new EnumMap<>(Level.class);
     map.put(Level.TRACE, ch.qos.logback.classic.Level.TRACE);
     map.put(Level.DEBUG, ch.qos.logback.classic.Level.DEBUG);
     map.put(Level.INFO, ch.qos.logback.classic.Level.INFO);

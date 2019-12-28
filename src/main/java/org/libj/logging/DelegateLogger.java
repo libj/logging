@@ -117,7 +117,7 @@ public abstract class DelegateLogger implements Logger {
 
   @Override
   public boolean isDebugEnabled() {
-    return isDebugEnabled();
+    return target.isDebugEnabled();
   }
 
   @Override
@@ -267,7 +267,7 @@ public abstract class DelegateLogger implements Logger {
 
   @Override
   public boolean isWarnEnabled(final Marker marker) {
-    return isWarnEnabled(marker);
+    return target.isWarnEnabled(marker);
   }
 
   @Override
@@ -364,7 +364,7 @@ public abstract class DelegateLogger implements Logger {
       return false;
 
     final DelegateLogger that = (DelegateLogger)obj;
-    return target != null ? target.equals(that.target) : that.target == null;
+    return Objects.equals(target, that.target);
   }
 
   @Override
