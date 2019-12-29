@@ -151,9 +151,7 @@ public class ColorConverter extends CompositeConverter<ILoggingEvent> {
 
     final StringBuilder builder = new StringBuilder();
     builder.append(ENCODE_START).append(strength);
-    if (color != null)
-      builder.append(';').append(group).append(color);
-
+    builder.append(';').append(group).append(color);
     return builder.append(ENCODE_END).append(in).append(ENCODE_START).append(RESET).append(ENCODE_END).toString();
   }
 }
