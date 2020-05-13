@@ -19,8 +19,6 @@ package org.libj.logging;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 
 import org.slf4j.LoggerFactory;
@@ -104,7 +102,7 @@ public final class DeferredLogger {
   }
 
   private static final class AppenderBuffer {
-    private final List<ILoggingEvent> events = new ArrayList<>();
+    private final ArrayList<ILoggingEvent> events = new ArrayList<>();
     private final FlushFilter flushFilter = new FlushFilter();
     private final Appender<ILoggingEvent> appender;
 
@@ -163,7 +161,7 @@ public final class DeferredLogger {
     }
   }
 
-  private static final Map<org.slf4j.Logger,DeferredLogger> deferrers = new LinkedHashMap<>();
+  private static final LinkedHashMap<org.slf4j.Logger,DeferredLogger> deferrers = new LinkedHashMap<>();
 
   /**
    * Returns the first {@link Appender} of the specified {@link Logger}, or if
@@ -339,7 +337,7 @@ public final class DeferredLogger {
   public static void clear(final org.slf4j.Logger logger) {
     final DeferredLogger deferredLogger = deferrers.get(logger);
     if (deferredLogger == null)
-      throw new IllegalArgumentException("The specified logger is not a DeferredLogger");
+      throw new IllegalArgumentException("The specified logger is not a " + DeferredLogger.class.getSimpleName());
 
     deferredLogger.buffer.clear();
   }
@@ -385,7 +383,7 @@ public final class DeferredLogger {
   public static void flush(final org.slf4j.Logger logger, final org.slf4j.event.Level level) {
     final DeferredLogger deferredLogger = deferrers.get(logger);
     if (deferredLogger == null)
-      throw new IllegalArgumentException("The specified logger is not a DeferredLogger");
+      throw new IllegalArgumentException("The specified logger is not a " + DeferredLogger.class.getSimpleName());
 
     deferredLogger.buffer.flush(LoggerUtil.levelToLevel.get(level));
   }
@@ -404,7 +402,7 @@ public final class DeferredLogger {
   public static void flush(final org.slf4j.Logger logger) {
     final DeferredLogger deferredLogger = deferrers.get(logger);
     if (deferredLogger == null)
-      throw new IllegalArgumentException("The specified logger is not a DeferredLogger");
+      throw new IllegalArgumentException("The specified logger is not a " + DeferredLogger.class.getSimpleName());
 
     deferredLogger.buffer.flush(deferredLogger.logger.getLevel());
   }
