@@ -22,10 +22,10 @@
   <parent>
     <groupId>org.libj</groupId>
     <artifactId>libj</artifactId>
-    <version>0.9.7-SNAPSHOT</version>
+    <version>0.9.7</version>
   </parent>
   <artifactId>logging</artifactId>
-  <version>0.4.5-SNAPSHOT</version>
+  <version>0.4.5</version>
   <name>LibJ Logging</name>
   <description>
     Supplementary patterns for the "Simple Logging Facade for Java" (SLF4J) and the Logback Project.
