@@ -1,6 +1,8 @@
 # Changes by Version
 
-## [v0.4.3](https://github.com/libj/logging/compare/c80f34c9d3f1c748ee3571e865c264818d1897a1..HEAD) (2020-05-23)
+## [v0.4.6-SNAPSHOT](https://github.com/libj/logging/compare/13416f6e68501167cde22b24327cd047f92123e7..HEAD)
+
+## [v0.4.5](https://github.com/libj/logging/compare/c80f34c9d3f1c748ee3571e865c264818d1897a1..13416f6e68501167cde22b24327cd047f92123e7) (2020-05-23)
 * Add `Objects.requireNonNull` assertions in `DeferredLogger`.
 * Add `equals`, `hashCode`, `toString` to `DelegateLogger`.
 * Upgrade `org.slf4j:slf4j-api:1.7.26` to `1.7.29`.
