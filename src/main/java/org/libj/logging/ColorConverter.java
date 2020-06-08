@@ -18,7 +18,6 @@ package org.libj.logging;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.spi.ILoggingEvent;
@@ -28,7 +27,7 @@ import ch.qos.logback.core.pattern.CompositeConverter;
  * A {@link CompositeConverter} implementation that colorizes log messages.
  */
 public class ColorConverter extends CompositeConverter<ILoggingEvent> {
-  private static final Map<String,AnsiColor> colors = new HashMap<>();
+  private static final HashMap<String,AnsiColor> colors = new HashMap<>();
 
   /**
    * Enum of standard ANSI color codes.
@@ -57,7 +56,7 @@ public class ColorConverter extends CompositeConverter<ILoggingEvent> {
     }
   }
 
-  private static final Map<Integer,AnsiColor> levels = new HashMap<>();
+  private static final HashMap<Integer,AnsiColor> levels = new HashMap<>();
 
   static {
     levels.put(Level.ERROR_INTEGER, AnsiColor.RED);
