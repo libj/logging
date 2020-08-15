@@ -1,9 +1,9 @@
 # LibJ Logging
 
-[![Build Status](https://travis-ci.org/libj/logging.svg?1)](https://travis-ci.org/libj/logging)
-[![Coverage Status](https://coveralls.io/repos/github/libj/logging/badge.svg?1)](https://coveralls.io/github/libj/logging)
-[![Javadocs](https://www.javadoc.io/badge/org.libj/logging.svg?1)](https://www.javadoc.io/doc/org.libj/logging)
-[![Released Version](https://img.shields.io/maven-central/v/org.libj/logging.svg?1)](https://mvnrepository.com/artifact/org.libj/logging)
+[![Build Status](https://travis-ci.org/libj/logging.svg?branch=master)](https://travis-ci.org/libj/logging)
+[![Coverage Status](https://coveralls.io/repos/github/libj/logging/badge.svg)](https://coveralls.io/github/libj/logging)
+[![Javadocs](https://www.javadoc.io/badge/org.libj/logging.svg)](https://www.javadoc.io/doc/org.libj/logging)
+[![Released Version](https://img.shields.io/maven-central/v/org.libj/logging.svg)](https://mvnrepository.com/artifact/org.libj/logging)
 ![Snapshot Version](https://img.shields.io/nexus/s/org.libj/logging?label=maven-snapshot&server=https%3A%2F%2Foss.sonatype.org)
 
 ## Introduction
