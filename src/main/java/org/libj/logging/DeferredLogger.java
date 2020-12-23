@@ -152,7 +152,7 @@ public final class DeferredLogger {
         while (iterator.hasNext()) {
           final ILoggingEvent event = iterator.next();
           iterator.remove();
-          if (event.getLevel().isGreaterOrEqual(level))
+          if (event != null && event.getLevel().isGreaterOrEqual(level))
             appender.doAppend(event);
         }
 
@@ -208,7 +208,7 @@ public final class DeferredLogger {
    * @throws NullPointerException If the specified {@link org.slf4j.Logger} is
    *           null.
    */
-  public static org.slf4j.Logger defer(final org.slf4j.Logger logger, final org.slf4j.event.Level deferredLevel) {
+  public static synchronized org.slf4j.Logger defer(final org.slf4j.Logger logger, final org.slf4j.event.Level deferredLevel) {
     return defer((Logger)logger, LoggerUtil.levelToLevel.get(deferredLevel));
   }
 
@@ -287,7 +287,7 @@ public final class DeferredLogger {
    * @throws IllegalArgumentException If the specified {@link Level} is null.
    * @throws NullPointerException If the specified {@link Logger} is null.
    */
-  private static org.slf4j.Logger defer(final Logger logger, final Level deferredLevel) {
+  private static synchronized org.slf4j.Logger defer(final Logger logger, final Level deferredLevel) {
     final Appender<ILoggingEvent> appender = getAppender(logger);
     final Level defaultLevel = logger.getEffectiveLevel();
     logger.setLevel(Objects.requireNonNull(deferredLevel));
@@ -321,7 +321,7 @@ public final class DeferredLogger {
   /**
    * Clears the buffers of deferred events for all deferred loggers.
    */
-  public static void clear() {
+  public static synchronized void clear() {
     for (final DeferredLogger deferredLogger : deferrers.values())
       deferredLogger.buffer.clear();
   }
@@ -334,7 +334,7 @@ public final class DeferredLogger {
    * @throws IllegalArgumentException If the specified {@link org.slf4j.Logger}
    *           is not a {@link DeferredLogger}.
    */
-  public static void clear(final org.slf4j.Logger logger) {
+  public static synchronized void clear(final org.slf4j.Logger logger) {
     final DeferredLogger deferredLogger = deferrers.get(logger);
     if (deferredLogger == null)
       throw new IllegalArgumentException("The specified logger is not a " + DeferredLogger.class.getSimpleName());
@@ -351,7 +351,7 @@ public final class DeferredLogger {
    *          If an event has a level lower than {@code level}, it will not be
    *          flushed.
    */
-  public static void flush(final org.slf4j.event.Level level) {
+  public static synchronized void flush(final org.slf4j.event.Level level) {
     for (final DeferredLogger entry : deferrers.values())
       entry.buffer.flush(LoggerUtil.levelToLevel.get(level));
   }
@@ -363,7 +363,7 @@ public final class DeferredLogger {
    * {@link DeferredLogger#defer(org.slf4j.Logger,org.slf4j.event.Level)}), and
    * below the default level set in {@code logback.xml}.
    */
-  public static void flush() {
+  public static synchronized void flush() {
     for (final DeferredLogger entry : deferrers.values())
       entry.buffer.flush(entry.logger.getLevel());
   }
@@ -380,7 +380,7 @@ public final class DeferredLogger {
    * @throws IllegalArgumentException If the specified {@link org.slf4j.Logger}
    *           is not a {@link DeferredLogger}.
    */
-  public static void flush(final org.slf4j.Logger logger, final org.slf4j.event.Level level) {
+  public static synchronized void flush(final org.slf4j.Logger logger, final org.slf4j.event.Level level) {
     final DeferredLogger deferredLogger = deferrers.get(logger);
     if (deferredLogger == null)
       throw new IllegalArgumentException("The specified logger is not a " + DeferredLogger.class.getSimpleName());
@@ -399,7 +399,7 @@ public final class DeferredLogger {
    * @throws IllegalArgumentException If the specified {@link org.slf4j.Logger}
    *           is not a {@link DeferredLogger}.
    */
-  public static void flush(final org.slf4j.Logger logger) {
+  public static synchronized void flush(final org.slf4j.Logger logger) {
     final DeferredLogger deferredLogger = deferrers.get(logger);
     if (deferredLogger == null)
       throw new IllegalArgumentException("The specified logger is not a " + DeferredLogger.class.getSimpleName());
