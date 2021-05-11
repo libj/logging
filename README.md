@@ -1,6 +1,6 @@
 # LibJ Logging
 
-[![Build Status](https://travis-ci.org/libj/logging.svg?branch=master)](https://travis-ci.org/libj/logging)
+[![Build Status](https://travis-ic.org/libj/logging.svg?branch=master)](https://travis-ic.org/libj/logging)
 [![Coverage Status](https://coveralls.io/repos/github/libj/logging/badge.svg)](https://coveralls.io/github/libj/logging)
 [![Javadocs](https://www.javadoc.io/badge/org.libj/logging.svg)](https://www.javadoc.io/doc/org.libj/logging)
 [![Released Version](https://img.shields.io/maven-central/v/org.libj/logging.svg)](https://mvnrepository.com/artifact/org.libj/logging)
