@@ -1,6 +1,6 @@
 # LibJ Logging
 
-[![Build Status](https://github.com/libj/logging/workflows/build.yml/badge.svg)](https://github.com/libj/logging/actions/workflows/build.yml)
+[![Build Status](https://github.com/libj/logging/actions/workflows/build.yml/badge.svg)](https://github.com/libj/logging/actions/workflows/build.yml)
 [![Coverage Status](https://coveralls.io/repos/github/libj/logging/badge.svg)](https://coveralls.io/github/libj/logging)
 [![Javadocs](https://www.javadoc.io/badge/org.libj/logging.svg)](https://www.javadoc.io/doc/org.libj/logging)
 [![Released Version](https://img.shields.io/maven-central/v/org.libj/logging.svg)](https://mvnrepository.com/artifact/org.libj/logging)
