@@ -110,11 +110,13 @@ public class ColorConverter extends CompositeConverter<ILoggingEvent> {
    * {@code <pattern>[%color(%4level){bold,blue}] %color(%msg%n){magenta}</pattern>}
    * </pre>
    *
-   * @throws NullPointerException If the specified {@link ILoggingEvent} is
-   *           null.
+   * @throws IllegalArgumentException If {@code event} is null.
    */
   @Override
   protected String transform(final ILoggingEvent event, final String in) {
+    if (event == null)
+      throw new IllegalArgumentException("event == null");
+
     if (!isEnabled())
       return in;
 

@@ -16,8 +16,6 @@
 
 package org.libj.logging;
 
-import java.util.Objects;
-
 import org.slf4j.Logger;
 import org.slf4j.Marker;
 import org.slf4j.event.Level;
@@ -40,10 +38,13 @@ public class SystemLogger implements Logger {
    * {@link Level} to be used with this logger.
    *
    * @param level The logging {@link Level}.
-   * @throws NullPointerException If {@code level} is null.
+   * @throws IllegalArgumentException If {@code level} is null.
    */
   public SystemLogger(final Level level) {
-    this.level = Objects.requireNonNull(level);
+    this.level = level;
+    if (level == null)
+      throw new IllegalArgumentException("level == null");
+
   }
 
   /**

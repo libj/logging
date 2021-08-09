@@ -55,11 +55,14 @@ public final class LoggerUtil {
    * @param level The {@link Level}.
    * @throws ClassCastException If {@code logger} is not an instance of
    *           {@link ch.qos.logback.classic.Logger}.
-   * @throws IllegalArgumentException If {@code level} is null, and
-   *           {@code logger} is the root logger.
-   * @throws NullPointerException If the specified {@link Logger} is null.
+   * @throws IllegalArgumentException If {@code logger} is null.
+   * @throws IllegalArgumentException If {@code level} is null and {@code logger} is
+   *           the root logger.
    */
   public static void setLevel(final Logger logger, final Level level) {
+    if (logger == null)
+      throw new IllegalArgumentException("logger == null");
+
     ((ch.qos.logback.classic.Logger)logger).setLevel(levelToLevel.get(level));
   }
 
@@ -71,7 +74,6 @@ public final class LoggerUtil {
    * @param level The logging {@link Level}.
    * @return {@code true} if the specified logging level is currently being
    *         logged by {@code logger}.
-   * @throws NullPointerException If the specified {@link Logger} is null.
    */
   public static boolean isLoggable(final Logger logger, final Level level) {
     return logger != null && level != null && (level == Level.INFO && logger.isInfoEnabled() || level == Level.DEBUG && logger.isDebugEnabled() || level == Level.TRACE && logger.isTraceEnabled() || level == Level.WARN && logger.isWarnEnabled() || level == Level.ERROR && logger.isErrorEnabled());
@@ -86,7 +88,6 @@ public final class LoggerUtil {
    * @param marker The {@link Marker} data to take into consideration.
    * @return {@code true} if the specified logging level is currently being
    *         logged by {@code logger}.
-   * @throws NullPointerException If the specified {@link Logger} is null.
    */
   public static boolean isLoggable(final Logger logger, final Level level, final Marker marker) {
     return logger != null && level != null && (level == Level.INFO && logger.isInfoEnabled(marker) || level == Level.DEBUG && logger.isDebugEnabled(marker) || level == Level.TRACE && logger.isTraceEnabled(marker) || level == Level.WARN && logger.isWarnEnabled(marker) || level == Level.ERROR && logger.isErrorEnabled(marker));
@@ -98,9 +99,12 @@ public final class LoggerUtil {
    * @param logger The {@link Logger}.
    * @param level The logging {@link Level}.
    * @param msg The message string to log.
-   * @throws NullPointerException If the specified {@link Logger} is null.
+   * @throws IllegalArgumentException If {@code logger} is null.
    */
   public static void log(final Logger logger, final Level level, final String msg) {
+    if (logger == null)
+      throw new IllegalArgumentException("logger == null");
+
     if (level == Level.INFO)
       logger.info(msg);
     else if (level == Level.DEBUG)
@@ -126,9 +130,12 @@ public final class LoggerUtil {
    * @param level The logging {@link Level}.
    * @param format The format string.
    * @param arg The argument.
-   * @throws NullPointerException If the specified {@link Logger} is null.
+   * @throws IllegalArgumentException If {@code logger} is null.
    */
   public static void log(final Logger logger, final Level level, final String format, final Object arg) {
+    if (logger == null)
+      throw new IllegalArgumentException("logger == null");
+
     if (level == Level.INFO)
       logger.info(format, arg);
     else if (level == Level.DEBUG)
@@ -155,9 +162,12 @@ public final class LoggerUtil {
    * @param format The format string.
    * @param arg1 The first argument.
    * @param arg2 The second argument.
-   * @throws NullPointerException If the specified {@link Logger} is null.
+   * @throws IllegalArgumentException If {@code logger} is null.
    */
   public static void log(final Logger logger, final Level level, final String format, final Object arg1, final Object arg2) {
+    if (logger == null)
+      throw new IllegalArgumentException("logger == null");
+
     if (level == Level.INFO)
       logger.info(format, arg1, arg2);
     else if (level == Level.DEBUG)
@@ -188,9 +198,12 @@ public final class LoggerUtil {
    * @param level The logging {@link Level}.
    * @param format The format string.
    * @param arguments A list of 3 or more arguments.
-   * @throws NullPointerException If the specified {@link Logger} is null.
+   * @throws IllegalArgumentException If {@code logger} is null.
    */
   public static void log(final Logger logger, final Level level, final String format, final Object ... arguments) {
+    if (logger == null)
+      throw new IllegalArgumentException("logger == null");
+
     if (level == Level.INFO)
       logger.info(format, arguments);
     else if (level == Level.DEBUG)
@@ -213,9 +226,12 @@ public final class LoggerUtil {
    * @param level The logging {@link Level}.
    * @param msg The message accompanying the exception.
    * @param t The {@link Throwable} to log.
-   * @throws NullPointerException If the specified {@link Logger} is null.
+   * @throws IllegalArgumentException If {@code logger} is null.
    */
   public static void log(final Logger logger, final Level level, final String msg, final Throwable t) {
+    if (logger == null)
+      throw new IllegalArgumentException("logger == null");
+
     if (level == Level.INFO)
       logger.info(msg, t);
     else if (level == Level.DEBUG)
@@ -238,9 +254,12 @@ public final class LoggerUtil {
    * @param level The logging {@link Level}.
    * @param marker The marker specific to this log statement.
    * @param msg The message string to be logged.
-   * @throws NullPointerException If the specified {@link Logger} is null.
+   * @throws IllegalArgumentException If {@code logger} is null.
    */
   public static void log(final Logger logger, final Level level, final Marker marker, final String msg) {
+    if (logger == null)
+      throw new IllegalArgumentException("logger == null");
+
     if (level == Level.INFO)
       logger.info(marker, msg);
     else if (level == Level.DEBUG)
@@ -270,9 +289,12 @@ public final class LoggerUtil {
    * @param marker The marker specific to this log statement.
    * @param format The format string.
    * @param arg The argument.
-   * @throws NullPointerException If the specified {@link Logger} is null.
+   * @throws IllegalArgumentException If {@code logger} is null.
    */
   public static void log(final Logger logger, final Level level, final Marker marker, final String format, final Object arg) {
+    if (logger == null)
+      throw new IllegalArgumentException("logger == null");
+
     if (level == Level.INFO)
       logger.info(marker, format, arg);
     else if (level == Level.DEBUG)
@@ -304,9 +326,12 @@ public final class LoggerUtil {
    * @param format The format string.
    * @param arg1 The first argument.
    * @param arg2 The second argument.
-   * @throws NullPointerException If the specified {@link Logger} is null.
+   * @throws IllegalArgumentException If {@code logger} is null.
    */
   public static void log(final Logger logger, final Level level, final Marker marker, final String format, final Object arg1, final Object arg2) {
+    if (logger == null)
+      throw new IllegalArgumentException("logger == null");
+
     if (level == Level.INFO)
       logger.info(marker, format, arg1, arg2);
     else if (level == Level.DEBUG)
@@ -342,9 +367,12 @@ public final class LoggerUtil {
    * @param marker The marker specific to this log statement.
    * @param format The format string.
    * @param arguments A list of 3 or more arguments.
-   * @throws NullPointerException If the specified {@link Logger} is null.
+   * @throws IllegalArgumentException If {@code logger} is null.
    */
   public static void log(final Logger logger, final Level level, final Marker marker, final String format, final Object ... arguments) {
+    if (logger == null)
+      throw new IllegalArgumentException("logger == null");
+
     if (level == Level.INFO)
       logger.info(marker, format, arguments);
     else if (level == Level.DEBUG)
@@ -371,9 +399,12 @@ public final class LoggerUtil {
    * @param marker The marker specific to this log statement.
    * @param msg The message accompanying the exception.
    * @param t The {@link Throwable} to log.
-   * @throws NullPointerException If the specified {@link Logger} is null.
+   * @throws IllegalArgumentException If {@code logger} is null.
    */
   public static void log(final Logger logger, final Level level, final Marker marker, final String msg, final Throwable t) {
+    if (logger == null)
+      throw new IllegalArgumentException("logger == null");
+
     if (level == Level.INFO)
       logger.info(marker, msg, t);
     else if (level == Level.DEBUG)
