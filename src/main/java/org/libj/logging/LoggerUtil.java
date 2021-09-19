@@ -16,9 +16,7 @@
 
 package org.libj.logging;
 
-import java.util.Collections;
-import java.util.EnumMap;
-import java.util.Map;
+import java.util.Arrays;
 
 import org.slf4j.Logger;
 import org.slf4j.Marker;
@@ -29,41 +27,29 @@ import org.slf4j.event.Level;
  */
 public final class LoggerUtil {
   /**
-   * A mapping from {@link Level} to its corresponding
-   * {@link ch.qos.logback.classic.Level}.
+   * An array of {@link ch.qos.logback.classic.Level} values corresponding to
+   * the ordinal of the {@link org.slf4j.event.Level} equivalents.
    */
-  static final Map<Level,ch.qos.logback.classic.Level> levelToLevel;
-
-  static {
-    final Map<Level,ch.qos.logback.classic.Level> map = new EnumMap<>(Level.class);
-    map.put(Level.TRACE, ch.qos.logback.classic.Level.TRACE);
-    map.put(Level.DEBUG, ch.qos.logback.classic.Level.DEBUG);
-    map.put(Level.INFO, ch.qos.logback.classic.Level.INFO);
-    map.put(Level.WARN, ch.qos.logback.classic.Level.WARN);
-    map.put(Level.ERROR, ch.qos.logback.classic.Level.ERROR);
-    levelToLevel = Collections.unmodifiableMap(map);
-  }
+  static final ch.qos.logback.classic.Level[] logbackLevel = {ch.qos.logback.classic.Level.ERROR, ch.qos.logback.classic.Level.WARN, ch.qos.logback.classic.Level.INFO, ch.qos.logback.classic.Level.DEBUG, ch.qos.logback.classic.Level.TRACE};
 
   /**
    * Programmatically sets the {@link Level} of the specified {@link Logger}.
-   * <p>
-   * <b>This method is only applicable to the
-   * <a href="https://logback.qos.ch/">LogBack</a> implementation of
-   * {@link Logger} instances.</b>
    *
+   * @implSpec This method is only applicable to the
+   *           <a href="https://logback.qos.ch/">LogBack</a> implementation of
+   *           {@link Logger} instances.
    * @param logger The {@link Logger}.
    * @param level The {@link Level}.
    * @throws ClassCastException If {@code logger} is not an instance of
    *           {@link ch.qos.logback.classic.Logger}.
-   * @throws IllegalArgumentException If {@code logger} is null.
-   * @throws IllegalArgumentException If {@code level} is null and {@code logger} is
-   *           the root logger.
+   * @throws IllegalArgumentException If {@code logger} is null, or if
+   *           {@code level} is null and {@code logger} is the root logger.
    */
   public static void setLevel(final Logger logger, final Level level) {
     if (logger == null)
-      throw new IllegalArgumentException("logger == null");
+      throw new IllegalArgumentException("logger is null");
 
-    ((ch.qos.logback.classic.Logger)logger).setLevel(levelToLevel.get(level));
+    ((ch.qos.logback.classic.Logger)logger).setLevel(logbackLevel[level.ordinal()]);
   }
 
   /**
@@ -103,7 +89,7 @@ public final class LoggerUtil {
    */
   public static void log(final Logger logger, final Level level, final String msg) {
     if (logger == null)
-      throw new IllegalArgumentException("logger == null");
+      throw new IllegalArgumentException("logger is null");
 
     if (level == Level.INFO)
       logger.info(msg);
@@ -134,7 +120,7 @@ public final class LoggerUtil {
    */
   public static void log(final Logger logger, final Level level, final String format, final Object arg) {
     if (logger == null)
-      throw new IllegalArgumentException("logger == null");
+      throw new IllegalArgumentException("logger is null");
 
     if (level == Level.INFO)
       logger.info(format, arg);
@@ -166,7 +152,7 @@ public final class LoggerUtil {
    */
   public static void log(final Logger logger, final Level level, final String format, final Object arg1, final Object arg2) {
     if (logger == null)
-      throw new IllegalArgumentException("logger == null");
+      throw new IllegalArgumentException("logger is null");
 
     if (level == Level.INFO)
       logger.info(format, arg1, arg2);
@@ -202,7 +188,7 @@ public final class LoggerUtil {
    */
   public static void log(final Logger logger, final Level level, final String format, final Object ... arguments) {
     if (logger == null)
-      throw new IllegalArgumentException("logger == null");
+      throw new IllegalArgumentException("logger is null");
 
     if (level == Level.INFO)
       logger.info(format, arguments);
@@ -230,7 +216,7 @@ public final class LoggerUtil {
    */
   public static void log(final Logger logger, final Level level, final String msg, final Throwable t) {
     if (logger == null)
-      throw new IllegalArgumentException("logger == null");
+      throw new IllegalArgumentException("logger is null");
 
     if (level == Level.INFO)
       logger.info(msg, t);
@@ -258,7 +244,7 @@ public final class LoggerUtil {
    */
   public static void log(final Logger logger, final Level level, final Marker marker, final String msg) {
     if (logger == null)
-      throw new IllegalArgumentException("logger == null");
+      throw new IllegalArgumentException("logger is null");
 
     if (level == Level.INFO)
       logger.info(marker, msg);
@@ -293,7 +279,7 @@ public final class LoggerUtil {
    */
   public static void log(final Logger logger, final Level level, final Marker marker, final String format, final Object arg) {
     if (logger == null)
-      throw new IllegalArgumentException("logger == null");
+      throw new IllegalArgumentException("logger is null");
 
     if (level == Level.INFO)
       logger.info(marker, format, arg);
@@ -330,7 +316,7 @@ public final class LoggerUtil {
    */
   public static void log(final Logger logger, final Level level, final Marker marker, final String format, final Object arg1, final Object arg2) {
     if (logger == null)
-      throw new IllegalArgumentException("logger == null");
+      throw new IllegalArgumentException("logger is null");
 
     if (level == Level.INFO)
       logger.info(marker, format, arg1, arg2);
@@ -371,7 +357,7 @@ public final class LoggerUtil {
    */
   public static void log(final Logger logger, final Level level, final Marker marker, final String format, final Object ... arguments) {
     if (logger == null)
-      throw new IllegalArgumentException("logger == null");
+      throw new IllegalArgumentException("logger is null");
 
     if (level == Level.INFO)
       logger.info(marker, format, arguments);
@@ -403,7 +389,7 @@ public final class LoggerUtil {
    */
   public static void log(final Logger logger, final Level level, final Marker marker, final String msg, final Throwable t) {
     if (logger == null)
-      throw new IllegalArgumentException("logger == null");
+      throw new IllegalArgumentException("logger is null");
 
     if (level == Level.INFO)
       logger.info(marker, msg, t);
@@ -417,6 +403,103 @@ public final class LoggerUtil {
       logger.error(marker, msg, t);
     else
       throw new UnsupportedOperationException("Unsupported level: " + level);
+  }
+
+  private static int convert(final StringBuilder builder, final CharSequence str, int a, final Object[] args) {
+    for (int i = 0; i < str.length();) {
+      final char ch = str.charAt(i++);
+      if (ch == '%') {
+        if (i < str.length() && str.charAt(i) == '?') {
+          ++i;
+          final Class<?> cls = args[a++].getClass();
+          builder.append(cls.isAnonymousClass() ? cls.getName() : cls.getSimpleName()).append("@%h");
+          continue;
+        }
+
+        ++a;
+      }
+
+      builder.append(ch);
+    }
+
+    return a;
+  }
+
+  /**
+   * Log a debug message representing a method signature to the specified
+   * {@link Logger logger} with the provided {@link Level level} of the form
+   *
+   * <pre>
+   * $method(String.format($format, $args...))
+   * </pre>
+   *
+   * @param logger The {@link Logger}.
+   * @param level The logging {@link Level}.
+   * @param method The method name.
+   * @param format The {@link String#format(String,Object...) format}.
+   * @param args The arguments to be appended via
+   *          {@link String#valueOf(Object)}.
+   * @throws IllegalArgumentException If {@code method} or {@code args} is null.
+   */
+  public static void logm(final Logger logger, final Level level, String method, final String format, final Object ... args) {
+    if (method == null)
+      throw new IllegalArgumentException("method is null");
+
+    if (args == null)
+      throw new IllegalArgumentException("args is null");
+
+    if (!isLoggable(logger, level))
+      return;
+
+    for (int i = 0; i < args.length; ++i) {
+      final Object arg = args[i];
+      if (arg == null)
+        continue;
+
+      if (arg.getClass().isArray())
+        args[i] = Arrays.toString((Object[])arg);
+      else if (arg instanceof Class)
+        args[i] = ((Class<?>)arg).getSimpleName();
+    }
+
+    final StringBuilder builder = new StringBuilder();
+    final int a = convert(builder, method, 0, args);
+    builder.append('(');
+    if (format != null) {
+      convert(builder, format, a, args);
+      builder.append(')');
+    }
+    else if (args.length > 0) {
+      for (int i = 0; i < args.length; ++i)
+        builder.append(args[i]).append(',');
+
+      builder.setCharAt(builder.length() - 1, ')');
+    }
+    else {
+      builder.append(')');
+    }
+
+    final String msg = format != null ? String.format(builder.toString(), args) : builder.toString();
+    log(logger, level, (Marker)null, msg, (Throwable)null);
+  }
+
+  /**
+   * Log a debug message representing a method signature to the specified
+   * {@link Logger logger} with the provided {@link Level level} of the form
+   *
+   * <pre>
+   * $method($args...)
+   * </pre>
+   *
+   * @param logger The {@link Logger}.
+   * @param level The logging {@link Level}.
+   * @param method The method name.
+   * @param args The arguments to be appended via
+   *          {@link String#valueOf(Object)}.
+   * @throws IllegalArgumentException If {@code method} or {@code args} is null.
+   */
+  public static void logm(final Logger logger, final Level level, final String method, final Object ... args) {
+    logm(logger, level, method, null, args);
   }
 
   private LoggerUtil() {

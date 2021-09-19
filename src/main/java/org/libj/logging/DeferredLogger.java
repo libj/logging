@@ -217,7 +217,7 @@ public final class DeferredLogger {
     if (logger == null)
       throw new IllegalArgumentException("logger == null");
 
-    return defer((Logger)logger, LoggerUtil.levelToLevel.get(deferredLevel));
+    return defer((Logger)logger, LoggerUtil.logbackLevel[deferredLevel.ordinal()]);
   }
 
   /**
@@ -373,7 +373,7 @@ public final class DeferredLogger {
    */
   public static synchronized void flush(final org.slf4j.event.Level level) {
     for (final DeferredLogger entry : deferrers.values())
-      entry.buffer.flush(LoggerUtil.levelToLevel.get(level));
+      entry.buffer.flush(LoggerUtil.logbackLevel[level.ordinal()]);
   }
 
   /**
@@ -405,7 +405,7 @@ public final class DeferredLogger {
     if (deferredLogger == null)
       throw new IllegalArgumentException("The specified logger is not a " + DeferredLogger.class.getSimpleName());
 
-    deferredLogger.buffer.flush(LoggerUtil.levelToLevel.get(level));
+    deferredLogger.buffer.flush(LoggerUtil.logbackLevel[level.ordinal()]);
   }
 
   /**
