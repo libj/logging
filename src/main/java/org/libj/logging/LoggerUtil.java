@@ -469,9 +469,9 @@ public final class LoggerUtil {
       convert(builder, format, a, args);
       builder.append(')');
     }
-    else if (args.length > 0) {
-      for (int i = 0; i < args.length; ++i)
-        builder.append(args[i]).append(',');
+    else if (args.length > 0 && a < args.length) {
+      for (int i = a; i < args.length; ++i)
+        builder.append("%s,");
 
       builder.setCharAt(builder.length() - 1, ')');
     }
@@ -479,7 +479,7 @@ public final class LoggerUtil {
       builder.append(')');
     }
 
-    final String msg = format != null ? String.format(builder.toString(), args) : builder.toString();
+    final String msg = args.length > 0 ? String.format(builder.toString(), args) : builder.toString();
     log(logger, level, (Marker)null, msg, (Throwable)null);
   }
 
