@@ -411,8 +411,15 @@ public final class LoggerUtil {
       if (ch == '%') {
         if (i < str.length() && str.charAt(i) == '?') {
           ++i;
-          final Class<?> cls = args[a++].getClass();
-          builder.append(cls.isAnonymousClass() ? cls.getName() : cls.getSimpleName()).append("@%h");
+          final Object arg = args[a++];
+          if (arg != null) {
+            final Class<?> cls = arg.getClass();
+            builder.append(cls.isAnonymousClass() ? cls.getName() : cls.getSimpleName()).append("@%h");
+          }
+          else {
+            builder.append("%s");
+          }
+
           continue;
         }
 
