@@ -16,43 +16,59 @@
 
 package org.libj.logging;
 
+import java.io.PrintStream;
+
 import org.slf4j.Logger;
 import org.slf4j.Marker;
 import org.slf4j.event.Level;
 
 /**
- * A {@link Logger} that proxies its output to {@link System#out} and
- * {@link System#err}.
+ * A {@link Logger} that proxies its output to a {@link PrintStream}, such as {@link System#out} and {@link System#err}.
  */
-public class SystemLogger implements Logger {
+public class PrintStreamLogger implements Logger {
   private static final String TRACE = "[TRACE] ";
   private static final String DEBUG = "[DEBUG] ";
   private static final String INFO = "[INFO] ";
   private static final String WARN = "[WARN] ";
   private static final String ERROR = "[ERROR] ";
 
+  private final PrintStream ps;
   private final Level level;
 
   /**
-   * Constructs a new {@link SystemLogger} with the specified logging
-   * {@link Level} to be used with this logger.
+   * Constructs a new {@link PrintStreamLogger} with the provided logging {@link Level} and {@link PrintStream}.
+   *
+   * @param level The logging {@link Level}.
+   * @param ps The {@link PrintStream}.
+   * @throws IllegalArgumentException If {@code level} or {@code ps} is null.
+   */
+  public PrintStreamLogger(final Level level, final PrintStream ps) {
+    if (level == null)
+      throw new IllegalArgumentException("level == null");
+
+    if (ps == null)
+      throw new IllegalArgumentException("ps == null");
+
+    this.level = level;
+    this.ps = ps;
+  }
+
+  /**
+   * Constructs a new {@link PrintStreamLogger} with the provided logging {@link Level} to be used with this logger, with
+   * {@link System#out System.out} as the {@link PrintStream}.
    *
    * @param level The logging {@link Level}.
    * @throws IllegalArgumentException If {@code level} is null.
    */
-  public SystemLogger(final Level level) {
-    this.level = level;
-    if (level == null)
-      throw new IllegalArgumentException("level == null");
-
+  public PrintStreamLogger(final Level level) {
+    this(level, System.out);
   }
 
   /**
-   * Constructs a new {@link SystemLogger} with the {@link Level#INFO} to be
-   * used with this logger.
+   * Constructs a new {@link PrintStreamLogger} with the {@link Level#INFO} to be used with this logger.
    */
-  public SystemLogger() {
-    this.level = Level.INFO;
+  public PrintStreamLogger() {
+    this(Level.INFO, System.out);
   }
 
   @Override
@@ -68,32 +84,32 @@ public class SystemLogger implements Logger {
   @Override
   public void trace(final String msg) {
     if (isTraceEnabled())
-      System.out.println(TRACE + msg);
+      ps.println(TRACE + msg);
   }
 
   @Override
   public void trace(final String format, final Object arg) {
     if (isTraceEnabled())
-      System.out.println(TRACE + String.format(format, arg));
+      ps.println(TRACE + String.format(format, arg));
   }
 
   @Override
   public void trace(final String format, final Object arg1, final Object arg2) {
     if (isTraceEnabled())
-      System.out.println(TRACE + String.format(format, arg1, arg2));
+      ps.println(TRACE + String.format(format, arg1, arg2));
   }
 
   @Override
   public void trace(final String format, final Object ... arguments) {
     if (isTraceEnabled())
-      System.out.println(TRACE + String.format(format, arguments));
+      ps.println(TRACE + String.format(format, arguments));
   }
 
   @Override
   public void trace(final String msg, final Throwable t) {
     if (isTraceEnabled()) {
-      System.out.println(TRACE + msg);
-      t.printStackTrace(System.out);
+      ps.println(TRACE + msg);
+      t.printStackTrace(ps);
     }
   }
 
@@ -135,32 +151,32 @@ public class SystemLogger implements Logger {
   @Override
   public void debug(final String msg) {
     if (isDebugEnabled())
-      System.out.println(DEBUG + msg);
+      ps.println(DEBUG + msg);
   }
 
   @Override
   public void debug(final String format, final Object arg) {
     if (isDebugEnabled())
-      System.out.println(DEBUG + String.format(format, arg));
+      ps.println(DEBUG + String.format(format, arg));
   }
 
   @Override
   public void debug(final String format, final Object arg1, final Object arg2) {
     if (isDebugEnabled())
-      System.out.println(DEBUG + String.format(format, arg1, arg2));
+      ps.println(DEBUG + String.format(format, arg1, arg2));
   }
 
   @Override
   public void debug(final String format, final Object ... arguments) {
     if (isDebugEnabled())
-      System.out.println(DEBUG + String.format(format, arguments));
+      ps.println(DEBUG + String.format(format, arguments));
   }
 
   @Override
   public void debug(final String msg, final Throwable t) {
     if (isDebugEnabled()) {
-      System.out.println(DEBUG + msg);
-      t.printStackTrace(System.out);
+      ps.println(DEBUG + msg);
+      t.printStackTrace(ps);
     }
   }
 
@@ -202,32 +218,32 @@ public class SystemLogger implements Logger {
   @Override
   public void info(final String msg) {
     if (isInfoEnabled())
-      System.out.println(INFO + msg);
+      ps.println(INFO + msg);
   }
 
   @Override
   public void info(final String format, final Object arg) {
     if (isInfoEnabled())
-      System.out.println(INFO + String.format(format, arg));
+      ps.println(INFO + String.format(format, arg));
   }
 
   @Override
   public void info(final String format, final Object arg1, final Object arg2) {
     if (isInfoEnabled())
-      System.out.println(INFO + String.format(format, arg1, arg2));
+      ps.println(INFO + String.format(format, arg1, arg2));
   }
 
   @Override
   public void info(final String format, final Object ... arguments) {
     if (isInfoEnabled())
-      System.out.println(INFO + String.format(format, arguments));
+      ps.println(INFO + String.format(format, arguments));
   }
 
   @Override
   public void info(final String msg, final Throwable t) {
     if (isInfoEnabled()) {
-      System.out.println(INFO + msg);
-      t.printStackTrace(System.out);
+      ps.println(INFO + msg);
+      t.printStackTrace(ps);
     }
   }
 
@@ -269,32 +285,32 @@ public class SystemLogger implements Logger {
   @Override
   public void warn(final String msg) {
     if (isWarnEnabled())
-      System.out.println(WARN + msg);
+      ps.println(WARN + msg);
   }
 
   @Override
   public void warn(final String format, final Object arg) {
     if (isWarnEnabled())
-      System.out.println(WARN + String.format(format, arg));
+      ps.println(WARN + String.format(format, arg));
   }
 
   @Override
   public void warn(final String format, final Object arg1, final Object arg2) {
     if (isWarnEnabled())
-      System.out.println(WARN + String.format(format, arg1, arg2));
+      ps.println(WARN + String.format(format, arg1, arg2));
   }
 
   @Override
   public void warn(final String format, final Object ... arguments) {
     if (isWarnEnabled())
-      System.out.println(WARN + String.format(format, arguments));
+      ps.println(WARN + String.format(format, arguments));
   }
 
   @Override
   public void warn(final String msg, final Throwable t) {
     if (isWarnEnabled()) {
-      System.out.println(WARN + msg);
-      t.printStackTrace(System.out);
+      ps.println(WARN + msg);
+      t.printStackTrace(ps);
     }
   }
 
