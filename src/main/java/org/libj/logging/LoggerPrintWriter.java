@@ -25,12 +25,10 @@ import org.slf4j.Logger;
 import org.slf4j.event.Level;
 
 /**
- * A {@link PrintWriter} that delegates its methods to a target {@link Logger}.
- * The {@code print()}, {@code println()}, {@code write()}, and {@code append()}
- * methods will result in a new log event only if the log message ends with a
- * {@code '\n'} character. If a message does not end with a {@code '\n'}
- * character, it will be buffered until a {@code '\n'} character is encountered
- * as the last character of a later call.
+ * A {@link PrintWriter} that delegates its methods to a target {@link Logger}. The {@code print()}, {@code println()},
+ * {@code write()}, and {@code append()} methods will result in a new log event only if the log message ends with a {@code '\n'}
+ * character. If a message does not end with a {@code '\n'} character, it will be buffered until a {@code '\n'} character is
+ * encountered as the last character of a later call.
  */
 public class LoggerPrintWriter extends PrintWriter {
   private final StringBuffer buffer = new StringBuffer();
@@ -38,13 +36,10 @@ public class LoggerPrintWriter extends PrintWriter {
   private final Level level;
 
   /**
-   * Creates a new {@link LoggerPrintWriter} with the specified {@link Logger}
-   * and {@link Level}.
+   * Creates a new {@link LoggerPrintWriter} with the specified {@link Logger} and {@link Level}.
    *
-   * @param logger The {@link Logger} instance to which methods of this
-   *          {@link LoggerPrintWriter} will be delegated.
-   * @param level The {@link Level} that will be used for log statements from
-   *          this {@link LoggerPrintWriter}.
+   * @param logger The {@link Logger} instance to which methods of this {@link LoggerPrintWriter} will be delegated.
+   * @param level The {@link Level} that will be used for log statements from this {@link LoggerPrintWriter}.
    */
   public LoggerPrintWriter(final Logger logger, final Level level) {
     super(new Writer() {

@@ -27,23 +27,20 @@ import org.slf4j.event.Level;
  */
 public final class LoggerUtil {
   /**
-   * An array of {@link ch.qos.logback.classic.Level} values corresponding to
-   * the ordinal of the {@link org.slf4j.event.Level} equivalents.
+   * An array of {@link ch.qos.logback.classic.Level} values corresponding to the ordinal of the {@link org.slf4j.event.Level}
+   * equivalents.
    */
   static final ch.qos.logback.classic.Level[] logbackLevel = {ch.qos.logback.classic.Level.ERROR, ch.qos.logback.classic.Level.WARN, ch.qos.logback.classic.Level.INFO, ch.qos.logback.classic.Level.DEBUG, ch.qos.logback.classic.Level.TRACE};
 
   /**
    * Programmatically sets the {@link Level} of the specified {@link Logger}.
    *
-   * @implSpec This method is only applicable to the
-   *           <a href="https://logback.qos.ch/">LogBack</a> implementation of
-   *           {@link Logger} instances.
+   * @implSpec This method is only applicable to the <a href="https://logback.qos.ch/">LogBack</a> implementation of {@link Logger}
+   *           instances.
    * @param logger The {@link Logger}.
    * @param level The {@link Level}.
-   * @throws ClassCastException If {@code logger} is not an instance of
-   *           {@link ch.qos.logback.classic.Logger}.
-   * @throws IllegalArgumentException If {@code logger} is null, or if
-   *           {@code level} is null and {@code logger} is the root logger.
+   * @throws ClassCastException If {@code logger} is not an instance of {@link ch.qos.logback.classic.Logger}.
+   * @throws IllegalArgumentException If {@code logger} is null, or if {@code level} is null and {@code logger} is the root logger.
    */
   public static void setLevel(final Logger logger, final Level level) {
     if (logger == null)
@@ -53,27 +50,23 @@ public final class LoggerUtil {
   }
 
   /**
-   * Check if a message of the specified {@code level} would be logged by
-   * {@code logger}.
+   * Check if a message of the specified {@code level} would be logged by {@code logger}.
    *
    * @param logger The {@link Logger} to check.
    * @param level The logging {@link Level}.
-   * @return {@code true} if the specified logging level is currently being
-   *         logged by {@code logger}.
+   * @return {@code true} if the specified logging level is currently being logged by {@code logger}.
    */
   public static boolean isLoggable(final Logger logger, final Level level) {
     return logger != null && level != null && (level == Level.INFO && logger.isInfoEnabled() || level == Level.DEBUG && logger.isDebugEnabled() || level == Level.TRACE && logger.isTraceEnabled() || level == Level.WARN && logger.isWarnEnabled() || level == Level.ERROR && logger.isErrorEnabled());
   }
 
   /**
-   * Check if a message of the specified {@code level} and {@code marker} would
-   * be logged by {@code logger}.
+   * Check if a message of the specified {@code level} and {@code marker} would be logged by {@code logger}.
    *
    * @param logger The {@link Logger} to check.
    * @param level The logging {@link Level}.
    * @param marker The {@link Marker} data to take into consideration.
-   * @return {@code true} if the specified logging level is currently being
-   *         logged by {@code logger}.
+   * @return {@code true} if the specified logging level is currently being logged by {@code logger}.
    */
   public static boolean isLoggable(final Logger logger, final Level level, final Marker marker) {
     return logger != null && level != null && (level == Level.INFO && logger.isInfoEnabled(marker) || level == Level.DEBUG && logger.isDebugEnabled(marker) || level == Level.TRACE && logger.isTraceEnabled(marker) || level == Level.WARN && logger.isWarnEnabled(marker) || level == Level.ERROR && logger.isErrorEnabled(marker));
@@ -106,11 +99,9 @@ public final class LoggerUtil {
   }
 
   /**
-   * Log a message with {@code logger} at {@code level} according to the
-   * specified {@code format} and {@code arg}.
+   * Log a message with {@code logger} at {@code level} according to the specified {@code format} and {@code arg}.
    * <p>
-   * This form avoids superfluous object creation when the logger is disabled
-   * for the {@code level}.
+   * This form avoids superfluous object creation when the logger is disabled for the {@code level}.
    *
    * @param logger The {@link Logger}.
    * @param level The logging {@link Level}.
@@ -137,11 +128,10 @@ public final class LoggerUtil {
   }
 
   /**
-   * Log a message with {@code logger} at {@code level} according to the
-   * specified {@code format} and arguments, {@code arg1} and {@code arg2}.
+   * Log a message with {@code logger} at {@code level} according to the specified {@code format} and arguments, {@code arg1} and
+   * {@code arg2}.
    * <p>
-   * This form avoids superfluous object creation when the logger is disabled
-   * for the {@code level}.
+   * This form avoids superfluous object creation when the logger is disabled for the {@code level}.
    *
    * @param logger The {@link Logger}.
    * @param level The logging {@link Level}.
@@ -169,16 +159,12 @@ public final class LoggerUtil {
   }
 
   /**
-   * Log a message with {@code logger} at {@code level} according to the
-   * specified {@code format} and {@code arguments}.
+   * Log a message with {@code logger} at {@code level} according to the specified {@code format} and {@code arguments}.
    * <p>
-   * This form avoids superfluous string concatenation when the logger is
-   * disabled for the {@code level}. However, this variant incurs the hidden
-   * (and relatively small) cost of creating an {@code Object[]} before invoking
-   * the method, even if {@code logger} is disabled for {@code level}. The
-   * variants taking {@link #log(Logger,Level,String,Object)} and
-   * {@link #log(Logger,Level,String,Object,Object)} arguments exist solely in
-   * order to avoid this hidden cost.
+   * This form avoids superfluous string concatenation when the logger is disabled for the {@code level}. However, this variant
+   * incurs the hidden (and relatively small) cost of creating an {@code Object[]} before invoking the method, even if
+   * {@code logger} is disabled for {@code level}. The variants taking {@link #log(Logger,Level,String,Object)} and
+   * {@link #log(Logger,Level,String,Object,Object)} arguments exist solely in order to avoid this hidden cost.
    *
    * @param logger The {@link Logger}.
    * @param level The logging {@link Level}.
@@ -205,8 +191,7 @@ public final class LoggerUtil {
   }
 
   /**
-   * Log an exception {@code t} (throwable) with {@code logger} at {@code level}
-   * with an accompanying {@code msg} message.
+   * Log an exception {@code t} (throwable) with {@code logger} at {@code level} with an accompanying {@code msg} message.
    *
    * @param logger The {@link Logger}.
    * @param level The logging {@link Level}.
@@ -233,8 +218,7 @@ public final class LoggerUtil {
   }
 
   /**
-   * Log a {@code msg} message with {@code logger} at {@code level}, with the
-   * specific {@code marker}.
+   * Log a {@code msg} message with {@code logger} at {@code level}, with the specific {@code marker}.
    *
    * @param logger The {@link Logger}.
    * @param level The logging {@link Level}.
@@ -261,14 +245,13 @@ public final class LoggerUtil {
   }
 
   /**
-   * Log a message with {@code logger} at {@code level} according to the
-   * specified {@code format} and {@code arg}, with the specific {@code marker}.
+   * Log a message with {@code logger} at {@code level} according to the specified {@code format} and {@code arg}, with the specific
+   * {@code marker}.
    * <p>
-   * This form avoids superfluous object creation when the logger is disabled
-   * for the {@code level}.
+   * This form avoids superfluous object creation when the logger is disabled for the {@code level}.
    * <p>
-   * This method is similar to {@link #log(Logger,Level,String,Object)} method
-   * except that the marker data is also taken into consideration.
+   * This method is similar to {@link #log(Logger,Level,String,Object)} method except that the marker data is also taken into
+   * consideration.
    *
    * @param logger The {@link Logger}.
    * @param level The logging {@link Level}.
@@ -296,15 +279,13 @@ public final class LoggerUtil {
   }
 
   /**
-   * Log a message with {@code logger} at {@code level} according to the
-   * specified {@code format} and arguments, {@code arg1} and {@code arg2}, with
-   * the specific {@code marker}.
+   * Log a message with {@code logger} at {@code level} according to the specified {@code format} and arguments, {@code arg1} and
+   * {@code arg2}, with the specific {@code marker}.
    * <p>
-   * This form avoids superfluous object creation when the logger is disabled
-   * for the {@code level}.
+   * This form avoids superfluous object creation when the logger is disabled for the {@code level}.
    * <p>
-   * This method is similar to {@link #log(Logger,Level,String,Object,Object)}
-   * method except that the marker data is also taken into consideration.
+   * This method is similar to {@link #log(Logger,Level,String,Object,Object)} method except that the marker data is also taken into
+   * consideration.
    *
    * @param logger The {@link Logger}.
    * @param level The logging {@link Level}.
@@ -333,20 +314,16 @@ public final class LoggerUtil {
   }
 
   /**
-   * Log a message with {@code logger} at {@code level} according to the
-   * specified {@code format} and {@code arguments}, with the specific
-   * {@code marker}.
+   * Log a message with {@code logger} at {@code level} according to the specified {@code format} and {@code arguments}, with the
+   * specific {@code marker}.
    * <p>
-   * This form avoids superfluous string concatenation when the logger is
-   * disabled for the {@code level}. However, this variant incurs the hidden
-   * (and relatively small) cost of creating an {@code Object[]} before invoking
-   * the method, even if {@code logger} is disabled for {@code level}. The
-   * variants taking {@link #log(Logger,Level,String,Object)} and
-   * {@link #log(Logger,Level,String,Object,Object)} arguments exist solely in
-   * order to avoid this hidden cost.
+   * This form avoids superfluous string concatenation when the logger is disabled for the {@code level}. However, this variant
+   * incurs the hidden (and relatively small) cost of creating an {@code Object[]} before invoking the method, even if
+   * {@code logger} is disabled for {@code level}. The variants taking {@link #log(Logger,Level,String,Object)} and
+   * {@link #log(Logger,Level,String,Object,Object)} arguments exist solely in order to avoid this hidden cost.
    * <p>
-   * This method is similar to {@link #log(Logger,Level,String,Object...)}
-   * method except that the marker data is also taken into consideration.
+   * This method is similar to {@link #log(Logger,Level,String,Object...)} method except that the marker data is also taken into
+   * consideration.
    *
    * @param logger The {@link Logger}.
    * @param level The logging {@link Level}.
@@ -374,11 +351,11 @@ public final class LoggerUtil {
   }
 
   /**
-   * Log an exception {@code t} (throwable) with {@code logger} at {@code level}
-   * with an accompanying {@code msg} message, with the specific {@code marker}.
+   * Log an exception {@code t} (throwable) with {@code logger} at {@code level} with an accompanying {@code msg} message, with the
+   * specific {@code marker}.
    * <p>
-   * This method is similar to {@link #log(Logger,Level,String,Throwable)}
-   * method except that the marker data is also taken into consideration.
+   * This method is similar to {@link #log(Logger,Level,String,Throwable)} method except that the marker data is also taken into
+   * consideration.
    *
    * @param logger The {@link Logger}.
    * @param level The logging {@link Level}.
@@ -406,7 +383,7 @@ public final class LoggerUtil {
   }
 
   private static int convert(final StringBuilder builder, final CharSequence str, int a, final Object[] args) {
-    for (int i = 0; i < str.length();) {
+    for (int i = 0, i$ = str.length(); i < i$;) { // [N]
       final char ch = str.charAt(i++);
       if (ch == '%') {
         if (i < str.length() && str.charAt(i) == '?') {
@@ -433,8 +410,8 @@ public final class LoggerUtil {
   }
 
   /**
-   * Log a debug message representing a method signature to the specified
-   * {@link Logger logger} with the provided {@link Level level} of the form
+   * Log a debug message representing a method signature to the specified {@link Logger logger} with the provided {@link Level
+   * level} of the form
    *
    * <pre>
    * $method(String.format($format, $args...))
@@ -444,8 +421,7 @@ public final class LoggerUtil {
    * @param level The logging {@link Level}.
    * @param method The method name.
    * @param format The {@link String#format(String,Object...) format}.
-   * @param args The arguments to be appended via
-   *          {@link String#valueOf(Object)}.
+   * @param args The arguments to be appended via {@link String#valueOf(Object)}.
    * @throws IllegalArgumentException If {@code method} or {@code args} is null.
    */
   public static void logm(final Logger logger, final Level level, String method, final String format, final Object ... args) {
@@ -458,7 +434,7 @@ public final class LoggerUtil {
     if (!isLoggable(logger, level))
       return;
 
-    for (int i = 0; i < args.length; ++i) {
+    for (int i = 0; i < args.length; ++i) { // [A]
       final Object arg = args[i];
       if (arg == null)
         continue;
@@ -477,7 +453,7 @@ public final class LoggerUtil {
       builder.append(')');
     }
     else if (args.length > 0 && a < args.length) {
-      for (int i = a; i < args.length; ++i)
+      for (int i = a; i < args.length; ++i) // [A]
         builder.append("%s,");
 
       builder.setCharAt(builder.length() - 1, ')');
@@ -491,8 +467,8 @@ public final class LoggerUtil {
   }
 
   /**
-   * Log a debug message representing a method signature to the specified
-   * {@link Logger logger} with the provided {@link Level level} of the form
+   * Log a debug message representing a method signature to the specified {@link Logger logger} with the provided {@link Level
+   * level} of the form
    *
    * <pre>
    * $method($args...)
@@ -501,8 +477,7 @@ public final class LoggerUtil {
    * @param logger The {@link Logger}.
    * @param level The logging {@link Level}.
    * @param method The method name.
-   * @param args The arguments to be appended via
-   *          {@link String#valueOf(Object)}.
+   * @param args The arguments to be appended via {@link String#valueOf(Object)}.
    * @throws IllegalArgumentException If {@code method} or {@code args} is null.
    */
   public static void logm(final Logger logger, final Level level, final String method, final Object ... args) {

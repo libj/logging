@@ -70,11 +70,9 @@ public class ColorConverter extends CompositeConverter<ILoggingEvent> {
   private static Boolean enabled;
 
   /**
-   * Returns {@code true} if the {@link ColorConverter} is enabled; otherwise
-   * {@code false}.
+   * Returns {@code true} if the {@link ColorConverter} is enabled; otherwise {@code false}.
    *
-   * @return {@code true} if the {@link ColorConverter} is enabled; otherwise
-   *         {@code false}.
+   * @return {@code true} if the {@link ColorConverter} is enabled; otherwise {@code false}.
    */
   private static boolean isEnabled() {
     if (enabled != null)
@@ -89,20 +87,17 @@ public class ColorConverter extends CompositeConverter<ILoggingEvent> {
   }
 
   /**
-   * Sets the enabled state of the {@link ColorConverter} to the value of
-   * {@code enabled}.
+   * Sets the enabled state of the {@link ColorConverter} to the value of {@code enabled}.
    *
-   * @param enabled The value to which the enabled state of the
-   *          {@link ColorConverter} should be set.
+   * @param enabled The value to which the enabled state of the {@link ColorConverter} should be set.
    */
   public static void setEnabled(final boolean enabled) {
     ColorConverter.enabled = enabled;
   }
 
   /**
-   * Transforms the specified {@link ILoggingEvent} by amending its message with
-   * color options specified in the {@code <pattern>} element under
-   * {@code <layout>} in {@code logback.xml}.
+   * Transforms the specified {@link ILoggingEvent} by amending its message with color options specified in the {@code <pattern>}
+   * element under {@code <layout>} in {@code logback.xml}.
    * <p>
    * An example {@code <pattern>} that specifies color codes and options is:
    *
@@ -125,7 +120,7 @@ public class ColorConverter extends CompositeConverter<ILoggingEvent> {
     AnsiColor color = null;
     final List<String> options = getOptionList();
     if (options != null) {
-      for (final String option : options) {
+      for (final String option : options) { // [L]
         if ("bold".equals(option)) {
           group = "3";
           strength = "1";
