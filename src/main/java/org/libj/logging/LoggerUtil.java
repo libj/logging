@@ -434,7 +434,7 @@ public final class LoggerUtil {
     if (!isLoggable(logger, level))
       return;
 
-    for (int i = 0; i < args.length; ++i) { // [A]
+    for (int i = 0, i$ = args.length; i < i$; ++i) { // [A]
       final Object arg = args[i];
       if (arg == null)
         continue;
@@ -453,7 +453,7 @@ public final class LoggerUtil {
       builder.append(')');
     }
     else if (args.length > 0 && a < args.length) {
-      for (int i = a; i < args.length; ++i) // [A]
+      for (int i = a, i$ = args.length; i < i$; ++i) // [A]
         builder.append("%s,");
 
       builder.setCharAt(builder.length() - 1, ')');
