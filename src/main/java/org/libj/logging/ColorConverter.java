@@ -119,7 +119,7 @@ public class ColorConverter extends CompositeConverter<ILoggingEvent> {
     String strength = "0";
     AnsiColor color = null;
     final List<String> options = getOptionList();
-    if (options != null) {
+    if (options != null && options.size() > 0) {
       for (final String option : options) { // [L]
         if ("bold".equals(option)) {
           group = "3";
@@ -157,5 +157,8 @@ public class ColorConverter extends CompositeConverter<ILoggingEvent> {
     builder.append(ENCODE_START).append(strength);
     builder.append(';').append(group).append(color);
     return builder.append(ENCODE_END).append(in).append(ENCODE_START).append(RESET).append(ENCODE_END).toString();
+  }
+
+  private void x() {
   }
 }

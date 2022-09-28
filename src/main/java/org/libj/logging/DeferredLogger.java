@@ -297,8 +297,9 @@ public final class DeferredLogger {
    * Clears the buffers of deferred events for all deferred loggers.
    */
   public static synchronized void clear() {
-    for (final DeferredLogger deferredLogger : deferrers.values()) // [C]
-      deferredLogger.buffer.clear();
+    if (deferrers.size() > 0)
+      for (final DeferredLogger dererrer : deferrers.values()) // [C]
+        dererrer.buffer.clear();
   }
 
   /**
@@ -323,8 +324,9 @@ public final class DeferredLogger {
    *          will not be flushed.
    */
   public static synchronized void flush(final org.slf4j.event.Level level) {
-    for (final DeferredLogger entry : deferrers.values()) // [C]
-      entry.buffer.flush(LoggerUtil.logbackLevel[level.ordinal()]);
+    if (deferrers.size() > 0)
+      for (final DeferredLogger dererrer : deferrers.values()) // [C]
+        dererrer.buffer.flush(LoggerUtil.logbackLevel[level.ordinal()]);
   }
 
   /**
@@ -333,8 +335,9 @@ public final class DeferredLogger {
    * {@link DeferredLogger#defer(org.slf4j.Logger,org.slf4j.event.Level)}), and below the default level set in {@code logback.xml}.
    */
   public static synchronized void flush() {
-    for (final DeferredLogger entry : deferrers.values()) // [C]
-      entry.buffer.flush(entry.logger.getLevel());
+    if (deferrers.size() > 0)
+      for (final DeferredLogger dererrer : deferrers.values()) // [C]
+        dererrer.buffer.flush(dererrer.logger.getLevel());
   }
 
   /**
