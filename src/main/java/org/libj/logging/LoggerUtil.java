@@ -16,11 +16,20 @@
 
 package org.libj.logging;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 import java.util.Arrays;
+import java.util.Enumeration;
 
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.slf4j.Marker;
 import org.slf4j.event.Level;
+
+import ch.qos.logback.classic.LoggerContext;
+import ch.qos.logback.classic.joran.JoranConfigurator;
+import ch.qos.logback.core.joran.spi.JoranException;
 
 /**
  * Utility functions for operations pertaining to {@link Logger}.
@@ -47,6 +56,61 @@ public final class LoggerUtil {
       throw new IllegalArgumentException("logger is null");
 
     ((ch.qos.logback.classic.Logger)logger).setLevel(logbackLevel[level.ordinal()]);
+  }
+
+  /**
+   * Find and load a {@code "logback.xml"} file that IS NOT located in the root location matching that of the provided {@code cls}.
+   *
+   * @param cls The {@link Class} of which to find and load a {@code "logback.xml"} file NOT belonging to the same root location.
+   * @return {@code true} if a {@code "logback.xml"} file was found, otherwise {@code false}.
+   * @throws IllegalArgumentException If {@code cls} is null.
+   */
+  public static boolean loadConfigExcludeLocation(final Class<?> cls) {
+    return loadConfigViaLocation(cls, true);
+  }
+
+  /**
+   * Find and load a {@code "logback.xml"} file that IS located in the root location matching that of the provided {@code cls}.
+   *
+   * @param cls The {@link Class} of which to find and load a {@code "logback.xml"} file belonging to the same root location.
+   * @return {@code true} if a {@code "logback.xml"} file was found, otherwise {@code false}.
+   * @throws IllegalArgumentException If {@code cls} is null.
+   */
+  public static boolean loadConfigIncludeLocation(final Class<?> cls) {
+    return loadConfigViaLocation(cls, false);
+  }
+
+  private static boolean loadConfigViaLocation(final Class<?> cls, final boolean exclude) {
+    if (cls == null)
+      throw new IllegalArgumentException("cls is null");
+
+    final String classResource = cls.getName().replace('.', '/').concat(".class");
+    final ClassLoader classLoader = ClassLoader.getSystemClassLoader();
+    final URL classResourceUrl = classLoader.getResource(classResource);
+    if (classResourceUrl != null) {
+      try {
+        final String classResourcePath = classResourceUrl.toString();
+        final Enumeration<URL> e = classLoader.getResources("logback.xml");
+        while (e.hasMoreElements()) {
+          final URL url = e.nextElement();
+          if (url.toString().regionMatches(0, classResourcePath, 0, classResourcePath.length() - classResource.length()) != exclude) {
+            final LoggerContext loggerContext = (LoggerContext)LoggerFactory.getILoggerFactory();
+            loggerContext.reset();
+            final JoranConfigurator configurator = new JoranConfigurator();
+            configurator.setContext(loggerContext);
+            try (final InputStream in = url.openStream()) {
+              configurator.doConfigure(in);
+              return true;
+            }
+          }
+        }
+      }
+      catch (final IOException | JoranException e) {
+        throw new RuntimeException(e);
+      }
+    }
+
+    return false;
   }
 
   /**
