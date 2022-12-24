@@ -16,10 +16,11 @@
 
 package org.libj.logging;
 
-import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.Deque;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.Objects;
+import java.util.function.Supplier;
 
 import org.slf4j.LoggerFactory;
 
@@ -41,23 +42,25 @@ import ch.qos.logback.core.spi.FilterReply;
  * trace and debug log statements are principle in helping the developer diagnose the problem. In order to satisfy both the success
  * and failure cases, there exist a couple of approaches:
  * <ol>
- * <li>By default, set the log level to INFO. This would ensure the success case does not flood the logs. If there is a failure,
- * however, the developer would have to set the log level to TRACE, and restart the long running test phase. Additionally, the log
- * statements from this test phase would be outputted regardless of whether the specific operation led to the error or not. The
- * developer would therefore have to filter through the entire log output to find the events corresponding to the error.</li>
+ * <li>By default, set the log level to {@code INFO}. This would ensure the success case does not flood the logs. If there is a
+ * failure, however, the developer would have to set the log level to {@code TRACE}, and restart the long running test phase.
+ * Additionally, the log statements from this test phase would be outputted regardless of whether the specific operation led to the
+ * error or not. The developer would therefore have to filter through the entire log output to find the events corresponding to the
+ * error.</li>
  * <li>Alternatively, consider a solution that uses the {@link DeferredLogger}. The {@link DeferredLogger} is configured with two
  * parameters:
  * <ol>
- * <li>The default log level: Specified by the current level set for the logger (e.g. INFO).</li>
- * <li>The deferred log level: Specifies the lower level of events to defer for later output (e.g. TRACE).</li>
+ * <li>The default log level: Specified by the current level set for the logger (e.g. {@code INFO}).</li>
+ * <li>The deferred log level: Specifies the lower level of events to defer for later output (e.g. {@code TRACE}).</li>
  * </ol>
- * With this configuration, the {@link DeferredLogger} allows events with a level of INFO or above to be outputted to the console,
- * while events with a level from TRACE (inclusive) to INFO (exclusive) will be deferred. The developer may use this pattern to
- * thereafter include a call to {@link DeferredLogger#flush()} in a catch block that may be invoked by an exception (which will
- * happen in the case of the error). When {@link DeferredLogger#flush()} is called, the deferred log statements from TRACE
- * (inclusive) to INFO (exclusive) are outputted. To help reduce the number of irrelevant log events outputted during the test
- * phase, the developer may include a call to {@link DeferredLogger#clear()} at the end of each test method (meaning the test was
- * successful). When {@link DeferredLogger#clear()} is called, the buffer of deferred log statements is cleared.</li>
+ * With this configuration, the {@link DeferredLogger} allows events with a level of {@code INFO} or above to be outputted to the
+ * console, while events with a level from {@code TRACE} (inclusive) to {@code INFO} (exclusive) will be deferred. The developer may
+ * use this pattern to thereafter include a call to {@link DeferredLogger#flush()} in a catch block that may be invoked by an
+ * exception (which will happen in the case of the error). When {@link DeferredLogger#flush()} is called, the deferred log
+ * statements from {@code TRACE} (inclusive) to {@code INFO} (exclusive) are outputted. To help reduce the number of irrelevant log
+ * events outputted during the test phase, the developer may include a call to {@link DeferredLogger#clear()} at the end of each
+ * test method (meaning the test was successful). When {@link DeferredLogger#clear()} is called, the buffer of deferred log
+ * statements is cleared.</li>
  * </ol>
  * With the {@link DeferredLogger}, trace log statements will be outputted only if an exception triggers
  * {@link DeferredLogger#flush()}. This logging pattern can be used to produce output of trace log statements that are directly
@@ -86,9 +89,10 @@ public final class DeferredLogger {
   }
 
   private static final class AppenderBuffer {
-    private final ArrayList<ILoggingEvent> events = new ArrayList<>();
+    private final Deque<ILoggingEvent> events;
     private final FlushFilter flushFilter = new FlushFilter();
     private final Appender<ILoggingEvent> appender;
+    private final int maxEvents;
 
     /**
      * Create a new {@link AppenderBuffer} with the specified {@link Appender} to which deferred events will be flushed.
@@ -96,12 +100,20 @@ public final class DeferredLogger {
      * @param appender The {@link Appender} to which deferred events will be flushed.
      * @throws IllegalArgumentException If {@code appender} is null.
      */
-    private AppenderBuffer(final Appender<ILoggingEvent> appender) {
+    private AppenderBuffer(final Appender<ILoggingEvent> appender, final int maxEvents, final Supplier<Deque> listSupplier) {
       this.appender = appender;
       if (appender == null)
-        throw new IllegalArgumentException("appender == null");
+        throw new IllegalArgumentException("appender is null");
 
+      if (listSupplier == null)
+        throw new IllegalArgumentException("listSupplier is null");
+
+      if (maxEvents <= 0)
+        throw new IllegalArgumentException("maxEvents (" + maxEvents + ") must be positive");
+
+      this.events = listSupplier.get();
       this.appender.addFilter(flushFilter);
+      this.maxEvents = maxEvents;
     }
 
     /**
@@ -109,14 +121,16 @@ public final class DeferredLogger {
      *
      * @param event The {@link ILoggingEvent} that will be deferred for later output.
      */
-    public void addEvent(final ILoggingEvent event) {
+    private void addEvent(final ILoggingEvent event) {
       events.add(event);
+      for (int i = maxEvents, $i = events.size(); i < $i; ++i)
+        events.removeFirst();
     }
 
     /**
      * Clears the buffer of deferred events.
      */
-    public void clear() {
+    private void clear() {
       events.clear();
     }
 
@@ -127,13 +141,11 @@ public final class DeferredLogger {
      * @param level The lowest {@link Level} condition for events to be flushed. If an event has a level lower than {@code level},
      *          it will not be flushed.
      */
-    public void flush(final Level level) {
+    private void flush(final Level level) {
       synchronized (flushFilter) {
         flushFilter.setLevel(level);
-        final Iterator<ILoggingEvent> iterator = events.iterator();
-        while (iterator.hasNext()) {
-          final ILoggingEvent event = iterator.next();
-          iterator.remove();
+        for (int i = 0, i$ = events.size(); i < i$; ++i) { // [RA]
+          final ILoggingEvent event = events.removeFirst();
           if (event != null && event.getLevel().isGreaterOrEqual(level))
             appender.doAppend(event);
         }
@@ -184,11 +196,96 @@ public final class DeferredLogger {
    * @throws IllegalArgumentException If the specified {@link org.slf4j.event.Level} is null.
    * @throws IllegalArgumentException If {@code logger} is null.
    */
-  public static synchronized org.slf4j.Logger defer(final org.slf4j.Logger logger, final org.slf4j.event.Level deferredLevel) {
-    if (logger == null)
-      throw new IllegalArgumentException("logger == null");
+  public static synchronized org.slf4j.Logger defer(final org.slf4j.Logger logger, final org.slf4j.event.Level deferredLevel, final int maxEvents, final Supplier<Deque> listSupplier) {
+    return defer((Logger)logger, LoggerUtil.logbackLevel[deferredLevel.ordinal()], maxEvents, listSupplier);
+  }
 
-    return defer((Logger)logger, LoggerUtil.logbackLevel[deferredLevel.ordinal()]);
+  /**
+   * Configures the specified {@link org.slf4j.Logger} to defer log events with a level between:
+   * <ol>
+   * <li>The level for {@code logger} that is configured in {@code logback.xml}.</li>
+   * <li>The level specified by {@code deferredLevel}.</li>
+   * </ol>
+   *
+   * @param logger The logger to configure to defer log events with a level between (1) and (2) above.
+   * @param deferredLevel The lowest {@link org.slf4j.event.Level} that will be deferred for later output.
+   * @return The specified {@link Logger}.
+   * @throws ClassCastException If {@code logger} is not an instance of {@link ch.qos.logback.classic.Logger}.
+   * @throws IllegalStateException If the specified {@link Logger} and the root logger do not have an appender.
+   * @throws IllegalArgumentException If the specified {@link org.slf4j.event.Level} is null.
+   * @throws IllegalArgumentException If {@code logger} is null.
+   */
+  public static synchronized org.slf4j.Logger defer(final org.slf4j.Logger logger, final org.slf4j.event.Level deferredLevel, final Supplier<Deque> listSupplier) {
+    return defer((Logger)logger, LoggerUtil.logbackLevel[deferredLevel.ordinal()], Integer.MAX_VALUE, listSupplier);
+  }
+
+  /**
+   * Configures the specified {@link org.slf4j.Logger} to defer log events with a level between:
+   * <ol>
+   * <li>The level for {@code logger} that is configured in {@code logback.xml}.</li>
+   * <li>The level specified by {@code deferredLevel}.</li>
+   * </ol>
+   *
+   * @param logger The logger to configure to defer log events with a level between (1) and (2) above.
+   * @param deferredLevel The lowest {@link org.slf4j.event.Level} that will be deferred for later output.
+   * @return The specified {@link Logger}.
+   * @throws ClassCastException If {@code logger} is not an instance of {@link ch.qos.logback.classic.Logger}.
+   * @throws IllegalStateException If the specified {@link Logger} and the root logger do not have an appender.
+   * @throws IllegalArgumentException If the specified {@link org.slf4j.event.Level} is null.
+   * @throws IllegalArgumentException If {@code logger} is null.
+   */
+  public static synchronized org.slf4j.Logger defer(final org.slf4j.Logger logger, final org.slf4j.event.Level deferredLevel) {
+    return defer((Logger)logger, LoggerUtil.logbackLevel[deferredLevel.ordinal()], Integer.MAX_VALUE, LinkedList::new);
+  }
+
+  /**
+   * Configures the specified {@link Logger} to defer log events with a level between:
+   * <ol>
+   * <li>The level for {@code logger} that is configured in {@code logback.xml}.</li>
+   * <li>The level specified by {@code deferredLevel}.</li>
+   * </ol>
+   *
+   * @param logger The logger to configure to defer log events with a level between (1) and (2) above.
+   * @param deferredLevel The lowest {@link Level} that will be deferred for later output.
+   * @return The specified {@link Logger}.
+   * @throws IllegalStateException If the specified {@link Logger} and the root logger do not have an appender.
+   * @throws IllegalArgumentException If {@code logger} or {@code deferredLevel} is null.
+   */
+  private static synchronized org.slf4j.Logger defer(final Logger logger, final Level deferredLevel, final int maxEvents, final Supplier<Deque> listSupplier) {
+    if (logger == null)
+      throw new IllegalArgumentException("logger is null");
+
+    if (deferredLevel == null)
+      throw new IllegalArgumentException("deferredLevel is null");
+
+    final Appender<ILoggingEvent> appender = getAppender(logger);
+    final Level defaultLevel = logger.getEffectiveLevel();
+    logger.setLevel(Objects.requireNonNull(deferredLevel));
+    if (deferrers.containsKey(logger))
+      return logger;
+
+    final AppenderBuffer buffer = new AppenderBuffer(appender, maxEvents, listSupplier);
+    final DeferredLogger deferredLogger = new DeferredLogger(logger, defaultLevel, buffer);
+    deferrers.put(logger, deferredLogger);
+    appender.addFilter(new Filter<ILoggingEvent>() {
+      @Override
+      public FilterReply decide(final ILoggingEvent event) {
+        if (!matchesLogger(event, logger, appender))
+          return FilterReply.NEUTRAL;
+
+        if (event.getLevel().levelInt < deferredLevel.levelInt)
+          return FilterReply.DENY;
+
+        if (event.getLevel().levelInt < deferredLogger.level.levelInt) {
+          buffer.addEvent(event);
+          return FilterReply.DENY;
+        }
+
+        return FilterReply.ACCEPT;
+      }
+    });
+
+    return logger;
   }
 
   /**
@@ -241,56 +338,6 @@ public final class DeferredLogger {
       return loggerName.equals(eventLoggerName);
 
     return loggerName.length() < eventLoggerName.length() && eventLoggerName.startsWith(loggerName + ".");
-  }
-
-  /**
-   * Configures the specified {@link Logger} to defer log events with a level between:
-   * <ol>
-   * <li>The level for {@code logger} that is configured in {@code logback.xml}.</li>
-   * <li>The level specified by {@code deferredLevel}.</li>
-   * </ol>
-   *
-   * @param logger The logger to configure to defer log events with a level between (1) and (2) above.
-   * @param deferredLevel The lowest {@link Level} that will be deferred for later output.
-   * @return The specified {@link Logger}.
-   * @throws IllegalStateException If the specified {@link Logger} and the root logger do not have an appender.
-   * @throws IllegalArgumentException If {@code logger} or {@code deferredLevel} is null.
-   */
-  private static synchronized org.slf4j.Logger defer(final Logger logger, final Level deferredLevel) {
-    if (logger == null)
-      throw new IllegalArgumentException("logger == null");
-
-    if (deferredLevel == null)
-      throw new IllegalArgumentException("deferredLevel == null");
-
-    final Appender<ILoggingEvent> appender = getAppender(logger);
-    final Level defaultLevel = logger.getEffectiveLevel();
-    logger.setLevel(Objects.requireNonNull(deferredLevel));
-    if (deferrers.containsKey(logger))
-      return logger;
-
-    final AppenderBuffer buffer = new AppenderBuffer(appender);
-    final DeferredLogger deferredLogger = new DeferredLogger(logger, defaultLevel, buffer);
-    deferrers.put(logger, deferredLogger);
-    appender.addFilter(new Filter<ILoggingEvent>() {
-      @Override
-      public FilterReply decide(final ILoggingEvent event) {
-        if (!matchesLogger(event, logger, appender))
-          return FilterReply.NEUTRAL;
-
-        if (event.getLevel().levelInt < deferredLevel.levelInt)
-          return FilterReply.DENY;
-
-        if (event.getLevel().levelInt < deferredLogger.level.levelInt) {
-          buffer.addEvent(event);
-          return FilterReply.DENY;
-        }
-
-        return FilterReply.ACCEPT;
-      }
-    });
-
-    return logger;
   }
 
   /**
@@ -388,14 +435,14 @@ public final class DeferredLogger {
   private DeferredLogger(final Logger logger, final Level level, final AppenderBuffer buffer) {
     this.logger = logger;
     if (logger == null)
-      throw new IllegalArgumentException("logger == null");
+      throw new IllegalArgumentException("logger is null");
 
     this.level = level;
     if (level == null)
-      throw new IllegalArgumentException("level == null");
+      throw new IllegalArgumentException("level is null");
 
     this.buffer = buffer;
     if (buffer == null)
-      throw new IllegalArgumentException("buffer == null");
+      throw new IllegalArgumentException("buffer is null");
   }
 }
