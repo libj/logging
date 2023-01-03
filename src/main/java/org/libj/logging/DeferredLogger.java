@@ -19,7 +19,7 @@ package org.libj.logging;
 import java.util.Deque;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
-import java.util.Objects;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.Supplier;
 
 import org.slf4j.LoggerFactory;
@@ -70,6 +70,8 @@ import ch.qos.logback.core.spi.FilterReply;
  * {@link org.slf4j.Logger} instances.</b>
  */
 public final class DeferredLogger {
+  private static final ReentrantLock classLock = new ReentrantLock();
+
   private static class FlushFilter extends Filter<ILoggingEvent> {
     private Level level;
 
@@ -88,32 +90,39 @@ public final class DeferredLogger {
     }
   }
 
-  private static final class AppenderBuffer {
-    private final Deque<ILoggingEvent> events;
+  private final class AppenderBuffer {
     private final FlushFilter flushFilter = new FlushFilter();
+    private final Deque<ILoggingEvent> events;
     private final Appender<ILoggingEvent> appender;
-    private final int maxEvents;
 
     /**
      * Create a new {@link AppenderBuffer} with the specified {@link Appender} to which deferred events will be flushed.
      *
-     * @param appender The {@link Appender} to which deferred events will be flushed.
      * @throws IllegalArgumentException If {@code appender} is null.
      */
-    private AppenderBuffer(final Appender<ILoggingEvent> appender, final int maxEvents, final Supplier<Deque> listSupplier) {
-      this.appender = appender;
-      if (appender == null)
-        throw new IllegalArgumentException("appender is null");
-
-      if (listSupplier == null)
-        throw new IllegalArgumentException("listSupplier is null");
-
-      if (maxEvents <= 0)
-        throw new IllegalArgumentException("maxEvents (" + maxEvents + ") must be positive");
+    private AppenderBuffer() {
+      this.appender = getAppender(logger);
+      this.appender.addFilter(flushFilter);
 
       this.events = listSupplier.get();
-      this.appender.addFilter(flushFilter);
-      this.maxEvents = maxEvents;
+
+      appender.addFilter(new Filter<ILoggingEvent>() {
+        @Override
+        public FilterReply decide(final ILoggingEvent event) {
+          if (!matchesLogger(event, logger, appender))
+            return FilterReply.NEUTRAL;
+
+          final Level level = event.getLevel();
+          final boolean loggable = level.levelInt >= logger.getEffectiveLevel().levelInt;
+          if (level.levelInt < deferredLevel.levelInt)
+            return loggable ? FilterReply.ACCEPT : FilterReply.DENY;
+
+          if (loggable)
+            addEvent(event);
+
+          return FilterReply.DENY;
+        }
+      });
     }
 
     /**
@@ -131,7 +140,9 @@ public final class DeferredLogger {
      * Clears the buffer of deferred events.
      */
     private void clear() {
+      lock.lock();
       events.clear();
+      lock.unlock();
     }
 
     /**
@@ -142,16 +153,16 @@ public final class DeferredLogger {
      *          it will not be flushed.
      */
     private void flush(final Level level) {
-      synchronized (flushFilter) {
-        flushFilter.setLevel(level);
-        for (int i = 0, i$ = events.size(); i < i$; ++i) { // [RA]
-          final ILoggingEvent event = events.removeFirst();
-          if (event != null && event.getLevel().isGreaterOrEqual(level))
-            appender.doAppend(event);
-        }
-
-        flushFilter.setLevel(null);
+      lock.lock();
+      flushFilter.setLevel(level);
+      for (int i = 0, i$ = events.size(); i < i$; ++i) { // [RA]
+        final ILoggingEvent event = events.removeFirst();
+        if (event != null && event.getLevel().isGreaterOrEqual(level))
+          appender.doAppend(event);
       }
+
+      flushFilter.setLevel(null);
+      lock.unlock();
     }
   }
 
@@ -196,7 +207,7 @@ public final class DeferredLogger {
    * @throws IllegalArgumentException If the specified {@link org.slf4j.event.Level} is null.
    * @throws IllegalArgumentException If {@code logger} is null.
    */
-  public static synchronized org.slf4j.Logger defer(final org.slf4j.Logger logger, final org.slf4j.event.Level deferredLevel, final int maxEvents, final Supplier<Deque> listSupplier) {
+  public static org.slf4j.Logger defer(final org.slf4j.Logger logger, final org.slf4j.event.Level deferredLevel, final int maxEvents, final Supplier<Deque> listSupplier) {
     return defer((Logger)logger, LoggerUtil.logbackLevel[deferredLevel.ordinal()], maxEvents, listSupplier);
   }
 
@@ -215,7 +226,7 @@ public final class DeferredLogger {
    * @throws IllegalArgumentException If the specified {@link org.slf4j.event.Level} is null.
    * @throws IllegalArgumentException If {@code logger} is null.
    */
-  public static synchronized org.slf4j.Logger defer(final org.slf4j.Logger logger, final org.slf4j.event.Level deferredLevel, final Supplier<Deque> listSupplier) {
+  public static org.slf4j.Logger defer(final org.slf4j.Logger logger, final org.slf4j.event.Level deferredLevel, final Supplier<Deque> listSupplier) {
     return defer((Logger)logger, LoggerUtil.logbackLevel[deferredLevel.ordinal()], Integer.MAX_VALUE, listSupplier);
   }
 
@@ -234,7 +245,7 @@ public final class DeferredLogger {
    * @throws IllegalArgumentException If the specified {@link org.slf4j.event.Level} is null.
    * @throws IllegalArgumentException If {@code logger} is null.
    */
-  public static synchronized org.slf4j.Logger defer(final org.slf4j.Logger logger, final org.slf4j.event.Level deferredLevel) {
+  public static org.slf4j.Logger defer(final org.slf4j.Logger logger, final org.slf4j.event.Level deferredLevel) {
     return defer((Logger)logger, LoggerUtil.logbackLevel[deferredLevel.ordinal()], Integer.MAX_VALUE, LinkedList::new);
   }
 
@@ -251,40 +262,14 @@ public final class DeferredLogger {
    * @throws IllegalStateException If the specified {@link Logger} and the root logger do not have an appender.
    * @throws IllegalArgumentException If {@code logger} or {@code deferredLevel} is null.
    */
-  private static synchronized org.slf4j.Logger defer(final Logger logger, final Level deferredLevel, final int maxEvents, final Supplier<Deque> listSupplier) {
-    if (logger == null)
-      throw new IllegalArgumentException("logger is null");
+  private static org.slf4j.Logger defer(final Logger logger, final Level deferredLevel, final int maxEvents, final Supplier<Deque> listSupplier) {
+    classLock.lock();
+    DeferredLogger deferredLogger = deferrers.get(logger);
+    if (deferredLogger == null)
+      deferrers.put(logger, deferredLogger = new DeferredLogger(logger, maxEvents, listSupplier));
 
-    if (deferredLevel == null)
-      throw new IllegalArgumentException("deferredLevel is null");
-
-    final Appender<ILoggingEvent> appender = getAppender(logger);
-    final Level defaultLevel = logger.getEffectiveLevel();
-    logger.setLevel(Objects.requireNonNull(deferredLevel));
-    if (deferrers.containsKey(logger))
-      return logger;
-
-    final AppenderBuffer buffer = new AppenderBuffer(appender, maxEvents, listSupplier);
-    final DeferredLogger deferredLogger = new DeferredLogger(logger, defaultLevel, buffer);
-    deferrers.put(logger, deferredLogger);
-    appender.addFilter(new Filter<ILoggingEvent>() {
-      @Override
-      public FilterReply decide(final ILoggingEvent event) {
-        if (!matchesLogger(event, logger, appender))
-          return FilterReply.NEUTRAL;
-
-        if (event.getLevel().levelInt < deferredLevel.levelInt)
-          return FilterReply.DENY;
-
-        if (event.getLevel().levelInt < deferredLogger.level.levelInt) {
-          buffer.addEvent(event);
-          return FilterReply.DENY;
-        }
-
-        return FilterReply.ACCEPT;
-      }
-    });
-
+    deferredLogger.setDeferredLevel(deferredLevel);
+    classLock.unlock();
     return logger;
   }
 
@@ -320,30 +305,20 @@ public final class DeferredLogger {
    * @param appender The {@link Appender}.
    * @return {@code true} if the specified {@link ILoggingEvent} matches the specified {@link Logger} and {@link Appender};
    *         otherwise {@code false}.
-   * @throws IllegalArgumentException If {@code event} or {@code logger} is null.
    */
-  private static boolean matchesLogger(final ILoggingEvent event, final Logger logger, final Appender<ILoggingEvent> appender) {
-    if (event == null)
-      throw new IllegalArgumentException("event == null");
-
-    if (logger == null)
-      throw new IllegalArgumentException("logger == null");
-
-    final String loggerName = logger.getName();
+  private boolean matchesLogger(final ILoggingEvent event, final Logger logger, final Appender<ILoggingEvent> appender) {
     final String eventLoggerName = event.getLoggerName();
-    if (org.slf4j.Logger.ROOT_LOGGER_NAME.equals(loggerName))
+    if (isRootLogger)
       return org.slf4j.Logger.ROOT_LOGGER_NAME.equals(eventLoggerName) || !((Logger)LoggerFactory.getLogger(event.getLoggerName())).isAttached(appender);
 
-    if (loggerName.length() == eventLoggerName.length())
-      return loggerName.equals(eventLoggerName);
-
-    return loggerName.length() < eventLoggerName.length() && eventLoggerName.startsWith(loggerName + ".");
+    final char ch;
+    return eventLoggerName.startsWith(loggerName) && (eventLoggerName.length() == loggerNameLength || (ch = eventLoggerName.charAt(loggerNameLength)) == '.' || ch == '$');
   }
 
   /**
    * Clears the buffers of deferred events for all deferred loggers.
    */
-  public static synchronized void clear() {
+  public static void clear() {
     if (deferrers.size() > 0)
       for (final DeferredLogger dererrer : deferrers.values()) // [C]
         dererrer.buffer.clear();
@@ -355,7 +330,7 @@ public final class DeferredLogger {
    * @param logger The deferred {@link org.slf4j.Logger}.
    * @throws IllegalArgumentException If the specified {@link org.slf4j.Logger} is not a {@link DeferredLogger}.
    */
-  public static synchronized void clear(final org.slf4j.Logger logger) {
+  public static void clear(final org.slf4j.Logger logger) {
     final DeferredLogger deferredLogger = deferrers.get(logger);
     if (deferredLogger == null)
       throw new IllegalArgumentException("The specified logger is not a " + DeferredLogger.class.getSimpleName());
@@ -370,7 +345,7 @@ public final class DeferredLogger {
    * @param level The lowest {@link Level} condition for events to be flushed. If an event has a level lower than {@code level}, it
    *          will not be flushed.
    */
-  public static synchronized void flush(final org.slf4j.event.Level level) {
+  public static void flush(final org.slf4j.event.Level level) {
     if (deferrers.size() > 0)
       for (final DeferredLogger dererrer : deferrers.values()) // [C]
         dererrer.buffer.flush(LoggerUtil.logbackLevel[level.ordinal()]);
@@ -381,7 +356,7 @@ public final class DeferredLogger {
    * {@link Appender#doAppend(Object)} method for each event with level at or above the {@code deferredLevel} (specified in
    * {@link DeferredLogger#defer(org.slf4j.Logger,org.slf4j.event.Level)}), and below the default level set in {@code logback.xml}.
    */
-  public static synchronized void flush() {
+  public static void flush() {
     if (deferrers.size() > 0)
       for (final DeferredLogger dererrer : deferrers.values()) // [C]
         dererrer.buffer.flush(dererrer.logger.getLevel());
@@ -396,7 +371,7 @@ public final class DeferredLogger {
    *          will not be flushed.
    * @throws IllegalArgumentException If the specified {@link org.slf4j.Logger} is not a {@link DeferredLogger}.
    */
-  public static synchronized void flush(final org.slf4j.Logger logger, final org.slf4j.event.Level level) {
+  public static void flush(final org.slf4j.Logger logger, final org.slf4j.event.Level level) {
     final DeferredLogger deferredLogger = deferrers.get(logger);
     if (deferredLogger == null)
       throw new IllegalArgumentException("The specified logger is not a " + DeferredLogger.class.getSimpleName());
@@ -412,7 +387,7 @@ public final class DeferredLogger {
    * @param logger The deferred {@link org.slf4j.Logger}.
    * @throws IllegalArgumentException If the specified {@link org.slf4j.Logger} is not a {@link DeferredLogger}.
    */
-  public static synchronized void flush(final org.slf4j.Logger logger) {
+  public static void flush(final org.slf4j.Logger logger) {
     final DeferredLogger deferredLogger = deferrers.get(logger);
     if (deferredLogger == null)
       throw new IllegalArgumentException("The specified logger is not a " + DeferredLogger.class.getSimpleName());
@@ -420,29 +395,47 @@ public final class DeferredLogger {
     deferredLogger.buffer.flush(deferredLogger.logger.getLevel());
   }
 
+  private final ReentrantLock lock = new ReentrantLock();
   private final Logger logger;
-  private final Level level;
+  private final String loggerName;
+  private final boolean isRootLogger;
+  private final int loggerNameLength;
   private final AppenderBuffer buffer;
+  private final int maxEvents;
+  private final Supplier<Deque> listSupplier;
+  private Level deferredLevel;
 
   /**
    * Creates a new {@link DeferredLogger} with the specified parameters.
    *
    * @param logger The {@link Logger}.
-   * @param level The current {@link Level} value as configured in {@code logback.xml}.
-   * @param buffer The {@link AppenderBuffer}.
-   * @throws IllegalArgumentException If any of the specified parameters is null.
+   * @param maxEvents The maximum number of events to buffer.
+   * @param listSupplier The {@link Supplier} to create the instance of the {@link Deque} buffer.
+   * @throws IllegalArgumentException If {@code logger} is null.
    */
-  private DeferredLogger(final Logger logger, final Level level, final AppenderBuffer buffer) {
-    this.logger = logger;
-    if (logger == null)
+  private DeferredLogger(final Logger logger, final int maxEvents, final Supplier<Deque> listSupplier) {
+    if ((this.logger = logger) == null)
       throw new IllegalArgumentException("logger is null");
 
-    this.level = level;
-    if (level == null)
-      throw new IllegalArgumentException("level is null");
+    this.loggerName = logger.getName();
+    this.loggerNameLength = loggerName.length();
+    this.isRootLogger = org.slf4j.Logger.ROOT_LOGGER_NAME.equals(loggerName);
 
-    this.buffer = buffer;
-    if (buffer == null)
-      throw new IllegalArgumentException("buffer is null");
+    if ((this.maxEvents = maxEvents) <= 0)
+      throw new IllegalArgumentException("maxEvents (" + maxEvents + ") must be positive");
+
+    if ((this.listSupplier = listSupplier) == null)
+      throw new IllegalArgumentException("listSupplier is null");
+
+    this.buffer = new AppenderBuffer();
+  }
+
+  /**
+   * Set the {@code deferredLevel} value.
+   *
+   * @param deferredLevel The deferred {@link Level} value.
+   */
+  private void setDeferredLevel(final Level deferredLevel) {
+    this.deferredLevel = deferredLevel;
   }
 }

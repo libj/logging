@@ -19,7 +19,6 @@ package org.libj.logging;
 import static org.junit.Assert.*;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -31,10 +30,11 @@ import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.LayoutBase;
 
 public class DeferredLoggerTest extends LayoutBase<ILoggingEvent> {
-  static final List<String> events = new ArrayList<>();
+  static final ArrayList<String> events = new ArrayList<>();
 
   @Override
   public String doLayout(final ILoggingEvent event) {
+//    System.err.println(event.getFormattedMessage());
     events.add(event.getFormattedMessage());
     return "";
   }
@@ -46,96 +46,33 @@ public class DeferredLoggerTest extends LayoutBase<ILoggingEvent> {
 
   @Test
   public void test1() {
-    final Logger logger = DeferredLogger.defer(LoggerFactory.getLogger(DeferredLoggerTest.class), Level.TRACE);
-    logger.trace("trace");
-    assertEquals(0, events.size());
-    logger.debug("debug");
-    assertEquals(0, events.size());
-    logger.info("info");
-    assertEquals(0, events.size());
-    logger.warn("warn");
-    assertEquals(1, events.size());
-    logger.error("error");
-    assertEquals(2, events.size());
+    for (final Level defaultLevel : Level.values()) {
+      LoggerUtil.setLevel(LoggerFactory.getLogger(DeferredLoggerTest.class), defaultLevel);
+      for (final Level deferredLevel : Level.values()) {
+        final Logger logger = DeferredLogger.defer(LoggerFactory.getLogger(DeferredLoggerTest.class), deferredLevel);
+        int loggable = 0;
+        int printed = 0;
+        for (final Level level : Level.values()) {
+          if (LoggerUtil.isLoggable(logger, level)) {
+            ++loggable;
+            LoggerUtil.log(logger, level, level.toString());
+            if (level.ordinal() <= defaultLevel.ordinal() && level.ordinal() > deferredLevel.ordinal())
+              ++printed;
+          }
 
-    DeferredLogger.flush(Level.TRACE);
-    assertEquals(5, events.size());
+          assertEquals(printed, events.size());
+        }
+
+        DeferredLogger.flush(deferredLevel);
+        assertEquals(loggable, events.size());
+        events.clear();
+      }
+    }
   }
 
   @Test
   public void test2() {
-    final Logger logger = DeferredLogger.defer(LoggerFactory.getLogger(DeferredLoggerTest.class), Level.TRACE);
-    logger.trace("trace");
-    assertEquals(0, events.size());
-    logger.debug("debug");
-    assertEquals(0, events.size());
-    logger.info("info");
-    assertEquals(0, events.size());
-    logger.warn("warn");
-    assertEquals(1, events.size());
-    logger.error("error");
-    assertEquals(2, events.size());
-
-    DeferredLogger.flush();
-    assertEquals(5, events.size());
-  }
-
-  @Test
-  public void test3() {
-    final Logger logger = DeferredLogger.defer(LoggerFactory.getLogger(DeferredLoggerTest.class), Level.DEBUG);
-    logger.trace("trace");
-    assertEquals(0, events.size());
-    logger.debug("debug");
-    assertEquals(0, events.size());
-    logger.info("info");
-    assertEquals(0, events.size());
-    logger.warn("warn");
-    assertEquals(1, events.size());
-    logger.error("error");
-    assertEquals(2, events.size());
-
-    DeferredLogger.flush(Level.TRACE);
-    assertEquals(4, events.size());
-  }
-
-  @Test
-  public void test4() {
-    final Logger logger = DeferredLogger.defer(LoggerFactory.getLogger(DeferredLoggerTest.class), Level.DEBUG);
-    logger.trace("trace");
-    assertEquals(0, events.size());
-    logger.debug("debug");
-    assertEquals(0, events.size());
-    logger.info("info");
-    assertEquals(0, events.size());
-    logger.warn("warn");
-    assertEquals(1, events.size());
-    logger.error("error");
-    assertEquals(2, events.size());
-
-    DeferredLogger.flush();
-    assertEquals(4, events.size());
-  }
-
-  @Test
-  public void test5() {
-    final Logger logger = DeferredLogger.defer(LoggerFactory.getLogger(DeferredLoggerTest.class), Level.DEBUG);
-    logger.trace("trace");
-    assertEquals(0, events.size());
-    logger.debug("debug");
-    assertEquals(0, events.size());
-    logger.info("info");
-    assertEquals(0, events.size());
-    logger.warn("warn");
-    assertEquals(1, events.size());
-    logger.error("error");
-    assertEquals(2, events.size());
-
-    DeferredLogger.flush(Level.INFO);
-    assertEquals(3, events.size());
-  }
-
-  @Test
-  public void test6() {
+    LoggerUtil.setLevel(LoggerFactory.getLogger(DeferredLoggerTest.class), Level.WARN);
     final Logger logger = DeferredLogger.defer(LoggerFactory.getLogger(DeferredLoggerTest.class), Level.INFO);
     logger.trace("trace");
     assertEquals(0, events.size());
@@ -143,57 +80,30 @@ public class DeferredLoggerTest extends LayoutBase<ILoggingEvent> {
     assertEquals(0, events.size());
     logger.info("info");
     assertEquals(0, events.size());
-    logger.warn("warn");
-    assertEquals(1, events.size());
-    logger.error("error");
-    assertEquals(2, events.size());
 
-    DeferredLogger.flush(Level.TRACE);
-    assertEquals(3, events.size());
-  }
-
-  @Test
-  public void test7() {
-    final Logger logger = DeferredLogger.defer(LoggerFactory.getLogger(DeferredLoggerTest.class), Level.INFO);
-    logger.trace("trace");
-    assertEquals(0, events.size());
-    logger.debug("debug");
-    assertEquals(0, events.size());
-    logger.info("info");
-    assertEquals(0, events.size());
-    logger.warn("warn");
-    assertEquals(1, events.size());
-    logger.error("error");
-    assertEquals(2, events.size());
-
-    DeferredLogger.flush();
-    assertEquals(3, events.size());
-  }
-
-  @Test
-  public void test8() {
-    final Logger logger = DeferredLogger.defer(LoggerFactory.getLogger(DeferredLoggerTest.class), Level.INFO);
-    logger.trace("trace");
-    assertEquals(0, events.size());
-    logger.debug("debug");
-    assertEquals(0, events.size());
-    logger.info("info");
-    assertEquals(0, events.size());
     LoggerFactory.getLogger("foo").info("foo info");
     assertEquals(1, events.size());
+    events.clear();
+
     DeferredLogger.clear(logger);
     logger.warn("warn");
-    assertEquals(2, events.size());
+    assertEquals(0, events.size());
+    LoggerFactory.getLogger(DeferredLoggerTest.class.getName() + ".SubClass").error("error");
     LoggerFactory.getLogger(DeferredLoggerTest.class.getName() + ".SubClass").warn("warn");
-    assertEquals(3, events.size());
-    DeferredLogger.defer(LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME), Level.DEBUG).debug("debug");
-    assertEquals(3, events.size());
-    LoggerFactory.getLogger("bar").debug("debug");
-    assertEquals(3, events.size());
-    logger.error("error");
-    assertEquals(4, events.size());
-
+    LoggerFactory.getLogger(DeferredLoggerTest.class.getName() + ".SubClass").info("info");
+    assertEquals(0, events.size());
     DeferredLogger.flush();
-    assertEquals(6, events.size());
+    assertEquals(3, events.size());
+    events.clear();
+
+    DeferredLogger.defer(LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME), Level.DEBUG).debug("debug");
+    assertEquals(0, events.size());
+    LoggerFactory.getLogger("bar").debug("debug");
+    assertEquals(0, events.size());
+
+    logger.error("error");
+    assertEquals(0, events.size());
+    DeferredLogger.flush();
+    assertEquals(1, events.size());
   }
 }
