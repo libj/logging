@@ -46,13 +46,13 @@ public class DeferredLoggerTest extends LayoutBase<ILoggingEvent> {
 
   @Test
   public void test1() {
-    for (final Level defaultLevel : Level.values()) {
+    for (final Level defaultLevel : Level.values()) { // [A]
       LoggerUtil.setLevel(LoggerFactory.getLogger(DeferredLoggerTest.class), defaultLevel);
-      for (final Level deferredLevel : Level.values()) {
+      for (final Level deferredLevel : Level.values()) { // [A]
         final Logger logger = DeferredLogger.defer(LoggerFactory.getLogger(DeferredLoggerTest.class), deferredLevel);
         int loggable = 0;
         int printed = 0;
-        for (final Level level : Level.values()) {
+        for (final Level level : Level.values()) { // [A]
           if (LoggerUtil.isLoggable(logger, level)) {
             ++loggable;
             LoggerUtil.log(logger, level, level.toString());

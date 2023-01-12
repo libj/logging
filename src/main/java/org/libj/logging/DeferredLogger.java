@@ -132,7 +132,7 @@ public final class DeferredLogger {
      */
     private void addEvent(final ILoggingEvent event) {
       events.add(event);
-      for (int i = maxEvents, $i = events.size(); i < $i; ++i)
+      for (int i = maxEvents, $i = events.size(); i < $i; ++i) // [N]
         events.removeFirst();
     }
 
