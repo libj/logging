@@ -156,7 +156,7 @@ public final class DeferredLogger {
       lock.lock();
       flushFilter.setLevel(level);
       for (int i = 0, i$ = events.size(); i < i$; ++i) { // [RA]
-        final ILoggingEvent event = events.removeFirst();
+        final ILoggingEvent event = events.pollFirst();
         if (event != null && event.getLevel().isGreaterOrEqual(level))
           appender.doAppend(event);
       }
