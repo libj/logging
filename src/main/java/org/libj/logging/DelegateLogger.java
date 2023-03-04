@@ -35,12 +35,10 @@ public abstract class DelegateLogger implements Logger {
    * Creates a new {@link DelegateLogger} with the specified target {@link Logger}.
    *
    * @param target The target {@link Logger}.
-   * @throws IllegalArgumentException If {@code target} is null.
+   * @throws NullPointerException If {@code target} is null.
    */
   public DelegateLogger(final Logger target) {
-    this.target = target;
-    if (target == null)
-      throw new IllegalArgumentException("target == null");
+    this.target = Objects.requireNonNull(target, "target == null");
   }
 
   /**

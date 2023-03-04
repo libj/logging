@@ -19,6 +19,7 @@ package org.libj.logging;
 import java.util.Deque;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
+import java.util.Objects;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.Supplier;
 
@@ -98,7 +99,7 @@ public final class DeferredLogger {
     /**
      * Create a new {@link AppenderBuffer} with the specified {@link Appender} to which deferred events will be flushed.
      *
-     * @throws IllegalArgumentException If {@code appender} is null.
+     * @throws NullPointerException If {@code appender} is null.
      */
     private AppenderBuffer() {
       this.appender = getAppender(logger);
@@ -176,12 +177,9 @@ public final class DeferredLogger {
    * @return The first {@link Appender} of the specified {@link Logger}, or if one does not exist, the first {@link Appender} of the
    *         ROOT logger.
    * @throws IllegalStateException If the specified {@link Logger} and the ROOT logger do not have an appender.
-   * @throws IllegalArgumentException If {@code logger} is null.
+   * @throws NullPointerException If {@code logger} is null.
    */
   private static Appender<ILoggingEvent> getAppender(final Logger logger) {
-    if (logger == null)
-      throw new IllegalArgumentException("logger == null");
-
     if (logger.iteratorForAppenders().hasNext())
       return logger.iteratorForAppenders().next();
 
@@ -204,8 +202,7 @@ public final class DeferredLogger {
    * @return The specified {@link Logger}.
    * @throws ClassCastException If {@code logger} is not an instance of {@link ch.qos.logback.classic.Logger}.
    * @throws IllegalStateException If the specified {@link Logger} and the root logger do not have an appender.
-   * @throws IllegalArgumentException If the specified {@link org.slf4j.event.Level} is null.
-   * @throws IllegalArgumentException If {@code logger} is null.
+   * @throws NullPointerException If the specified {@link org.slf4j.event.Level} or {@code logger} is null.
    */
   public static org.slf4j.Logger defer(final org.slf4j.Logger logger, final org.slf4j.event.Level deferredLevel, final int maxEvents, final Supplier<Deque> listSupplier) {
     return defer((Logger)logger, LoggerUtil.logbackLevel[deferredLevel.ordinal()], maxEvents, listSupplier);
@@ -223,8 +220,7 @@ public final class DeferredLogger {
    * @return The specified {@link Logger}.
    * @throws ClassCastException If {@code logger} is not an instance of {@link ch.qos.logback.classic.Logger}.
    * @throws IllegalStateException If the specified {@link Logger} and the root logger do not have an appender.
-   * @throws IllegalArgumentException If the specified {@link org.slf4j.event.Level} is null.
-   * @throws IllegalArgumentException If {@code logger} is null.
+   * @throws NullPointerException If the specified {@link org.slf4j.event.Level} or {@code logger} is null.
    */
   public static org.slf4j.Logger defer(final org.slf4j.Logger logger, final org.slf4j.event.Level deferredLevel, final Supplier<Deque> listSupplier) {
     return defer((Logger)logger, LoggerUtil.logbackLevel[deferredLevel.ordinal()], Integer.MAX_VALUE, listSupplier);
@@ -242,8 +238,7 @@ public final class DeferredLogger {
    * @return The specified {@link Logger}.
    * @throws ClassCastException If {@code logger} is not an instance of {@link ch.qos.logback.classic.Logger}.
    * @throws IllegalStateException If the specified {@link Logger} and the root logger do not have an appender.
-   * @throws IllegalArgumentException If the specified {@link org.slf4j.event.Level} is null.
-   * @throws IllegalArgumentException If {@code logger} is null.
+   * @throws NullPointerException If the specified {@link org.slf4j.event.Level} or {@code logger} is null.
    */
   public static org.slf4j.Logger defer(final org.slf4j.Logger logger, final org.slf4j.event.Level deferredLevel) {
     return defer((Logger)logger, LoggerUtil.logbackLevel[deferredLevel.ordinal()], Integer.MAX_VALUE, LinkedList::new);
@@ -260,7 +255,7 @@ public final class DeferredLogger {
    * @param deferredLevel The lowest {@link Level} that will be deferred for later output.
    * @return The specified {@link Logger}.
    * @throws IllegalStateException If the specified {@link Logger} and the root logger do not have an appender.
-   * @throws IllegalArgumentException If {@code logger} or {@code deferredLevel} is null.
+   * @throws NullPointerException If {@code logger} or {@code deferredLevel} is null.
    */
   private static org.slf4j.Logger defer(final Logger logger, final Level deferredLevel, final int maxEvents, final Supplier<Deque> listSupplier) {
     classLock.lock();
@@ -411,12 +406,10 @@ public final class DeferredLogger {
    * @param logger The {@link Logger}.
    * @param maxEvents The maximum number of events to buffer.
    * @param listSupplier The {@link Supplier} to create the instance of the {@link Deque} buffer.
-   * @throws IllegalArgumentException If {@code logger} is null.
+   * @throws NullPointerException If {@code logger} or {@code listSupplier} is null.
    */
   private DeferredLogger(final Logger logger, final int maxEvents, final Supplier<Deque> listSupplier) {
-    if ((this.logger = logger) == null)
-      throw new IllegalArgumentException("logger is null");
-
+    this.logger = logger;
     this.loggerName = logger.getName();
     this.loggerNameLength = loggerName.length();
     this.isRootLogger = org.slf4j.Logger.ROOT_LOGGER_NAME.equals(loggerName);
@@ -424,9 +417,7 @@ public final class DeferredLogger {
     if ((this.maxEvents = maxEvents) <= 0)
       throw new IllegalArgumentException("maxEvents (" + maxEvents + ") must be positive");
 
-    if ((this.listSupplier = listSupplier) == null)
-      throw new IllegalArgumentException("listSupplier is null");
-
+    this.listSupplier = Objects.requireNonNull(listSupplier, "listSupplier is null");
     this.buffer = new AppenderBuffer();
   }
 

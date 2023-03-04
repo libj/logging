@@ -17,6 +17,7 @@
 package org.libj.logging;
 
 import java.io.PrintStream;
+import java.util.Objects;
 
 import org.slf4j.Logger;
 import org.slf4j.Marker;
@@ -40,17 +41,11 @@ public class PrintStreamLogger implements Logger {
    *
    * @param level The logging {@link Level}.
    * @param ps The {@link PrintStream}.
-   * @throws IllegalArgumentException If {@code level} or {@code ps} is null.
+   * @throws NullPointerException If {@code level} or {@code ps} is null.
    */
   public PrintStreamLogger(final Level level, final PrintStream ps) {
-    if (level == null)
-      throw new IllegalArgumentException("level == null");
-
-    if (ps == null)
-      throw new IllegalArgumentException("ps == null");
-
-    this.level = level;
-    this.ps = ps;
+    this.level = Objects.requireNonNull(level, "level == null");
+    this.ps = Objects.requireNonNull(ps, "ps == null");
   }
 
   /**
@@ -58,7 +53,7 @@ public class PrintStreamLogger implements Logger {
    * {@link System#out System.out} as the {@link PrintStream}.
    *
    * @param level The logging {@link Level}.
-   * @throws IllegalArgumentException If {@code level} is null.
+   * @throws NullPointerException If {@code level} is null.
    */
   public PrintStreamLogger(final Level level) {
     this(level, System.out);
