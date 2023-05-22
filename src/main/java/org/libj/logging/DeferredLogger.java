@@ -71,8 +71,6 @@ import ch.qos.logback.core.spi.FilterReply;
  * {@link org.slf4j.Logger} instances.</b>
  */
 public final class DeferredLogger {
-  private static final ReentrantLock classLock = new ReentrantLock();
-
   private static class FlushFilter extends Filter<ILoggingEvent> {
     private Level level;
 
@@ -258,13 +256,14 @@ public final class DeferredLogger {
    * @throws NullPointerException If {@code logger} or {@code deferredLevel} is null.
    */
   private static org.slf4j.Logger defer(final Logger logger, final Level deferredLevel, final int maxEvents, final Supplier<Deque> listSupplier) {
-    classLock.lock();
-    DeferredLogger deferredLogger = deferrers.get(logger);
-    if (deferredLogger == null)
-      deferrers.put(logger, deferredLogger = new DeferredLogger(logger, maxEvents, listSupplier));
+    synchronized (deferrers) {
+      DeferredLogger deferredLogger = deferrers.get(logger);
+      if (deferredLogger == null)
+        deferrers.put(logger, deferredLogger = new DeferredLogger(logger, maxEvents, listSupplier));
 
-    deferredLogger.setDeferredLevel(deferredLevel);
-    classLock.unlock();
+      deferredLogger.setDeferredLevel(deferredLevel);
+    }
+
     return logger;
   }
 
