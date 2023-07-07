@@ -38,7 +38,7 @@ public abstract class DelegateLogger implements Logger {
    * @throws NullPointerException If {@code target} is null.
    */
   public DelegateLogger(final Logger target) {
-    this.target = Objects.requireNonNull(target, "target == null");
+    this.target = Objects.requireNonNull(target, "target is null");
   }
 
   /**

@@ -44,8 +44,8 @@ public class PrintStreamLogger implements Logger {
    * @throws NullPointerException If {@code level} or {@code ps} is null.
    */
   public PrintStreamLogger(final Level level, final PrintStream ps) {
-    this.level = Objects.requireNonNull(level, "level == null");
-    this.ps = Objects.requireNonNull(ps, "ps == null");
+    this.level = Objects.requireNonNull(level, "level is null");
+    this.ps = Objects.requireNonNull(ps, "ps is null");
   }
 
   /**
