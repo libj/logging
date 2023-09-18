@@ -95,7 +95,7 @@ public final class DeferredLogger {
     private final Appender<ILoggingEvent> appender;
 
     /**
-     * Create a new {@link AppenderBuffer} with the specified {@link Appender} to which deferred events will be flushed.
+     * Creates a new {@link AppenderBuffer} with the specified {@link Appender} to which deferred events will be flushed.
      *
      * @throws NullPointerException If {@code appender} is null.
      */
