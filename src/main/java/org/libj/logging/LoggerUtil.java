@@ -210,9 +210,9 @@ public final class LoggerUtil {
   /**
    * Log a message with {@code logger} at {@code level} according to the specified {@code format} and {@code arguments}.
    * <p>
-   * This form avoids superfluous string concatenation when the logger is disabled for the {@code level}. However, this variant
-   * incurs the hidden (and relatively small) cost of creating an {@code Object[]} before invoking the method, even if
-   * {@code logger} is disabled for {@code level}. The variants taking {@link #log(Logger,Level,String,Object)} and
+   * This form avoids superfluous string concatenation when the logger is disabled for the {@code level}. However, this variant incurs
+   * the hidden (and relatively small) cost of creating an {@code Object[]} before invoking the method, even if {@code logger} is
+   * disabled for {@code level}. The variants taking {@link #log(Logger,Level,String,Object)} and
    * {@link #log(Logger,Level,String,Object,Object)} arguments exist solely in order to avoid this hidden cost.
    *
    * @param logger The {@link Logger}.
@@ -351,9 +351,9 @@ public final class LoggerUtil {
    * Log a message with {@code logger} at {@code level} according to the specified {@code format} and {@code arguments}, with the
    * specific {@code marker}.
    * <p>
-   * This form avoids superfluous string concatenation when the logger is disabled for the {@code level}. However, this variant
-   * incurs the hidden (and relatively small) cost of creating an {@code Object[]} before invoking the method, even if
-   * {@code logger} is disabled for {@code level}. The variants taking {@link #log(Logger,Level,String,Object)} and
+   * This form avoids superfluous string concatenation when the logger is disabled for the {@code level}. However, this variant incurs
+   * the hidden (and relatively small) cost of creating an {@code Object[]} before invoking the method, even if {@code logger} is
+   * disabled for {@code level}. The variants taking {@link #log(Logger,Level,String,Object)} and
    * {@link #log(Logger,Level,String,Object,Object)} arguments exist solely in order to avoid this hidden cost.
    * <p>
    * This method is similar to {@link #log(Logger,Level,String,Object...)} method except that the marker data is also taken into
@@ -438,8 +438,8 @@ public final class LoggerUtil {
   }
 
   /**
-   * Log a debug message representing a method signature to the specified {@link Logger logger} with the provided {@link Level
-   * level} of the form
+   * Log a debug message representing a method signature to the specified {@link Logger logger} with the provided {@link Level level}
+   * of the form
    *
    * <pre>
    * $method(String.format($format, $args...))
@@ -489,8 +489,8 @@ public final class LoggerUtil {
   }
 
   /**
-   * Log a debug message representing a method signature to the specified {@link Logger logger} with the provided {@link Level
-   * level} of the form
+   * Log a debug message representing a method signature to the specified {@link Logger logger} with the provided {@link Level level}
+   * of the form
    *
    * <pre>
    * $method($args...)

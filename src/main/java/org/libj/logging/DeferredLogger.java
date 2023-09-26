@@ -148,8 +148,8 @@ public final class DeferredLogger {
      * Flushes the buffer of deferred events. This method will invoke the default {@link Appender#doAppend(Object)} method for each
      * event that satisfies the specified {@code level}.
      *
-     * @param level The lowest {@link Level} condition for events to be flushed. If an event has a level lower than {@code level},
-     *          it will not be flushed.
+     * @param level The lowest {@link Level} condition for events to be flushed. If an event has a level lower than {@code level}, it
+     *          will not be flushed.
      */
     private void flush(final Level level) {
       lock.lock();
@@ -297,8 +297,8 @@ public final class DeferredLogger {
    * @param event The {@link ILoggingEvent}.
    * @param logger The {@link Logger}.
    * @param appender The {@link Appender}.
-   * @return {@code true} if the specified {@link ILoggingEvent} matches the specified {@link Logger} and {@link Appender};
-   *         otherwise {@code false}.
+   * @return {@code true} if the specified {@link ILoggingEvent} matches the specified {@link Logger} and {@link Appender}; otherwise
+   *         {@code false}.
    */
   private boolean matchesLogger(final ILoggingEvent event, final Logger logger, final Appender<ILoggingEvent> appender) {
     final String eventLoggerName = event.getLoggerName();

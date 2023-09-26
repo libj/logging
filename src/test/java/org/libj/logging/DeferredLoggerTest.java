@@ -34,7 +34,7 @@ public class DeferredLoggerTest extends LayoutBase<ILoggingEvent> {
 
   @Override
   public String doLayout(final ILoggingEvent event) {
-//    System.err.println(event.getFormattedMessage());
+    // System.err.println(event.getFormattedMessage());
     events.add(event.getFormattedMessage());
     return "";
   }
