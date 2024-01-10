@@ -33,37 +33,66 @@ public class PrintStreamLogger implements Logger {
   private static final String WARN = "[WARN] ";
   private static final String ERROR = "[ERROR] ";
 
-  private final PrintStream ps;
+  private final PrintStream trace;
+  private final PrintStream debug;
+  private final PrintStream info;
+  private final PrintStream warn;
+  private final PrintStream error;
   private final Level level;
 
   /**
-   * Constructs a new {@link PrintStreamLogger} with the provided logging {@link Level} and {@link PrintStream}.
+   * Constructs a new {@link PrintStreamLogger} with the provided logging {@link Level} to be used with this logger, and the given
+   * {@link PrintStream}s to apply to each individual logging {@link Level}.
    *
    * @param level The logging {@link Level}.
-   * @param ps The {@link PrintStream}.
-   * @throws NullPointerException If {@code level} or {@code ps} is null.
+   * @param trace The {@link PrintStream} to be used for {@link Level#TRACE}.
+   * @param debug The {@link PrintStream} to be used for {@link Level#DEBUG}.
+   * @param info The {@link PrintStream} to be used for {@link Level#INFO}.
+   * @param warn The {@link PrintStream} to be used for {@link Level#WARN}.
+   * @param error The {@link PrintStream} to be used for {@link Level#ERROR}.
+   * @throws NullPointerException If any argument is null.
    */
-  public PrintStreamLogger(final Level level, final PrintStream ps) {
+  public PrintStreamLogger(final Level level, final PrintStream trace, final PrintStream debug, final PrintStream info, final PrintStream warn, final PrintStream error) {
     this.level = Objects.requireNonNull(level, "level is null");
-    this.ps = Objects.requireNonNull(ps, "ps is null");
+    this.trace = Objects.requireNonNull(trace, "trace is null");
+    this.debug = Objects.requireNonNull(debug, "debug is null");
+    this.info = Objects.requireNonNull(info, "info is null");
+    this.warn = Objects.requireNonNull(warn, "warn is null");
+    this.error = Objects.requireNonNull(error, "error is null");
   }
 
   /**
-   * Constructs a new {@link PrintStreamLogger} with the provided logging {@link Level} to be used with this logger, with
-   * {@link System#out System.out} as the {@link PrintStream}.
+   * Constructs a new {@link PrintStreamLogger} with the provided logging {@link Level} to be used with this logger, and the given
+   * {@link PrintStream} to apply to all logging {@link Level}s.
+   *
+   * @param level The logging {@link Level}.
+   * @param ps The {@link PrintStream}.
+   * @throws NullPointerException If any argument is null.
+   */
+  public PrintStreamLogger(final Level level, final PrintStream ps) {
+    this.level = Objects.requireNonNull(level, "level is null");
+    this.trace = this.debug = this.info = this.warn = this.error = Objects.requireNonNull(ps, "ps is null");
+  }
+
+  /**
+   * Constructs a new {@link PrintStreamLogger} with the provided logging {@link Level} to be used with this logger, and
+   * {@link System#out System.out} as the {@link PrintStream} for all logging {@link Level}s.
    *
    * @param level The logging {@link Level}.
    * @throws NullPointerException If {@code level} is null.
    */
   public PrintStreamLogger(final Level level) {
-    this(level, System.out);
+    this.level = Objects.requireNonNull(level, "level is null");
+    this.trace = this.debug = this.info = this.warn = this.error = System.out;
   }
 
   /**
-   * Constructs a new {@link PrintStreamLogger} with the {@link Level#INFO} to be used with this logger.
+   * Constructs a new {@link PrintStreamLogger} with the {@link Level#INFO} to be used with this logger, and {@link System#out
+   * System.out} as the {@link PrintStream} for all logging {@link Level}s.
    */
   public PrintStreamLogger() {
-    this(Level.INFO, System.out);
+    this.level = Level.INFO;
+    this.trace = this.debug = this.info = this.warn = this.error = System.out;
   }
 
   @Override
@@ -79,32 +108,32 @@ public class PrintStreamLogger implements Logger {
   @Override
   public void trace(final String msg) {
     if (isTraceEnabled())
-      ps.println(TRACE + msg);
+      trace.println(TRACE + msg);
   }
 
   @Override
   public void trace(final String format, final Object arg) {
     if (isTraceEnabled())
-      ps.println(TRACE + String.format(format, arg));
+      trace.println(TRACE + String.format(format, arg));
   }
 
   @Override
   public void trace(final String format, final Object arg1, final Object arg2) {
     if (isTraceEnabled())
-      ps.println(TRACE + String.format(format, arg1, arg2));
+      trace.println(TRACE + String.format(format, arg1, arg2));
   }
 
   @Override
   public void trace(final String format, final Object ... arguments) {
     if (isTraceEnabled())
-      ps.println(TRACE + String.format(format, arguments));
+      trace.println(TRACE + String.format(format, arguments));
   }
 
   @Override
   public void trace(final String msg, final Throwable t) {
     if (isTraceEnabled()) {
-      ps.println(TRACE + msg);
-      t.printStackTrace(ps);
+      trace.println(TRACE + msg);
+      t.printStackTrace(trace);
     }
   }
 
@@ -146,32 +175,32 @@ public class PrintStreamLogger implements Logger {
   @Override
   public void debug(final String msg) {
     if (isDebugEnabled())
-      ps.println(DEBUG + msg);
+      debug.println(DEBUG + msg);
   }
 
   @Override
   public void debug(final String format, final Object arg) {
     if (isDebugEnabled())
-      ps.println(DEBUG + String.format(format, arg));
+      debug.println(DEBUG + String.format(format, arg));
   }
 
   @Override
   public void debug(final String format, final Object arg1, final Object arg2) {
     if (isDebugEnabled())
-      ps.println(DEBUG + String.format(format, arg1, arg2));
+      debug.println(DEBUG + String.format(format, arg1, arg2));
   }
 
   @Override
   public void debug(final String format, final Object ... arguments) {
     if (isDebugEnabled())
-      ps.println(DEBUG + String.format(format, arguments));
+      debug.println(DEBUG + String.format(format, arguments));
   }
 
   @Override
   public void debug(final String msg, final Throwable t) {
     if (isDebugEnabled()) {
-      ps.println(DEBUG + msg);
-      t.printStackTrace(ps);
+      debug.println(DEBUG + msg);
+      t.printStackTrace(debug);
     }
   }
 
@@ -213,32 +242,32 @@ public class PrintStreamLogger implements Logger {
   @Override
   public void info(final String msg) {
     if (isInfoEnabled())
-      ps.println(INFO + msg);
+      info.println(INFO + msg);
   }
 
   @Override
   public void info(final String format, final Object arg) {
     if (isInfoEnabled())
-      ps.println(INFO + String.format(format, arg));
+      info.println(INFO + String.format(format, arg));
   }
 
   @Override
   public void info(final String format, final Object arg1, final Object arg2) {
     if (isInfoEnabled())
-      ps.println(INFO + String.format(format, arg1, arg2));
+      info.println(INFO + String.format(format, arg1, arg2));
   }
 
   @Override
   public void info(final String format, final Object ... arguments) {
     if (isInfoEnabled())
-      ps.println(INFO + String.format(format, arguments));
+      info.println(INFO + String.format(format, arguments));
   }
 
   @Override
   public void info(final String msg, final Throwable t) {
     if (isInfoEnabled()) {
-      ps.println(INFO + msg);
-      t.printStackTrace(ps);
+      info.println(INFO + msg);
+      t.printStackTrace(info);
     }
   }
 
@@ -280,32 +309,32 @@ public class PrintStreamLogger implements Logger {
   @Override
   public void warn(final String msg) {
     if (isWarnEnabled())
-      ps.println(WARN + msg);
+      warn.println(WARN + msg);
   }
 
   @Override
   public void warn(final String format, final Object arg) {
     if (isWarnEnabled())
-      ps.println(WARN + String.format(format, arg));
+      warn.println(WARN + String.format(format, arg));
   }
 
   @Override
   public void warn(final String format, final Object arg1, final Object arg2) {
     if (isWarnEnabled())
-      ps.println(WARN + String.format(format, arg1, arg2));
+      warn.println(WARN + String.format(format, arg1, arg2));
   }
 
   @Override
   public void warn(final String format, final Object ... arguments) {
     if (isWarnEnabled())
-      ps.println(WARN + String.format(format, arguments));
+      warn.println(WARN + String.format(format, arguments));
   }
 
   @Override
   public void warn(final String msg, final Throwable t) {
     if (isWarnEnabled()) {
-      ps.println(WARN + msg);
-      t.printStackTrace(ps);
+      warn.println(WARN + msg);
+      t.printStackTrace(warn);
     }
   }
 
@@ -347,32 +376,32 @@ public class PrintStreamLogger implements Logger {
   @Override
   public void error(final String msg) {
     if (isErrorEnabled())
-      System.err.println(ERROR + msg);
+      error.println(ERROR + msg);
   }
 
   @Override
   public void error(final String format, final Object arg) {
     if (isErrorEnabled())
-      System.err.println(ERROR + String.format(format, arg));
+      error.println(ERROR + String.format(format, arg));
   }
 
   @Override
   public void error(final String format, final Object arg1, final Object arg2) {
     if (isErrorEnabled())
-      System.err.println(ERROR + String.format(format, arg1, arg2));
+      error.println(ERROR + String.format(format, arg1, arg2));
   }
 
   @Override
   public void error(final String format, final Object ... arguments) {
     if (isErrorEnabled())
-      System.err.println(ERROR + String.format(format, arguments));
+      error.println(ERROR + String.format(format, arguments));
   }
 
   @Override
   public void error(final String msg, final Throwable t) {
     if (isErrorEnabled()) {
-      System.err.println(ERROR + msg);
-      t.printStackTrace(System.err);
+      error.println(ERROR + msg);
+      t.printStackTrace(error);
     }
   }
 
