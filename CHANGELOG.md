@@ -1,14 +1,17 @@
 # Changes by Version
 
-## [v0.5.0-SNAPSHOT](https://github.com/libj/util/compare/ebf16a8d5b7e26c393d4f3404e87a98642019972..HEAD)
+## [v0.5.1-SNAPSHOT](https://github.com/libj/util/compare/e1cee3b7c7ad64f322d94528c57c36d9e6b5051d..HEAD)
+
+## [v0.5.0](https://github.com/libj/util/compare/ebf16a8d5b7e26c393d4f3404e87a98642019972..e1cee3b7c7ad64f322d94528c57c36d9e6b5051d) (2024-02-27)
+* #8 Provide individual `PrintStream(s)` for each logging `Level` in `PrintStreamLogger`
 
 ## [v0.4.6](https://github.com/libj/logging/compare/13416f6e68501167cde22b24327cd047f92123e7..ebf16a8d5b7e26c393d4f3404e87a98642019972) (2023-09-20)
-* #6 Implement NoopLogger
-* #5 Implement LoggerUtil.logm(...)
+* #6 Implement`NoopLogger`
+* #5 Implement`LoggerUtil.logm(...)`
 * #4 Upgrade Maven dependencies
-* #3 Make DeferredLogger thread safe
+* #3 Make `DeferredLogger` thread safe
 * #2 Transition to GitHub Actions
-* #1 Add SystemLogger
+* #1 Add `SystemLogger`
 
 ## [v0.4.5](https://github.com/libj/logging/compare/c80f34c9d3f1c748ee3571e865c264818d1897a1..13416f6e68501167cde22b24327cd047f92123e7) (2020-05-23)
 * Add `Objects.requireNonNull` assertions in `DeferredLogger`.
