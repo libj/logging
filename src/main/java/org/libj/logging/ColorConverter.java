@@ -27,7 +27,7 @@ import ch.qos.logback.core.pattern.CompositeConverter;
  * A {@link CompositeConverter} implementation that colorizes log messages.
  */
 public class ColorConverter extends CompositeConverter<ILoggingEvent> {
-  private static final HashMap<String,AnsiColor> colors = new HashMap<>();
+  private static final HashMap<String,AnsiColor> colors = new HashMap<>(8);
 
   /**
    * Enum of standard ANSI color codes.
@@ -154,8 +154,5 @@ public class ColorConverter extends CompositeConverter<ILoggingEvent> {
     builder.append(ENCODE_START).append(strength);
     builder.append(';').append(group).append(color);
     return builder.append(ENCODE_END).append(in).append(ENCODE_START).append(RESET).append(ENCODE_END).toString();
-  }
-
-  private void x() {
   }
 }
