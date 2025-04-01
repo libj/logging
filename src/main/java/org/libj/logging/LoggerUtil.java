@@ -21,6 +21,8 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.Enumeration;
+import java.util.List;
+import java.util.function.Supplier;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,6 +37,27 @@ import ch.qos.logback.core.joran.spi.JoranException;
  * Utility functions for operations pertaining to {@link Logger}.
  */
 public final class LoggerUtil {
+  @SuppressWarnings("unchecked")
+  private static <T extends Throwable> void rethrow(final Throwable t) throws T {
+    throw (T)t;
+  }
+
+  @FunctionalInterface
+  public static interface ThrowingSupplier<T,E extends Throwable> extends Supplier<T> {
+    @Override
+    default T get() {
+      try {
+        return getThrows();
+      }
+      catch (final Throwable e) {
+        rethrow(e);
+        return null;
+      }
+    }
+
+    T getThrows() throws E;
+  }
+
   /**
    * An array of {@link ch.qos.logback.classic.Level} values corresponding to the ordinal of the {@link org.slf4j.event.Level}
    * equivalents.
@@ -52,7 +75,20 @@ public final class LoggerUtil {
    * @throws NullPointerException If {@code logger} is null, or if {@code level} is null and {@code logger} is the root logger.
    */
   public static void setLevel(final Logger logger, final Level level) {
-    ((ch.qos.logback.classic.Logger)logger).setLevel(logbackLevel[level.ordinal()]);
+    final String name = logger.getName();
+    final int nameLen = name.length();
+    final ch.qos.logback.classic.Level lev = logbackLevel[level.ordinal()];
+    ((ch.qos.logback.classic.Logger)logger).setLevel(lev);
+    final LoggerContext loggerContext = (LoggerContext)LoggerFactory.getILoggerFactory();
+    final List<ch.qos.logback.classic.Logger> loggers = loggerContext.getLoggerList();
+    for (final ch.qos.logback.classic.Logger log : loggers) {
+      final String n = log.getName();
+      final int len = n.length();
+      if (nameLen == 0 || nameLen == len && name.equals(n))
+        log.setLevel(lev);
+      else if (nameLen < len && n.startsWith(name) && n.charAt(nameLen) == '.')
+        log.setLevel(lev);
+    }
   }
 
   /**
@@ -128,6 +164,37 @@ public final class LoggerUtil {
    */
   public static boolean isLoggable(final Logger logger, final Level level, final Marker marker) {
     return logger != null && level != null && (level == Level.INFO && logger.isInfoEnabled(marker) || level == Level.DEBUG && logger.isDebugEnabled(marker) || level == Level.TRACE && logger.isTraceEnabled(marker) || level == Level.WARN && logger.isWarnEnabled(marker) || level == Level.ERROR && logger.isErrorEnabled(marker));
+  }
+
+  /**
+   * Log a {@code msg} message with {@code logger} at {@code level}.
+   *
+   * @param <E> Type parameter of a {@link Throwable} subclass thrown from the {@code msg} supplier.
+   * @param logger The {@link Logger}.
+   * @param level The logging {@link Level}.
+   * @param msg The message string to log.
+   * @throws E The {@link Throwable} subclass thrown from the {@code msg} supplier.
+   * @throws NullPointerException If {@code logger} or {@code msg} is null.
+   */
+  public static <E extends Throwable> void log(final Logger logger, final Level level, final ThrowingSupplier<String,E> msg) throws E {
+    if (level == Level.INFO) {
+      if (logger.isInfoEnabled()) { logger.info(msg.get()); }
+    }
+    else if (level == Level.DEBUG) {
+      if (logger.isDebugEnabled()) { logger.debug(msg.get()); }
+    }
+    else if (level == Level.TRACE) {
+      if (logger.isTraceEnabled()) { logger.trace(msg.get()); }
+    }
+    else if (level == Level.WARN) {
+      if (logger.isWarnEnabled()) { logger.warn(msg.get()); }
+    }
+    else if (level == Level.ERROR) {
+      if (logger.isErrorEnabled()) { logger.error(msg.get()); }
+    }
+    else {
+      throw new UnsupportedOperationException("Unsupported level: " + level);
+    }
   }
 
   /**
@@ -237,6 +304,38 @@ public final class LoggerUtil {
   }
 
   /**
+   * Log a {@code msg} message with {@code logger} at {@code level}.
+   *
+   * @param <E> Type parameter of a {@link Throwable} subclass thrown from the {@code msg} supplier.
+   * @param logger The {@link Logger}.
+   * @param level The logging {@link Level}.
+   * @param msg The message string to log.
+   * @param t The {@link Throwable} to log.
+   * @throws E The {@link Throwable} subclass thrown from the {@code msg} supplier.
+   * @throws NullPointerException If {@code logger} or {@code msg} is null.
+   */
+  public static <E extends Throwable> void log(final Logger logger, final Level level, final ThrowingSupplier<String,E> msg, final Throwable t) throws E {
+    if (level == Level.INFO) {
+      if (logger.isInfoEnabled()) { logger.info(msg.get(), t); }
+    }
+    else if (level == Level.DEBUG) {
+      if (logger.isDebugEnabled()) { logger.debug(msg.get(), t); }
+    }
+    else if (level == Level.TRACE) {
+      if (logger.isTraceEnabled()) { logger.trace(msg.get(), t); }
+    }
+    else if (level == Level.WARN) {
+      if (logger.isWarnEnabled()) { logger.warn(msg.get(), t); }
+    }
+    else if (level == Level.ERROR) {
+      if (logger.isErrorEnabled()) { logger.error(msg.get(), t); }
+    }
+    else {
+      throw new UnsupportedOperationException("Unsupported level: " + level);
+    }
+  }
+
+  /**
    * Log an exception {@code t} (throwable) with {@code logger} at {@code level} with an accompanying {@code msg} message.
    *
    * @param logger The {@link Logger}.
@@ -258,6 +357,38 @@ public final class LoggerUtil {
       logger.error(msg, t);
     else
       throw new UnsupportedOperationException("Unsupported level: " + level);
+  }
+
+  /**
+   * Log a {@code msg} message with {@code logger} at {@code level}.
+   *
+   * @param <E> Type parameter of a {@link Throwable} subclass thrown from the {@code msg} supplier.
+   * @param logger The {@link Logger}.
+   * @param level The logging {@link Level}.
+   * @param marker The marker specific to this log statement.
+   * @param msg The message string to log.
+   * @throws E The {@link Throwable} subclass thrown from the {@code msg} supplier.
+   * @throws NullPointerException If {@code logger} or {@code msg} is null.
+   */
+  public static <E extends Throwable> void log(final Logger logger, final Level level, final Marker marker, final ThrowingSupplier<String,E> msg) throws E {
+    if (level == Level.INFO) {
+      if (logger.isInfoEnabled()) { logger.info(marker, msg.get()); }
+    }
+    else if (level == Level.DEBUG) {
+      if (logger.isDebugEnabled()) { logger.debug(marker, msg.get()); }
+    }
+    else if (level == Level.TRACE) {
+      if (logger.isTraceEnabled()) { logger.trace(marker, msg.get()); }
+    }
+    else if (level == Level.WARN) {
+      if (logger.isWarnEnabled()) { logger.warn(marker, msg.get()); }
+    }
+    else if (level == Level.ERROR) {
+      if (logger.isErrorEnabled()) { logger.error(marker, msg.get()); }
+    }
+    else {
+      throw new UnsupportedOperationException("Unsupported level: " + level);
+    }
   }
 
   /**
@@ -379,6 +510,39 @@ public final class LoggerUtil {
       logger.error(marker, format, arguments);
     else
       throw new UnsupportedOperationException("Unsupported level: " + level);
+  }
+
+  /**
+   * Log a {@code msg} message with {@code logger} at {@code level}.
+   *
+   * @param <E> Type parameter of a {@link Throwable} subclass thrown from the {@code msg} supplier.
+   * @param logger The {@link Logger}.
+   * @param level The logging {@link Level}.
+   * @param marker The marker specific to this log statement.
+   * @param msg The message string to log.
+   * @param t The {@link Throwable} to log.
+   * @throws E The {@link Throwable} subclass thrown from the {@code msg} supplier.
+   * @throws NullPointerException If {@code logger} or {@code msg} is null.
+   */
+  public static <E extends Throwable> void log(final Logger logger, final Level level, final Marker marker, final ThrowingSupplier<String,E> msg, final Throwable t) throws E {
+    if (level == Level.INFO) {
+      if (logger.isInfoEnabled()) { logger.info(marker, msg.get(), t); }
+    }
+    else if (level == Level.DEBUG) {
+      if (logger.isDebugEnabled()) { logger.debug(marker, msg.get(), t); }
+    }
+    else if (level == Level.TRACE) {
+      if (logger.isTraceEnabled()) { logger.trace(marker, msg.get(), t); }
+    }
+    else if (level == Level.WARN) {
+      if (logger.isWarnEnabled()) { logger.warn(marker, msg.get(), t); }
+    }
+    else if (level == Level.ERROR) {
+      if (logger.isErrorEnabled()) { logger.error(marker, msg.get(), t); }
+    }
+    else {
+      throw new UnsupportedOperationException("Unsupported level: " + level);
+    }
   }
 
   /**

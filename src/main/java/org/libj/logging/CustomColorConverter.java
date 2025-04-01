@@ -74,6 +74,22 @@ public class CustomColorConverter extends CompositeConverter<ILoggingEvent> {
       String getValue(final ILoggingEvent event) {
         return event.getLoggerName();
       }
+
+      @Override
+      String match(final String property, final String key, final String value) {
+        final int propertyLen = property.length();
+        final int len = key.length();
+        if (len == propertyLen) {
+          if (property.equals(value))
+            return value;
+        }
+        else if (len < propertyLen) {
+          if (property.startsWith(key) && property.charAt(len) == '.')
+            return value;
+        }
+
+        return null;
+      }
     },
     MARKER("marker") {
       @Override
@@ -101,6 +117,10 @@ public class CustomColorConverter extends CompositeConverter<ILoggingEvent> {
     }
 
     abstract String getValue(ILoggingEvent event);
+
+    String match(final String property, final String key, final String value) {
+      return property.equals(key) ? value : null;
+    }
 
     @Override
     public String toString() {
@@ -137,34 +157,34 @@ public class CustomColorConverter extends CompositeConverter<ILoggingEvent> {
       return;
     }
 
-    final String prefix = optionList.get(1) + ":";
-    final int len = prefix.length();
-    for (final Map.Entry<String,String> entry : context.getCopyOfPropertyMap().entrySet()) {
-      if (entry.getKey().startsWith(prefix)) {
-        final String key = entry.getKey().substring(len);
-        keys.add(key);
-        values.add(entry.getValue());
+    final String prefix = optionList.get(1);
+
+    final Map<String,String> properties = context.getCopyOfPropertyMap();
+    if (properties.size() != 0) {
+      final int prefixLen = prefix.length();
+      for (final Map.Entry<String,String> entry : properties.entrySet()) { // [S]
+        final String key = entry.getKey();
+        if (key.length() > prefixLen && key.startsWith(prefix) && key.charAt(prefixLen) == ':') {
+          keys.add(key.substring(prefixLen + 1));
+          values.add(entry.getValue());
+        }
+      }
+
+      if (keys.size() > 0) {
+        super.start();
+        return;
       }
     }
 
-    super.start();
+    addError("No properties were found with \"" + prefix + ":\" prefix");
   }
 
   private String match(final ILoggingEvent event) {
-    final String loggerName = event.getLoggerName();
-    final int length = loggerName.length();
+    final String property = this.property.getValue(event);
     for (int i = 0, i$ = keys.size(); i < i$; ++i) { // [RA]
-      final String key = keys.get(i);
-      final int len = key.length();
-      final String value = values.get(i);
-      if (len == length) {
-        if (loggerName.equals(value))
-          return value;
-      }
-      else if (len < length) {
-        if (loggerName.startsWith(key) && loggerName.charAt(len) == '.')
-          return value;
-      }
+      final String match = this.property.match(property, keys.get(i), values.get(i));
+      if (match != null)
+        return match;
     }
 
     return null;
@@ -172,7 +192,7 @@ public class CustomColorConverter extends CompositeConverter<ILoggingEvent> {
 
   @Override
   protected String transform(final ILoggingEvent event, final String in) {
-    final String value = match(event);
-    return value != null ? esc + value + in + esc + "[0m" : in;
+    final String match = match(event);
+    return match != null ? esc + match + in + esc + "[0m" : in;
   }
 }

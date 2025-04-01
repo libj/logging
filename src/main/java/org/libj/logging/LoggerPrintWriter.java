@@ -65,7 +65,7 @@ public class LoggerPrintWriter extends PrintWriter {
     if (buffer.length() == 0 || buffer.charAt(buffer.length() - 1) != '\n')
       return;
 
-    LoggerUtil.log(logger, level, buffer.toString());
+    LoggerUtil.log(logger, level, () -> buffer.toString());
     buffer.setLength(0);
   }
 
